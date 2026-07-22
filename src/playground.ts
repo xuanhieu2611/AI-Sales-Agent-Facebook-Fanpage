@@ -32,7 +32,7 @@ while (true) {
 
   const reply = await handleCustomerMessage(USER, msg);
   console.log(`Shop:  ${reply.text}`);
-  if (reply.handoff) console.log("       🔔 [Đã đánh dấu cần người thật]");
+  for (const n of reply.notices) console.log(`       ${n}`);
   console.log();
 }
 

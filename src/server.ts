@@ -7,6 +7,7 @@ import { handleCustomerMessage } from "./funnel.js";
 import { sendMessage, sendTyping } from "./facebook.js";
 import { startScheduler } from "./scheduler.js";
 import { getStore } from "./state.js";
+import { getPlayNotices } from "./playNotices.js";
 
 const app = express();
 app.use(express.json());
@@ -115,7 +116,12 @@ app.get("/api/play/history", async (req, res) => {
     const store = await getStore();
     const convo = await store.getConversation(sessionId);
     const turns = await store.getTurns(sessionId);
-    res.json({ turns, handedOff: convo.handedOff, stage: convo.stage });
+    res.json({
+      turns,
+      handedOff: convo.handedOff,
+      stage: convo.stage,
+      notices: getPlayNotices(sessionId),
+    });
   } catch (err) {
     console.error("play/history failed:", err);
     res.status(500).json({ error: "Failed to load history" });
@@ -138,7 +144,13 @@ app.post("/api/play/chat", async (req, res) => {
     const convo = await store.getConversation(sessionId);
     if (convo.handedOff) {
       const turns = await store.getTurns(sessionId);
-      return res.json({ turns, handedOff: true, stage: convo.stage, text: "" });
+      return res.json({
+        turns,
+        handedOff: true,
+        stage: convo.stage,
+        text: "",
+        notices: getPlayNotices(sessionId),
+      });
     }
 
     const reply = await handleCustomerMessage(sessionId, text);
@@ -154,6 +166,7 @@ app.post("/api/play/chat", async (req, res) => {
       turns,
       handedOff: updated.handedOff,
       stage: updated.stage,
+      notices: getPlayNotices(sessionId),
     });
   } catch (err) {
     console.error("play/chat failed:", err);

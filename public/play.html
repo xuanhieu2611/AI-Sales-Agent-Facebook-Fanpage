@@ -260,6 +260,23 @@
       padding: 6px 8px;
       animation: none;
     }
+    .bubble.notice {
+      max-width: 92%;
+      background: #fff8e6;
+      color: #6b4e00;
+      border: 1px solid #f0d78c;
+      font-size: 12px;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      line-height: 1.35;
+      text-align: left;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    .bubble.notice.handoff {
+      background: #fde8ec;
+      border-color: #f0a8b6;
+      color: #8a1530;
+    }
 
     .composer {
       flex-shrink: 0;
@@ -369,6 +386,7 @@
     let secret = params.get("key") || localStorage.getItem(STORAGE_SECRET) || "";
     let sessionId = localStorage.getItem(STORAGE_SESSION) || "";
     let knownCount = 0;
+    let knownNoticeCount = 0;
     let busy = false;
     let pollTimer = null;
 
@@ -426,15 +444,36 @@
       return data;
     }
 
-    function renderTurns(turns, handoff) {
+    function appendNotice(text) {
+      const row = document.createElement("div");
+      row.className = "row meta";
+      const el = document.createElement("div");
+      el.className = "bubble notice" + (text.includes("người thật") || text.includes("HANDOFF") || text.includes("handoff") ? " handoff" : "");
+      el.textContent = text;
+      row.appendChild(el);
+      log.appendChild(row);
+    }
+
+    function renderTurns(turns, handoff, notices) {
+      const noticeList = Array.isArray(notices) ? notices : [];
       log.innerHTML = "";
-      if (!turns.length) {
+      if (!turns.length && !noticeList.length) {
         const tip = document.createElement("div");
         tip.className = "row meta";
         tip.innerHTML = '<div class="bubble meta">Nhắn như khách trên Messenger. Follow-up hẹn giờ cũng hiện ở đây.</div>';
         log.appendChild(tip);
       }
-      for (const t of turns) {
+
+      let ni = 0;
+      const flushNoticesUpTo = (afterTurns) => {
+        while (ni < noticeList.length && noticeList[ni].afterTurns <= afterTurns) {
+          appendNotice(noticeList[ni].text);
+          ni++;
+        }
+      };
+
+      for (let i = 0; i < turns.length; i++) {
+        const t = turns[i];
         const row = document.createElement("div");
         row.className = "row " + (t.role === "user" ? "user" : "assistant");
         const el = document.createElement("div");
@@ -442,21 +481,28 @@
         el.textContent = t.content;
         row.appendChild(el);
         log.appendChild(row);
+        flushNoticesUpTo(i + 1);
       }
+      flushNoticesUpTo(Number.POSITIVE_INFINITY);
+
       if (handoff) {
-        const row = document.createElement("div");
-        row.className = "row meta";
-        row.innerHTML = '<div class="bubble meta">Đã handoff — bot im. Bấm “Chat mới” để thử lại.</div>';
-        log.appendChild(row);
+        // Prefer the stored handoff notice; only add a fallback if missing.
+        const hasHandoffNotice = noticeList.some((n) => /người thật|HANDOFF|handoff/i.test(n.text));
+        if (!hasHandoffNotice) appendNotice("🔔 [Đã đánh dấu cần người thật] — bot im, chờ bạn xử lý");
       }
+
       knownCount = turns.length;
+      knownNoticeCount = noticeList.length;
       scrollToBottom();
     }
 
     async function refreshHistory(force) {
       try {
         const data = await api("/api/play/history?sessionId=" + encodeURIComponent(sessionId));
-        if (force || data.turns.length !== knownCount) renderTurns(data.turns, data.handedOff);
+        const nCount = Array.isArray(data.notices) ? data.notices.length : 0;
+        if (force || data.turns.length !== knownCount || nCount !== knownNoticeCount) {
+          renderTurns(data.turns, data.handedOff, data.notices);
+        }
       } catch (e) {
         if (String(e.message).includes("Unauthorized")) {
           localStorage.removeItem(STORAGE_SECRET);
@@ -483,7 +529,8 @@
       localStorage.setItem(STORAGE_SESSION, sessionId);
       sessionLabel.textContent = "Play · " + shortSession(sessionId);
       knownCount = 0;
-      renderTurns([], false);
+      knownNoticeCount = 0;
+      renderTurns([], false, []);
       input.focus();
     };
 
@@ -499,7 +546,6 @@
       // Optimistic user bubble so the thread jumps to bottom immediately.
       const optimistic = document.createElement("div");
       optimistic.className = "row user";
-      optimistic.innerHTML = "";
       const b = document.createElement("div");
       b.className = "bubble user";
       b.textContent = text;
@@ -513,16 +559,10 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ sessionId, text }),
         });
-        renderTurns(data.turns, data.handedOff);
+        renderTurns(data.turns, data.handedOff, data.notices);
       } catch (err) {
         optimistic.remove();
-        const row = document.createElement("div");
-        row.className = "row meta";
-        const el = document.createElement("div");
-        el.className = "bubble meta";
-        el.textContent = "Lỗi: " + err.message;
-        row.appendChild(el);
-        log.appendChild(row);
+        appendNotice("Lỗi: " + err.message);
         scrollToBottom();
       } finally {
         busy = false;

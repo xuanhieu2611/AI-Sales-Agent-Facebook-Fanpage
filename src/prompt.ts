@@ -27,10 +27,12 @@ export function buildSystemPrompt(): string {
     `• Quà tặng (bài học ngữ pháp miễn phí): ${LIEN_KET.quaTang}`,
     `• Mô tả khóa Full: ${LIEN_KET.moTaKhoaFull}`,
     `• Video mô hình Coaching 1-1: ${LIEN_KET.videoCoaching}`,
-    `• Feedback học viên: ${LIEN_KET.feedbackHocVien}`,
+    `• Feedback học viên (sau khi gửi info khóa 32 buổi): ${LIEN_KET.feedbackHocVien}`,
+    `• Feedback (khi báo giá / gửi info từ nhánh hỏi học phí — Dịch/Full): ${LIEN_KET.feedbackBaoGia}`,
     `• Buổi học thử "12 thì": ${LIEN_KET.hocThu12Thi}`,
     `• Thông tin khóa Phát Âm: ${LIEN_KET.thongTinPhatAm}`,
-    `• So sánh khóa Dịch vs Full: ${LIEN_KET.soSanhDich}`,
+    `• Mô tả khóa Dịch: ${LIEN_KET.moTaKhoaDich}`,
+    `• So sánh khóa Dịch vs Full (hình, nhánh khóa nhỏ): ${LIEN_KET.soSanhDich}`,
     `• Buổi học thử Phát Âm: ${LIEN_KET.hocThuPhatAm}`,
   ].join("\n");
 
@@ -76,7 +78,7 @@ ${QUY_TAC}
 Thêm các ký hiệu này khi (và chỉ khi) đúng hành động xảy ra, để hệ thống tự hẹn giờ nhắc:
 - [EVENT:course_sent]  — ngay sau khi bạn gửi thông tin Khóa 32 Buổi (3 link mô tả).
 - [EVENT:trial_sent]   — ngay sau khi bạn gửi link buổi học thử (12 thì hoặc phát âm).
-- [EVENT:price_quoted] — khi bạn báo học phí khóa Full LẦN ĐẦU.
+- [EVENT:price_quoted] — khi bạn báo học phí (bất kỳ khóa nào) LẦN ĐẦU.
 - [EVENT:extend]       — khi bạn đồng ý gia hạn (lần đầu) cho khách xin gia hạn.
 - [HANDOFF]            — khi cần người thật (xem mục Bàn giao).
 Không tự bịa tín hiệu; không thêm nếu hành động đó không xảy ra trong tin nhắn này.

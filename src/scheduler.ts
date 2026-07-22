@@ -12,6 +12,7 @@
 import { FOLLOW_UPS } from "./business.js";
 import { getStore, type Conversation, type ScheduledJob, type Store } from "./state.js";
 import { HOURS, inHours } from "./funnel.js";
+import { addPlayNotice } from "./playNotices.js";
 
 /** How the scheduler delivers a message (injected so it's testable). */
 export type Sender = (psid: string, text: string) => Promise<void>;
@@ -56,6 +57,8 @@ async function deliver(store: Store, send: Sender, psid: string, key: keyof type
   await send(psid, text);
   await store.appendMessage(psid, "assistant", text);
   await store.updateConversation(psid, { lastBotMsgAt: new Date() });
+  const turns = await store.getTurns(psid);
+  addPlayNotice(psid, `⏰ Shop (tự động) · ${key}`, turns.length);
 }
 
 async function runJob(store: Store, send: Sender, job: ScheduledJob): Promise<void> {

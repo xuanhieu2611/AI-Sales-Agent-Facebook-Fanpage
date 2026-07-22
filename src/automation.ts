@@ -10,19 +10,19 @@
  */
 const WEBHOOK_URL = process.env.GIFT_ACCESS_WEBHOOK_URL;
 
+/** Human-readable result for logs / playground notices. */
 export async function grantGiftAccess(
   email: string,
   psid: string,
   opts: { extension?: boolean } = {},
-): Promise<void> {
+): Promise<string> {
   const payload = { email, psid, extension: !!opts.extension };
+  const action = opts.extension ? "extended" : "granted";
 
   if (!WEBHOOK_URL) {
-    console.log(
-      `[automation] (GIFT_ACCESS_WEBHOOK_URL not set) would grant access →`,
-      payload,
-    );
-    return;
+    const msg = `[automation] (GIFT_ACCESS_WEBHOOK_URL not set) would ${action === "extended" ? "extend" : "grant"} access → ${email}`;
+    console.log(msg, payload);
+    return msg;
   }
 
   try {
@@ -32,11 +32,15 @@ export async function grantGiftAccess(
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
-      console.error("[automation] grant webhook returned", res.status, await res.text());
-    } else {
-      console.log(`[automation] access ${opts.extension ? "extended" : "granted"} for ${email}`);
+      const detail = await res.text();
+      console.error("[automation] grant webhook returned", res.status, detail);
+      return `[automation] webhook failed (${res.status}) for ${email}`;
     }
+    const msg = `[automation] access ${action} for ${email}`;
+    console.log(msg);
+    return msg;
   } catch (err) {
     console.error("[automation] grant webhook failed:", err);
+    return `[automation] webhook error for ${email}`;
   }
 }
