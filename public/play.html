@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Playground — English with Bubby</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --panel: #fff;
+      --ink: #1c1917;
+      --muted: #78716c;
+      --line: #e7e5e4;
+      --me: #1d4ed8;
+      --bot: #f5f5f4;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 15px/1.45 system-ui, -apple-system, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    header h1 { margin: 0; font-size: 16px; font-weight: 600; }
+    header p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    header .actions { display: flex; gap: 8px; }
+    button, .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+    button.primary { background: var(--me); color: #fff; border-color: var(--me); }
+    button:disabled { opacity: 0.5; cursor: wait; }
+    #gate {
+      max-width: 360px;
+      margin: 48px auto;
+      padding: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    #gate label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    #gate input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+      margin-bottom: 12px;
+    }
+    #app { display: none; flex: 1; flex-direction: column; min-height: 0; }
+    #log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bubble {
+      max-width: min(560px, 92%);
+      padding: 10px 12px;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .bubble.user { align-self: flex-end; background: var(--me); color: #fff; }
+    .bubble.assistant { align-self: flex-start; background: var(--bot); border: 1px solid var(--line); }
+    .bubble.meta { align-self: center; color: var(--muted); font-size: 12px; background: transparent; }
+    form {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--line);
+      background: var(--panel);
+    }
+    form textarea {
+      flex: 1;
+      resize: none;
+      min-height: 44px;
+      max-height: 120px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;
+    }
+  </style>
+</head>
+<body>
+  <div id="gate">
+    <h1 style="margin-top:0;font-size:18px">Playground</h1>
+    <p style="color:var(--muted);font-size:13px;margin-top:0">
+      Nhập mật khẩu playground (biến <code>PLAYGROUND_SECRET</code> trên Render).
+      Để trống nếu server không đặt mật khẩu.
+    </p>
+    <label for="secret">Mật khẩu</label>
+    <input id="secret" type="password" autocomplete="current-password" />
+    <button class="primary" type="button" id="enter">Vào chat</button>
+    <p id="gateErr" style="color:#b91c1c;font-size:13px;display:none"></p>
+  </div>
+
+  <div id="app">
+    <header>
+      <div>
+        <h1>Playground — test AI (không qua Messenger)</h1>
+        <p id="sessionLabel"></p>
+      </div>
+      <div class="actions">
+        <button type="button" id="newChat">Chat mới</button>
+      </div>
+    </header>
+    <div id="log"></div>
+    <form id="form">
+      <textarea id="input" rows="1" placeholder="Nhắn như khách hàng…" autofocus></textarea>
+      <button class="primary" type="submit" id="send">Gửi</button>
+    </form>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const STORAGE_SECRET = "play_secret";
+    const STORAGE_SESSION = "play_session";
+
+    let secret = params.get("key") || localStorage.getItem(STORAGE_SECRET) || "";
+    let sessionId = localStorage.getItem(STORAGE_SESSION) || "";
+    let knownCount = 0;
+    let busy = false;
+    let pollTimer = null;
+
+    const gate = document.getElementById("gate");
+    const app = document.getElementById("app");
+    const log = document.getElementById("log");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const sendBtn = document.getElementById("send");
+    const sessionLabel = document.getElementById("sessionLabel");
+    const gateErr = document.getElementById("gateErr");
+
+    function newSessionId() {
+      return "web-" + (crypto.randomUUID?.() || String(Date.now()) + "-" + Math.random().toString(16).slice(2));
+    }
+
+    function showApp() {
+      gate.style.display = "none";
+      app.style.display = "flex";
+      if (!sessionId) {
+        sessionId = newSessionId();
+        localStorage.setItem(STORAGE_SESSION, sessionId);
+      }
+      sessionLabel.textContent = "Session: " + sessionId;
+      refreshHistory(true);
+      if (pollTimer) clearInterval(pollTimer);
+      pollTimer = setInterval(() => refreshHistory(false), 3000);
+    }
+
+    async function api(path, opts = {}) {
+      const headers = { ...(opts.headers || {}) };
+      if (secret) headers["X-Playground-Secret"] = secret;
+      const res = await fetch(path, { ...opts, headers });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || res.statusText || "Request failed");
+      return data;
+    }
+
+    function renderTurns(turns, handoff) {
+      log.innerHTML = "";
+      if (!turns.length) {
+        const tip = document.createElement("div");
+        tip.className = "bubble meta";
+        tip.textContent = "Bắt đầu nhắn như khách. Follow-up hẹn giờ cũng hiện ở đây (nếu TIMER_SCALE đang test nhanh).";
+        log.appendChild(tip);
+      }
+      for (const t of turns) {
+        const el = document.createElement("div");
+        el.className = "bubble " + (t.role === "user" ? "user" : "assistant");
+        el.textContent = t.content;
+        log.appendChild(el);
+      }
+      if (handoff) {
+        const el = document.createElement("div");
+        el.className = "bubble meta";
+        el.textContent = "🔔 Đã handoff — bot im. Bấm “Chat mới” để thử lại.";
+        log.appendChild(el);
+      }
+      log.scrollTop = log.scrollHeight;
+      knownCount = turns.length;
+    }
+
+    async function refreshHistory(force) {
+      try {
+        const data = await api("/api/play/history?sessionId=" + encodeURIComponent(sessionId));
+        if (force || data.turns.length !== knownCount) renderTurns(data.turns, data.handedOff);
+      } catch (e) {
+        if (String(e.message).includes("Unauthorized")) {
+          localStorage.removeItem(STORAGE_SECRET);
+          location.reload();
+        }
+      }
+    }
+
+    document.getElementById("enter").onclick = async () => {
+      secret = document.getElementById("secret").value.trim();
+      try {
+        await api("/api/play/ping");
+        if (secret) localStorage.setItem(STORAGE_SECRET, secret);
+        else localStorage.removeItem(STORAGE_SECRET);
+        showApp();
+      } catch (e) {
+        gateErr.style.display = "block";
+        gateErr.textContent = e.message || "Sai mật khẩu";
+      }
+    };
+
+    document.getElementById("newChat").onclick = () => {
+      sessionId = newSessionId();
+      localStorage.setItem(STORAGE_SESSION, sessionId);
+      sessionLabel.textContent = "Session: " + sessionId;
+      knownCount = 0;
+      renderTurns([], false);
+    };
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text || busy) return;
+      busy = true;
+      sendBtn.disabled = true;
+      input.value = "";
+      try {
+        const data = await api("/api/play/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionId, text }),
+        });
+        renderTurns(data.turns, data.handedOff);
+      } catch (err) {
+        const el = document.createElement("div");
+        el.className = "bubble meta";
+        el.textContent = "Lỗi: " + err.message;
+        log.appendChild(el);
+      } finally {
+        busy = false;
+        sendBtn.disabled = false;
+        input.focus();
+      }
+    };
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        form.requestSubmit();
+      }
+    });
+
+    // Skip gate if no secret configured and we already verified, or ?key= present.
+    (async () => {
+      document.getElementById("secret").value = secret;
+      try {
+        await api("/api/play/ping");
+        showApp();
+      } catch {
+        // stay on gate
+      }
+    })();
+  </script>
+</body>
+</html>
