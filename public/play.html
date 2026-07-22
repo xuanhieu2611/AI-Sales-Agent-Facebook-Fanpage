@@ -2,136 +2,364 @@
 <html lang="vi">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Playground — English with Bubby</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f6f4ef;
-      --panel: #fff;
-      --ink: #1c1917;
-      --muted: #78716c;
-      --line: #e7e5e4;
-      --me: #1d4ed8;
-      --bot: #f5f5f4;
+      --desk: #dce8f7;
+      --desk-deep: #c5d8ef;
+      --chassis: #ffffff;
+      --thread: #f0f2f5;
+      --ink: #050505;
+      --muted: #65676b;
+      --line: #e4e6eb;
+      --me: #0084ff;
+      --me-press: #006bd6;
+      --bot: #e4e6eb;
+      --danger: #e41e3f;
+      --radius-bubble: 18px;
+      --phone-w: min(420px, 100%);
+      --font-ui: "Be Vietnam Pro", system-ui, sans-serif;
+      --font-display: "Sora", "Be Vietnam Pro", sans-serif;
     }
+
     * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
-      font: 15px/1.45 system-ui, -apple-system, sans-serif;
+      font: 15px/1.45 var(--font-ui);
       color: var(--ink);
-      background: var(--bg);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, #eef5ff 0%, transparent 55%),
+        linear-gradient(165deg, var(--desk) 0%, var(--desk-deep) 100%);
+      min-height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 16px;
     }
-    header {
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
     }
-    header h1 { margin: 0; font-size: 16px; font-weight: 600; }
-    header p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
-    header .actions { display: flex; gap: 8px; }
-    button, .btn {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      color: var(--ink);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font: inherit;
-      cursor: pointer;
-    }
-    button.primary { background: var(--me); color: #fff; border-color: var(--me); }
-    button:disabled { opacity: 0.5; cursor: wait; }
+
+    /* ── Gate ─────────────────────────────────────────────── */
     #gate {
-      max-width: 360px;
-      margin: 48px auto;
-      padding: 20px;
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 12px;
+      width: min(380px, 100%);
+      padding: 28px 24px;
+      background: var(--chassis);
+      border-radius: 24px;
+      box-shadow: 0 18px 50px rgba(15, 40, 80, 0.12);
     }
-    #gate label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+    #gate .brand {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--me);
+      margin: 0 0 8px;
+    }
+    #gate h1 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+    #gate .lede {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    #gate label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
     #gate input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 12px 14px;
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 999px;
       font: inherit;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      background: var(--thread);
+      outline: none;
     }
-    #app { display: none; flex: 1; flex-direction: column; min-height: 0; }
+    #gate input:focus {
+      border-color: var(--me);
+      box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.2);
+    }
+    #gateErr {
+      color: var(--danger);
+      font-size: 13px;
+      display: none;
+      margin: 0 0 10px;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 600;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+    button:focus-visible {
+      outline: 2px solid var(--me);
+      outline-offset: 2px;
+    }
+    button.primary {
+      background: var(--me);
+      color: #fff;
+      width: 100%;
+    }
+    button.primary:hover { background: var(--me-press); }
+    button.primary:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.55; cursor: wait; }
+    button.ghost {
+      background: transparent;
+      color: var(--me);
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+    button.ghost:hover { background: rgba(0, 132, 255, 0.08); }
+
+    /* ── Phone / Messenger column ─────────────────────────── */
+    #app {
+      display: none;
+      width: var(--phone-w);
+      height: min(860px, calc(100vh - 32px));
+      height: min(860px, calc(100dvh - 32px));
+      flex-direction: column;
+      background: var(--chassis);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(15, 40, 80, 0.06),
+        0 24px 60px rgba(15, 40, 80, 0.18);
+      animation: rise 0.45s ease both;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(12px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .thread-header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background:
+        linear-gradient(145deg, #4dabff 0%, #0084ff 55%, #0060c2 100%);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 132, 255, 0.35);
+    }
+    .thread-meta { flex: 1; min-width: 0; }
+    .thread-meta h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .thread-meta p {
+      margin: 2px 0 0;
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .online-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #31a24c;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
     #log {
       flex: 1;
+      min-height: 0;
       overflow-y: auto;
-      padding: 16px;
+      overflow-x: hidden;
+      padding: 14px 12px 8px;
+      background: var(--thread);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
+      scroll-behavior: auto;
+      -webkit-overflow-scrolling: touch;
     }
+
+    .row {
+      display: flex;
+      width: 100%;
+    }
+    .row.user { justify-content: flex-end; }
+    .row.assistant { justify-content: flex-start; }
+    .row.meta { justify-content: center; }
+
     .bubble {
-      max-width: min(560px, 92%);
-      padding: 10px 12px;
-      border-radius: 12px;
+      max-width: 78%;
+      padding: 9px 12px;
+      border-radius: var(--radius-bubble);
       white-space: pre-wrap;
       word-break: break-word;
+      font-size: 15px;
+      line-height: 1.4;
+      animation: pop 0.22s ease both;
     }
-    .bubble.user { align-self: flex-end; background: var(--me); color: #fff; }
-    .bubble.assistant { align-self: flex-start; background: var(--bot); border: 1px solid var(--line); }
-    .bubble.meta { align-self: center; color: var(--muted); font-size: 12px; background: transparent; }
-    form {
+    @keyframes pop {
+      from { opacity: 0; transform: translateY(6px) scale(0.98); }
+      to { opacity: 1; transform: none; }
+    }
+    .bubble.user {
+      background: var(--me);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.assistant {
+      background: var(--bot);
+      color: var(--ink);
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.meta {
+      max-width: 90%;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+      padding: 6px 8px;
+      animation: none;
+    }
+
+    .composer {
+      flex-shrink: 0;
       display: flex;
+      align-items: flex-end;
       gap: 8px;
-      padding: 12px 16px;
+      padding: 10px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+      background: var(--chassis);
       border-top: 1px solid var(--line);
-      background: var(--panel);
     }
-    form textarea {
+    .composer textarea {
       flex: 1;
       resize: none;
-      min-height: 44px;
-      max-height: 120px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      border: none;
+      background: var(--thread);
+      border-radius: 22px;
+      padding: 11px 16px;
       font: inherit;
+      max-height: 120px;
+      min-height: 42px;
+      line-height: 1.35;
+      outline: none;
+    }
+    .composer textarea:focus {
+      box-shadow: 0 0 0 2px rgba(0, 132, 255, 0.25);
+    }
+    .composer .send {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--me);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .composer .send:hover { background: var(--me-press); }
+    .composer .send svg { width: 18px; height: 18px; display: block; }
+
+    .desk-caption {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      color: rgba(15, 40, 80, 0.45);
+      pointer-events: none;
+      font-weight: 500;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0; place-items: stretch; }
+      #app {
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .desk-caption { display: none; }
     }
   </style>
 </head>
 <body>
   <div id="gate">
-    <h1 style="margin-top:0;font-size:18px">Playground</h1>
-    <p style="color:var(--muted);font-size:13px;margin-top:0">
-      Nhập mật khẩu playground (biến <code>PLAYGROUND_SECRET</code> trên Render).
-      Để trống nếu server không đặt mật khẩu.
+    <p class="brand">English with Bubby</p>
+    <h1>Playground</h1>
+    <p class="lede">
+      Test AI như trên Messenger — không cần Fanpage.
+      Nhập mật khẩu <code>PLAYGROUND_SECRET</code> (để trống nếu server không đặt).
     </p>
     <label for="secret">Mật khẩu</label>
     <input id="secret" type="password" autocomplete="current-password" />
+    <p id="gateErr"></p>
     <button class="primary" type="button" id="enter">Vào chat</button>
-    <p id="gateErr" style="color:#b91c1c;font-size:13px;display:none"></p>
   </div>
 
-  <div id="app">
-    <header>
-      <div>
-        <h1>Playground — test AI (không qua Messenger)</h1>
-        <p id="sessionLabel"></p>
+  <div id="app" role="main">
+    <header class="thread-header">
+      <div class="avatar" aria-hidden="true">Eb</div>
+      <div class="thread-meta">
+        <h1>English with Bubby</h1>
+        <p><span class="online-dot" aria-hidden="true"></span><span id="sessionLabel">Đang kết nối…</span></p>
       </div>
-      <div class="actions">
-        <button type="button" id="newChat">Chat mới</button>
-      </div>
+      <button class="ghost" type="button" id="newChat" title="Khách mới / hội thoại mới">Chat mới</button>
     </header>
-    <div id="log"></div>
-    <form id="form">
-      <textarea id="input" rows="1" placeholder="Nhắn như khách hàng…" autofocus></textarea>
-      <button class="primary" type="submit" id="send">Gửi</button>
+
+    <div id="log" aria-live="polite"></div>
+
+    <form class="composer" id="form">
+      <textarea id="input" rows="1" placeholder="Aa" autofocus aria-label="Tin nhắn"></textarea>
+      <button class="send" type="submit" id="send" aria-label="Gửi">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M3.4 20.4 20.85 12.3a.8.8 0 0 0 0-1.4L3.4 2.8a.8.8 0 0 0-1.15.9l2.3 7.05a.8.8 0 0 0 .6.52L15 12l-9.85.73a.8.8 0 0 0-.6.52L2.25 20.3a.8.8 0 0 0 1.15.9Z"/>
+        </svg>
+      </button>
     </form>
   </div>
+  <p class="desk-caption">Giả lập khung Messenger · playground</p>
 
   <script>
     const params = new URLSearchParams(location.search);
@@ -157,6 +385,24 @@
       return "web-" + (crypto.randomUUID?.() || String(Date.now()) + "-" + Math.random().toString(16).slice(2));
     }
 
+    function shortSession(id) {
+      return id.replace(/^web-/, "").slice(0, 8);
+    }
+
+    /** Always pin to latest message (Messenger-style). */
+    function scrollToBottom() {
+      const pin = () => {
+        log.scrollTop = log.scrollHeight;
+        const last = log.lastElementChild;
+        if (last) last.scrollIntoView({ block: "end", behavior: "auto" });
+      };
+      pin();
+      requestAnimationFrame(() => {
+        pin();
+        requestAnimationFrame(pin);
+      });
+    }
+
     function showApp() {
       gate.style.display = "none";
       app.style.display = "flex";
@@ -164,10 +410,11 @@
         sessionId = newSessionId();
         localStorage.setItem(STORAGE_SESSION, sessionId);
       }
-      sessionLabel.textContent = "Session: " + sessionId;
+      sessionLabel.textContent = "Play · " + shortSession(sessionId);
       refreshHistory(true);
       if (pollTimer) clearInterval(pollTimer);
       pollTimer = setInterval(() => refreshHistory(false), 3000);
+      input.focus();
     }
 
     async function api(path, opts = {}) {
@@ -183,24 +430,27 @@
       log.innerHTML = "";
       if (!turns.length) {
         const tip = document.createElement("div");
-        tip.className = "bubble meta";
-        tip.textContent = "Bắt đầu nhắn như khách. Follow-up hẹn giờ cũng hiện ở đây (nếu TIMER_SCALE đang test nhanh).";
+        tip.className = "row meta";
+        tip.innerHTML = '<div class="bubble meta">Nhắn như khách trên Messenger. Follow-up hẹn giờ cũng hiện ở đây.</div>';
         log.appendChild(tip);
       }
       for (const t of turns) {
+        const row = document.createElement("div");
+        row.className = "row " + (t.role === "user" ? "user" : "assistant");
         const el = document.createElement("div");
         el.className = "bubble " + (t.role === "user" ? "user" : "assistant");
         el.textContent = t.content;
-        log.appendChild(el);
+        row.appendChild(el);
+        log.appendChild(row);
       }
       if (handoff) {
-        const el = document.createElement("div");
-        el.className = "bubble meta";
-        el.textContent = "🔔 Đã handoff — bot im. Bấm “Chat mới” để thử lại.";
-        log.appendChild(el);
+        const row = document.createElement("div");
+        row.className = "row meta";
+        row.innerHTML = '<div class="bubble meta">Đã handoff — bot im. Bấm “Chat mới” để thử lại.</div>';
+        log.appendChild(row);
       }
-      log.scrollTop = log.scrollHeight;
       knownCount = turns.length;
+      scrollToBottom();
     }
 
     async function refreshHistory(force) {
@@ -231,9 +481,10 @@
     document.getElementById("newChat").onclick = () => {
       sessionId = newSessionId();
       localStorage.setItem(STORAGE_SESSION, sessionId);
-      sessionLabel.textContent = "Session: " + sessionId;
+      sessionLabel.textContent = "Play · " + shortSession(sessionId);
       knownCount = 0;
       renderTurns([], false);
+      input.focus();
     };
 
     form.onsubmit = async (e) => {
@@ -243,6 +494,19 @@
       busy = true;
       sendBtn.disabled = true;
       input.value = "";
+      input.style.height = "auto";
+
+      // Optimistic user bubble so the thread jumps to bottom immediately.
+      const optimistic = document.createElement("div");
+      optimistic.className = "row user";
+      optimistic.innerHTML = "";
+      const b = document.createElement("div");
+      b.className = "bubble user";
+      b.textContent = text;
+      optimistic.appendChild(b);
+      log.appendChild(optimistic);
+      scrollToBottom();
+
       try {
         const data = await api("/api/play/chat", {
           method: "POST",
@@ -251,10 +515,15 @@
         });
         renderTurns(data.turns, data.handedOff);
       } catch (err) {
+        optimistic.remove();
+        const row = document.createElement("div");
+        row.className = "row meta";
         const el = document.createElement("div");
         el.className = "bubble meta";
         el.textContent = "Lỗi: " + err.message;
-        log.appendChild(el);
+        row.appendChild(el);
+        log.appendChild(row);
+        scrollToBottom();
       } finally {
         busy = false;
         sendBtn.disabled = false;
@@ -268,8 +537,11 @@
         form.requestSubmit();
       }
     });
+    input.addEventListener("input", () => {
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 120) + "px";
+    });
 
-    // Skip gate if no secret configured and we already verified, or ?key= present.
     (async () => {
       document.getElementById("secret").value = secret;
       try {
