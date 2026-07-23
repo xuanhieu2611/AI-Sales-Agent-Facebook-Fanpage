@@ -55,7 +55,11 @@ export async function generateReply(psid: string): Promise<Reply> {
   const promoLine = convo.promoDeadline
     ? `Hạn ưu đãi đã chốt cho khách này: ${convo.promoDeadline}. Dùng đúng ngày này khi nhắc ưu đãi.`
     : `Khách này chưa chốt hạn ưu đãi. Nếu báo giá/hạn ưu đãi lần đầu, hạn = hôm nay + 2 ngày (tức ${plusDays(2)}).`;
-  const dateBlock = `Hôm nay là ${today()}. ${promoLine}`;
+  // Ground truth for gift access — model must not invent "đã cấp quyền".
+  const emailLine = convo.accessGrantedAt
+    ? `Hệ thống ĐÃ cấp quyền Drive cho email ${convo.email}. Có thể nói đã cấp quyền.`
+    : `Hệ thống CHƯA cấp quyền (chưa có email hợp lệ dạng tên@domain). TUYỆT ĐỐI KHÔNG nói "đã cấp quyền" / "mình cấp rồi". Nếu đang chờ email mà tin khách không phải địa chỉ email → nhắc gửi lại email.`;
+  const dateBlock = `Hôm nay là ${today()}. ${promoLine}\n${emailLine}`;
 
   const response = await fetch(OPENROUTER_URL, {
     method: "POST",
@@ -91,7 +95,13 @@ export async function generateReply(psid: string): Promise<Reply> {
   const events = [...raw.matchAll(EVENT_RE)].map((m) => m[1] as FunnelEvent);
 
   // Strip every marker before the customer sees it.
-  const text = raw.replaceAll(HANDOFF_MARK, "").replace(EVENT_RE, "").replace(/\s+$/g, "").trim();
+  // Messenger bold is *one* asterisk per side; models often emit Markdown **…**.
+  const text = raw
+    .replaceAll(HANDOFF_MARK, "")
+    .replace(EVENT_RE, "")
+    .replaceAll("**", "*")
+    .replace(/\s+$/g, "")
+    .trim();
 
   return { raw, text, handoff, events: [...new Set(events)] };
 }

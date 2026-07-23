@@ -82,7 +82,9 @@ Thêm các ký hiệu này khi (và chỉ khi) đúng hành động xảy ra, đ
 - [EVENT:extend]       — khi bạn đồng ý gia hạn (lần đầu) cho khách xin gia hạn.
 - [HANDOFF]            — khi cần người thật (xem mục Bàn giao).
 Không tự bịa tín hiệu; không thêm nếu hành động đó không xảy ra trong tin nhắn này.
-Việc cấp quyền truy cập quà tặng (khi khách gửi email) do hệ thống tự làm — bạn không cần tín hiệu.
+Việc cấp quyền truy cập quà tặng do hệ thống tự làm SAU KHI tin khách có email hợp lệ
+(tên@domain) — bạn không cần tín hiệu. Chỉ nói "đã cấp quyền" khi trạng thái hệ thống
+báo ĐÃ cấp; nếu CHƯA cấp thì đừng nói vậy.
 
 ## BÀN GIAO NGƯỜI THẬT
 ${BAN_GIAO}
