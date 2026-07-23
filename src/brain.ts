@@ -11,8 +11,14 @@ const SYSTEM_PROMPT = buildSystemPrompt();
 const HANDOFF_MARK = "[HANDOFF]";
 
 /** System signals the model appends at the end of a reply; stripped before sending. */
-export type FunnelEvent = "course_sent" | "price_quoted" | "trial_sent" | "extend";
-const EVENT_RE = /\[EVENT:(course_sent|price_quoted|trial_sent|extend)\]/g;
+export type FunnelEvent =
+  | "course_sent"
+  | "price_quoted"
+  | "trial_sent"
+  | "extend"
+  | "gift_watched";
+const EVENT_RE =
+  /\[EVENT:(course_sent|price_quoted|trial_sent|extend|gift_watched)\]/g;
 
 export interface Reply {
   raw: string; // full model output incl. markers (stored for context)

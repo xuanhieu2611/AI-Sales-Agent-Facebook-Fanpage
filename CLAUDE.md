@@ -74,7 +74,8 @@ Customer → Messenger → webhook (server.ts) → funnel.ts → brain.ts → Op
   business facts here; read them from `business.ts`.
 - **`src/brain.ts`** — calls OpenRouter (OpenAI-compatible chat completions) with the
   system prompt + this customer's history + a small volatile date block (today / promo
-  deadline). Parses `[HANDOFF]` and `[EVENT:course_sent|trial_sent|price_quoted|extend]`,
+  deadline). Parses `[HANDOFF]` and
+  `[EVENT:course_sent|trial_sent|price_quoted|extend|gift_watched]`,
   strips them, returns `{text, handoff, events}`. Does NOT persist — the funnel does.
 - **`src/funnel.ts`** — orchestrator + the actual state machine. `handleCustomerMessage`
   is the single entry point (server + playground). Captures email (regex) → triggers
@@ -126,9 +127,13 @@ webhook at `https://<ngrok>/webhook`. See README.md "Phần 2" for the full flow
 - Job types map to the script: `GIFT_EXPIRY_20H` → `GIFT_NOREPLY_6H` → `GIFT_COLD_24H`
   (gift chain), `SELL_REACT_6H`, `TRIAL_EXPIRY_20H` → `POSTTRIAL_NOREPLY_6H`,
   `PROMO_DEADLINE_MINUS_1D`. Durations + `TIMER_SCALE` live in `funnel.ts`.
-- Marker set: `[EVENT:course_sent|trial_sent|price_quoted|extend]` + `[HANDOFF]`. If you
-  change them, update BOTH the instruction side (`prompt.ts`) and the parse side
-  (`brain.ts` `EVENT_RE` / `funnel.ts`).
+- Marker set: `[EVENT:course_sent|trial_sent|price_quoted|extend|gift_watched]` +
+  `[HANDOFF]`. If you change them, update BOTH the instruction side (`prompt.ts` /
+  `business.ts`) and the parse side (`brain.ts` `EVENT_RE` / `funnel.ts`).
+- `GIFT_EXPIRY_20H` is a "haven't watched yet" deadline nudge — cancel it on
+  `[EVENT:gift_watched]` or when leaving gift (`course_sent` / `trial_sent` / handoff).
+  Do NOT cancel it on a mere "cảm ơn". Silence nags (`GIFT_NOREPLY_6H`, `SELL_REACT_6H`)
+  stay on the existing reply/stage logic.
 - Promo deadline = first price-quote date + 2 days, stored per-customer in
   `conversations.promo_deadline`; the volatile date block in `brain.ts` feeds it back so
   the model writes the right date. `gia hạn` is enforced once via `gift_extended`/`trial_extended`.

@@ -126,16 +126,21 @@ async function applyEvents(psid: string, events: FunnelEvent[], notices: string[
   const convo = await store.getConversation(psid);
 
   for (const ev of events) {
-    if (ev === "course_sent") {
+    if (ev === "gift_watched") {
+      // Customer has watched / given gift feedback — the "còn 4h hãy xem" nudge is obsolete.
+      // Keep silence nags (GIFT_NOREPLY / SELL_REACT) intact.
+      await store.cancelJobs(psid, ["GIFT_EXPIRY_20H"]);
+      await notice(psid, `[EVENT:gift_watched] → hủy GIFT_EXPIRY_20H`, notices);
+    } else if (ev === "course_sent") {
       await setStage(psid, "selling");
-      await store.cancelJobs(psid, ["SELL_REACT_6H"]);
+      await store.cancelJobs(psid, ["GIFT_EXPIRY_20H", "SELL_REACT_6H"]);
       await store.scheduleJob(psid, "SELL_REACT_6H", inHours(HOURS.SELL_REACT_6H));
-      await notice(psid, `[EVENT:course_sent] → stage selling, hẹn SELL_REACT_6H`, notices);
+      await notice(psid, `[EVENT:course_sent] → stage selling, hủy GIFT_EXPIRY_20H, hẹn SELL_REACT_6H`, notices);
     } else if (ev === "trial_sent") {
       await store.updateConversation(psid, { trialSentAt: new Date(), stage: "trial" });
-      await store.cancelJobs(psid, ["TRIAL_EXPIRY_20H"]);
+      await store.cancelJobs(psid, ["GIFT_EXPIRY_20H", "TRIAL_EXPIRY_20H"]);
       await store.scheduleJob(psid, "TRIAL_EXPIRY_20H", inHours(HOURS.TRIAL_EXPIRY_20H));
-      await notice(psid, `[EVENT:trial_sent] → stage trial, hẹn TRIAL_EXPIRY_20H`, notices);
+      await notice(psid, `[EVENT:trial_sent] → stage trial, hủy GIFT_EXPIRY_20H, hẹn TRIAL_EXPIRY_20H`, notices);
     } else if (ev === "price_quoted") {
       if (!convo.promoDeadline) {
         const deadline = new Date();

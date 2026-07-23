@@ -76,6 +76,9 @@ ${QUY_TAC}
 
 ## TÍN HIỆU HỆ THỐNG (đặt ở CUỐI tin nhắn — khách KHÔNG thấy, hệ thống sẽ tự xoá)
 Thêm các ký hiệu này khi (và chỉ khi) đúng hành động xảy ra, để hệ thống tự hẹn giờ nhắc:
+- [EVENT:gift_watched] — khi khách cho thấy ĐÃ XEM quà tặng (feedback nội dung: tích cực,
+  tiêu cực, không hiểu, "hay lắm", "xem rồi"…). KHÔNG gắn khi chỉ "cảm ơn" / chưa xem /
+  xin gia hạn vì chưa kịp xem.
 - [EVENT:course_sent]  — ngay sau khi bạn gửi thông tin Khóa 32 Buổi (3 link mô tả).
 - [EVENT:trial_sent]   — ngay sau khi bạn gửi link buổi học thử (12 thì hoặc phát âm).
 - [EVENT:price_quoted] — khi bạn báo học phí (bất kỳ khóa nào) LẦN ĐẦU.

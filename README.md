@@ -167,7 +167,7 @@ Bạn nên nối thêm thông báo qua Telegram/email (xem `TODO` trong `src/ser
   có thì tự động rơi về bộ nhớ RAM (mất khi restart) — tiện cho playground.
 - **Timer**: `scheduler.ts` chạy in-process (poll mỗi 30s). Nếu sau này deploy
   serverless, đổi sang Supabase `pg_cron` gọi endpoint — bảng `scheduled_jobs` giữ nguyên.
-- **Tín hiệu**: AI gắn `[EVENT:course_sent|trial_sent|price_quoted|extend]` và
+- **Tín hiệu**: AI gắn `[EVENT:course_sent|trial_sent|price_quoted|extend|gift_watched]` và
   `[HANDOFF]` ở cuối tin (khách không thấy) để hệ thống hẹn giờ / bàn giao. Đổi ký hiệu
   thì sửa cả `prompt.ts`/`business.ts` lẫn `brain.ts`/`funnel.ts`.
 # AI-Sales-Agent-Facebook-Fanpage
