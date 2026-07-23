@@ -24,11 +24,14 @@ export const HOURS = {
 } satisfies Partial<Record<JobType, number>>;
 
 // Jobs that only make sense while the customer is silent — cancelled the moment
-// they send anything.
+// they send anything. Includes the 20h expiry nags so they don't pop mid-chat
+// after the customer already replied (e.g. "đang xem" / feedback).
 const NO_REPLY_JOBS: JobType[] = [
+  "GIFT_EXPIRY_20H",
   "GIFT_NOREPLY_6H",
   "GIFT_COLD_24H",
   "SELL_REACT_6H",
+  "TRIAL_EXPIRY_20H",
   "POSTTRIAL_NOREPLY_6H",
 ];
 
@@ -108,12 +111,7 @@ export async function handleCustomerMessage(
 
   if (reply.handoff) {
     await store.updateConversation(psid, { handedOff: true, stage: "handed_off" });
-    await store.cancelJobs(psid, [
-      ...NO_REPLY_JOBS,
-      "GIFT_EXPIRY_20H",
-      "TRIAL_EXPIRY_20H",
-      "PROMO_DEADLINE_MINUS_1D",
-    ]);
+    await store.cancelJobs(psid, [...NO_REPLY_JOBS, "PROMO_DEADLINE_MINUS_1D"]);
     await notice(psid, "🔔 [Đã đánh dấu cần người thật] — bot im, chờ bạn xử lý", notices);
   }
 

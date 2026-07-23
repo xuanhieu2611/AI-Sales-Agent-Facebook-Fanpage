@@ -72,8 +72,10 @@ async function runJob(store: Store, send: Sender, job: ScheduledJob): Promise<vo
 
   switch (job.jobType) {
     case "GIFT_EXPIRY_20H": {
-      // Only relevant while still in the gift phase.
-      if (c.stage !== "gift") return void (await store.finishJob(job.id, "skipped"));
+      // Only relevant while still in the gift phase and still silent.
+      if (c.stage !== "gift" || !stillSilent(c, job)) {
+        return void (await store.finishJob(job.id, "skipped"));
+      }
       await deliver(store, send, job.psid, "GIFT_EXPIRY_20H");
       await store.scheduleJob(job.psid, "GIFT_NOREPLY_6H", inHours(HOURS.GIFT_NOREPLY_6H));
       break;
@@ -95,6 +97,7 @@ async function runJob(store: Store, send: Sender, job: ScheduledJob): Promise<vo
       break;
     }
     case "TRIAL_EXPIRY_20H": {
+      if (!stillSilent(c, job)) return void (await store.finishJob(job.id, "skipped"));
       await deliver(store, send, job.psid, "TRIAL_EXPIRY_20H");
       await store.updateConversation(job.psid, { stage: "post_trial" });
       await store.scheduleJob(job.psid, "POSTTRIAL_NOREPLY_6H", inHours(HOURS.POSTTRIAL_NOREPLY_6H));
