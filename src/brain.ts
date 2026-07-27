@@ -4,8 +4,6 @@ import { getStore } from "./state.js";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const MODEL = process.env.MODEL || "deepseek/deepseek-v4-flash";
 
-// remove this line
-
 // Built once; the sales script is a stable prefix (kept separate from the
 // per-request date block below so the prompt stays easy to reason about).
 const SYSTEM_PROMPT = buildSystemPrompt();
