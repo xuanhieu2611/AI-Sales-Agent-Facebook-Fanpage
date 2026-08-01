@@ -56,6 +56,14 @@ recurring pitfalls — not every minor thing._
   they don't fit.)
 - **Model IDs must be full OpenRouter slugs** (`deepseek/deepseek-v4-flash`,
   `anthropic/claude-haiku-4.5`) — short names 404.
+- **Vietnamese needs `line-height` ≥ ~1.2 on headings.** Vietnamese stacks two
+  levels of marks (`ế` `ỗ` `ữ`), so ascenders run much taller than English. Below
+  ~1.2 the next line's marks collide into the line above and get clipped — it
+  looks exactly like a broken font missing its diacritics, and you will waste an
+  hour blaming the font. The trap: Tailwind's `text-5xl`/`text-4xl`/… utilities
+  ship their own `line-height: 1`, which overrides any base rule in `globals.css`
+  — so every heading using `text-*` needs an explicit `leading-*` next to it.
+  (Verified on the landing page: 1.12 broke, 1.22 is clean.)
 
 ## Architecture
 
@@ -95,6 +103,23 @@ Customer → Messenger → webhook (server.ts) → funnel.ts → brain.ts → Op
   requires < 5s). If a conversation is `handedOff`, the bot stays silent. On boot it
   connects the DB and starts the scheduler.
 - **`src/playground.ts`** — local terminal chat to test the brain without Facebook.
+
+### `web/` — the ads landing page (separate project)
+
+Next.js 16 + Tailwind v4, deployed separately (Vercel). Ad traffic lands here, then
+converts to Messenger (`m.me`) or a phone-number form. See `web/README.md`.
+
+- Deliberately **not** gift-first: the old funnel paid for clicks with a free Drive
+  video behind an email gate, which selected for freebie hunters. The page delivers
+  that proof openly (method breakdown, video previews, feedback wall) and asks for a
+  consult instead. The trial lesson is a secondary CTA, below pricing.
+- All copy/prices live in `web/lib/site.ts` (+ `web/lib/translations.ts` for the
+  hero demo). Components read from those — don't hardcode business facts in JSX.
+- Lead form → `web/app/api/lead/route.ts` → Apps Script → Google Sheet
+  (`apps-script/leads/`). Separate from the gift-access Apps Script.
+- **Note:** landing-page visitors arrive mid-funnel, not at "nhắn Ngữ Pháp xin quà".
+  `business.ts` GIAI ĐOẠN 0 still assumes the gift opener — worth revisiting when
+  this page goes live.
 
 ## Commands
 
