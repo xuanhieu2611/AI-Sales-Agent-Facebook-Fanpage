@@ -20,6 +20,31 @@ export type FunnelEvent =
 const EVENT_RE =
   /\[EVENT:(course_sent|price_quoted|trial_sent|extend|gift_watched)\]/g;
 
+/**
+ * The owner does not want the bot saying "Dạ" or the deferential particle "ạ"
+ * (too subservient — not their voice). QUY_TAC tells the model that; this is the
+ * deterministic backstop for slips.
+ *
+ * "Dạ" is only stripped as an opener (start of message/line, or after . ! ? …) —
+ * "Dạ vâng", "Dạ ạ", "Dạ," included — then what follows is re-capitalised.
+ * "ạ" is stripped anywhere it stands as its own syllable ("vâng ạ" → "vâng",
+ * "đúng không ạ?" → "đúng không?"); the lookarounds keep "dạy", "bạn", "ạvv"
+ * and friends intact.
+ */
+const DA_OPENER_RE =
+  /(^|\n|(?<=[.!?…]\s))[ \t]*dạ(?!\p{L})(?:\s+(?:vâng|vầng|ạ))*[\s,.!]*(\p{L})?/giu;
+const A_PARTICLE_RE = /[ \t]*(?<!\p{L})ạ(?!\p{L})/giu;
+
+function stripDa(s: string): string {
+  const out = s
+    .replace(DA_OPENER_RE, (_m, pre: string, letter?: string) =>
+      `${pre ?? ""}${letter ? letter.toUpperCase() : ""}`,
+    )
+    .replace(A_PARTICLE_RE, "");
+  // If the whole reply was just "Dạ vâng ạ", keep something sendable.
+  return out.trim() ? out : "Ok bạn nha 😊";
+}
+
 export interface Reply {
   raw: string; // full model output incl. markers (stored for context)
   text: string; // cleaned text to send to the customer
@@ -92,10 +117,12 @@ export async function generateReply(psid: string): Promise<Reply> {
     );
   }
 
-  const raw = (data.choices?.[0]?.message?.content ?? "").trim();
-  if (!raw) {
+  const modelOutput = (data.choices?.[0]?.message?.content ?? "").trim();
+  if (!modelOutput) {
     throw new Error("OpenRouter returned an empty completion");
   }
+  // Scrub "Dạ" before storing too, so the history doesn't reinforce the habit.
+  const raw = stripDa(modelOutput);
 
   const handoff = raw.includes(HANDOFF_MARK);
   const events = [...raw.matchAll(EVENT_RE)].map((m) => m[1] as FunnelEvent);
