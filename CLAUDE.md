@@ -143,6 +143,12 @@ webhook at `https://<ngrok>/webhook`. See README.md "Phần 2" for the full flow
   `VERIFY_TOKEN`, `MODEL`, `PORT`. Never commit them or print token values.
 - Replies should read like real short chat messages (2–4 sentences) — the prompt
   enforces this; don't loosen it without reason.
+- **Anti-echo:** the model tends to re-append its standing pitch (promo deadline +
+  cọc 300k, "xem xong nhắn feedback nha") in consecutive messages. `QUY_TAC` forbids
+  it; `dropEchoes` in `brain.ts` is the deterministic backstop — it drops sentences
+  ≥6 tokens that are ≥0.6 Jaccard-similar to the previous assistant message, skipping
+  the whole check when the customer's last message looks like a question. History
+  stores the deduped text (+ markers), so a dropped echo can't return as context.
 
 ## Timers, markers & the state machine (added in the funnel build)
 

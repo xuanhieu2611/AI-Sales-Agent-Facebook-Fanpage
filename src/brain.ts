@@ -45,6 +45,74 @@ function stripDa(s: string): string {
   return out.trim() ? out : "Ok bạn nha 😊";
 }
 
+/**
+ * Anti-echo backstop. The model likes to re-append its standing pitch verbatim
+ * ("Nhớ là ưu đãi còn đến ngày X…", "xem xong nhắn mình feedback nha") in the very
+ * next reply, so two consecutive bot messages say the same thing. QUY_TAC tells it
+ * not to; this drops the leftovers deterministically.
+ *
+ * Only compares against the ONE previous assistant message, only drops sentences
+ * that are long enough to be real content, and backs off entirely when the customer
+ * just asked something — a repeat is then an answer, not an echo.
+ */
+const SENTENCE_RE = /[^.!?…\n]+[.!?…]*/g;
+const QUESTION_RE = /\?|(^|\s)(gì|nào|sao|mấy|đâu|bao nhiêu|thế nào|khi nào|hả)(\s|$|,|\?)/i;
+
+function stripMarkers(s: string): string {
+  return s.replaceAll(HANDOFF_MARK, "").replace(EVENT_RE, "").trim();
+}
+
+function tokens(s: string): Set<string> {
+  return new Set(
+    s
+      .toLowerCase()
+      .replace(/[^\p{L}\p{N}\/]+/gu, " ") // keep dates like 04/08/2026 intact
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean),
+  );
+}
+
+function similarity(a: Set<string>, b: Set<string>): number {
+  if (!a.size || !b.size) return 0;
+  let shared = 0;
+  for (const t of a) if (b.has(t)) shared++;
+  return shared / (a.size + b.size - shared); // Jaccard
+}
+
+const ECHO_THRESHOLD = 0.6;
+const MIN_ECHO_TOKENS = 6; // "Ok bạn nha" repeating is fine; a whole pitch is not
+
+export function dropEchoes(text: string, prevAssistant: string, lastUser: string): string {
+  if (!prevAssistant.trim() || QUESTION_RE.test(lastUser)) return text;
+
+  const prevSentences = (prevAssistant.match(SENTENCE_RE) ?? [])
+    .map(tokens)
+    .filter((t) => t.size >= MIN_ECHO_TOKENS);
+  if (!prevSentences.length) return text;
+
+  const kept = text
+    .split("\n")
+    .map((line) => {
+      const sentences = line.match(SENTENCE_RE) ?? [];
+      return sentences
+        .map((s) => s.trim())
+        .filter((s) => {
+          const t = tokens(s);
+          if (t.size < MIN_ECHO_TOKENS) return true;
+          return !prevSentences.some((p) => similarity(t, p) >= ECHO_THRESHOLD);
+        })
+        .join(" ")
+        .trim();
+    })
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  // Whole reply was an echo → a short ack beats sending the same message twice.
+  return kept || "Ok bạn nha 😊";
+}
+
 export interface Reply {
   raw: string; // full model output incl. markers (stored for context)
   text: string; // cleaned text to send to the customer
@@ -122,19 +190,30 @@ export async function generateReply(psid: string): Promise<Reply> {
     throw new Error("OpenRouter returned an empty completion");
   }
   // Scrub "Dạ" before storing too, so the history doesn't reinforce the habit.
-  const raw = stripDa(modelOutput);
+  const cleaned = stripDa(modelOutput);
 
-  const handoff = raw.includes(HANDOFF_MARK);
-  const events = [...raw.matchAll(EVENT_RE)].map((m) => m[1] as FunnelEvent);
+  const handoff = cleaned.includes(HANDOFF_MARK);
+  const events = [...new Set([...cleaned.matchAll(EVENT_RE)].map((m) => m[1] as FunnelEvent))];
 
   // Strip every marker before the customer sees it.
   // Messenger bold is *one* asterisk per side; models often emit Markdown **…**.
-  const text = raw
+  const stripped = cleaned
     .replaceAll(HANDOFF_MARK, "")
     .replace(EVENT_RE, "")
     .replaceAll("**", "*")
     .replace(/\s+$/g, "")
     .trim();
 
-  return { raw, text, handoff, events: [...new Set(events)] };
+  const prevAssistant = stripMarkers(
+    [...turns].reverse().find((t) => t.role === "assistant")?.content ?? "",
+  );
+  const lastUser = [...turns].reverse().find((t) => t.role === "user")?.content ?? "";
+  const text = dropEchoes(stripped, prevAssistant, lastUser);
+
+  // History stores what the customer actually saw + the signals, so a dropped echo
+  // can't come back as context on the next turn.
+  const markers = [...events.map((e) => `[EVENT:${e}]`), ...(handoff ? [HANDOFF_MARK] : [])];
+  const raw = markers.length ? `${text} ${markers.join(" ")}` : text;
+
+  return { raw, text, handoff, events };
 }
