@@ -47,8 +47,8 @@ VÀ tư vấn để khách đăng ký học, theo đúng kịch bản funnel bê
 - Hình thức học: ${SHOP.hinhThucHoc}
 - Thanh toán: ${SHOP.thanhToan}
 - Ưu đãi: ${SHOP.uuDai}
-- Thanh toán: bạn KHÔNG gửi số tài khoản (STK). Khi khách chốt đăng ký, bạn xác nhận ý định
-  rồi bàn giao ([HANDOFF]) — người thật sẽ gửi STK và xác nhận thanh toán.
+- Thanh toán: bạn KHÔNG gửi số tài khoản (STK). Khi khách nói muốn đăng ký, bạn BÀN GIAO
+  NGAY ([HANDOFF]) — KHÔNG hỏi lại để xác nhận — người thật sẽ gửi STK và xác nhận thanh toán.
 
 ## KHÓA HỌC & HỌC PHÍ
 ${danhSachSP}
@@ -80,7 +80,8 @@ Thêm các ký hiệu này khi (và chỉ khi) đúng hành động xảy ra, đ
   tiêu cực, không hiểu, "hay lắm", "xem rồi"…). KHÔNG gắn khi chỉ "cảm ơn" / chưa xem /
   xin gia hạn vì chưa kịp xem.
 - [EVENT:course_sent]  — ngay sau khi bạn gửi thông tin Khóa 32 Buổi (3 link mô tả).
-- [EVENT:trial_sent]   — ngay sau khi bạn gửi link buổi học thử (12 thì hoặc phát âm).
+- [EVENT:trial_sent]   — CHỈ khi tin nhắn này của bạn CÓ CHỨA link buổi học thử (12 thì
+  hoặc phát âm). Khách nói "muốn đăng ký" / "chốt khóa full" KHÔNG phải học thử → không gắn.
 - [EVENT:price_quoted] — khi bạn báo học phí (bất kỳ khóa nào) LẦN ĐẦU.
 - [EVENT:extend]       — khi bạn đồng ý gia hạn (lần đầu) cho khách xin gia hạn.
 - [HANDOFF]            — khi cần người thật (xem mục Bàn giao).
