@@ -1,6 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
-import { ANH } from "@/lib/site";
+import { ANH, KENH, KENH_URL } from "@/lib/site";
 
 export function About() {
   return (
@@ -49,6 +51,73 @@ export function About() {
             </div>
           </Reveal>
         </div>
+
+        {/* Bằng chứng khách tự đi kiểm chứng được. Mọi thứ phía trên trang này
+            là bên mình tự nói về mình; khối này chỉ vào một đống nội dung công
+            khai đã nằm sẵn ngoài kia từ nhiều năm. Với khách lạ, đây là chỗ
+            chuyển từ "nghe hay đấy" sang "ừ, có thật". */}
+        <Reveal>
+          <div className="mt-16 rounded-2xl border border-line bg-paper-2/60 p-7 sm:p-10">
+            <div className="flex flex-col gap-3 border-b border-line pb-7 sm:flex-row sm:items-end sm:justify-between sm:gap-8">
+              <div className="flex max-w-[44ch] flex-col gap-2">
+                <h3 className="text-[1.5rem] leading-[1.28] text-ink sm:text-[1.8rem]">
+                  {KENH.soNoiDung} nội dung miễn phí, đăng công khai.
+                </h3>
+                <p className="text-[0.97rem] leading-relaxed text-muted">
+                  Không cần tin lời bên mình. Mở kênh ra xem thử vài video rồi
+                  hẵng quyết định có nên nhắn tin hay không.
+                </p>
+              </div>
+
+              <div className="flex shrink-0 flex-col gap-1">
+                <span className="font-display text-3xl font-extrabold tracking-tight text-ink">
+                  {KENH.soFollower}
+                </span>
+                <span className="text-sm text-muted">người theo dõi</span>
+              </div>
+            </div>
+
+            <div className="mt-7 grid gap-8 sm:grid-cols-2 sm:gap-12">
+              <div className="flex flex-col gap-3">
+                <span className="eyebrow text-muted/70">Danh sách phát</span>
+                <ul className="flex flex-wrap gap-2">
+                  {KENH.danhSachPhat.map((d) => (
+                    <li
+                      key={d}
+                      className="rounded-full border border-line bg-surface px-3.5 py-1.5 text-sm text-ink-soft"
+                    >
+                      {d}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <span className="eyebrow text-brand">Bài học quà tặng, miễn phí</span>
+                <ul className="flex flex-col gap-1.5">
+                  {KENH.quaTang.map((q) => (
+                    <li key={q} className="text-[0.95rem] leading-snug text-ink-soft">
+                      {q}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Link chỉ hiện khi đã điền KENH_URL — link rỗng còn tệ hơn không có link */}
+            {KENH_URL && (
+              <Link
+                href={KENH_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center gap-1.5 text-[0.95rem] font-semibold text-brand underline-offset-4 hover:underline"
+              >
+                Xem kênh English with Bubby
+                <ArrowUpRight weight="bold" aria-hidden className="h-4 w-4" />
+              </Link>
+            )}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

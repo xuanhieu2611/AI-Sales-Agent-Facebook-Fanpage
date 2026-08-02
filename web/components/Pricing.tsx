@@ -30,8 +30,11 @@ export function Pricing() {
                       {UU_DAI.nhan}
                     </span>
                   )}
+                  {/* min-h = đúng 2 dòng. Tên khóa dài ngắn khác nhau, không
+                      chốt chiều cao thì giá của ba thẻ lệch nhau theo bậc
+                      thang khi xếp ngang — nhìn như trang bị vỡ. */}
                   <h3
-                    className={`text-xl leading-[1.3] ${
+                    className={`text-xl leading-[1.3] lg:min-h-[3.25rem] ${
                       k.noiBat ? "text-white" : "text-ink"
                     }`}
                   >
@@ -63,6 +66,16 @@ export function Pricing() {
                       {k.giaGoc}
                     </span>
                   </div>
+                  {/* Quy ra giá một buổi. "2tr5" làm khách khựng lại, "78k/buổi"
+                      thì so được với một bữa ăn — cùng một số tiền, khác nhau ở
+                      chỗ khách có đọc tiếp hay không. */}
+                  <span
+                    className={`font-display text-[0.95rem] font-bold tracking-tight ${
+                      k.noiBat ? "text-mark" : "text-brand"
+                    }`}
+                  >
+                    {k.giaMoiBuoi}
+                  </span>
                   <span
                     className={`font-mono text-xs ${
                       k.noiBat ? "text-white/75" : "text-muted"

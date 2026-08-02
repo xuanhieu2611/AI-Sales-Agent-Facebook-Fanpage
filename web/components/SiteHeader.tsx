@@ -1,5 +1,19 @@
+import Link from "next/link";
 import { Button, CTA, MessengerIcon } from "./ui";
 import { CONTACT, MESSENGER_URL } from "@/lib/site";
+
+/**
+ * Bốn mục thôi. Trang này là một mạch đọc từ trên xuống, thanh điều hướng
+ * chỉ để khách đã xem rồi quay lại tìm đúng chỗ — không phải mục lục đầy đủ.
+ * Liệt kê hết mọi mục là mời khách nhảy thẳng xuống giá trước khi kịp thấy
+ * lý do vì sao đáng tiền.
+ */
+const DE_MUC = [
+  { nhan: "Lộ trình", href: "#lo-trinh" },
+  { nhan: "Mô hình lớp", href: "#mo-hinh" },
+  { nhan: "Feedback", href: "#feedback" },
+  { nhan: "Học phí", href: "#hoc-phi" },
+];
 
 /**
  * Thanh đầu trang, dính theo khi cuộn. Trước đây nút nhắn tin chỉ nằm ở
@@ -13,6 +27,20 @@ export function SiteHeader() {
         <span className="font-display text-base font-extrabold tracking-tight text-ink sm:text-lg">
           {CONTACT.pageName}
         </span>
+
+        {/* Ẩn dưới lg: trên điện thoại chỗ đâu mà để, và khách điện thoại
+            cuộn chứ không dùng menu. */}
+        <nav className="hidden items-center gap-8 lg:flex">
+          {DE_MUC.map((m) => (
+            <Link
+              key={m.href}
+              href={m.href}
+              className="text-sm font-medium text-muted transition-colors hover:text-brand"
+            >
+              {m.nhan}
+            </Link>
+          ))}
+        </nav>
 
         <Button
           href={MESSENGER_URL}

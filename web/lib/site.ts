@@ -17,6 +17,21 @@ export const MESSENGER_URL = "https://m.me/englishwithbubby";
 // đăng, video, feedback rồi quay lại sau.
 export const FANPAGE_URL = "https://facebook.com/englishwithbubby";
 
+// Kênh video (nơi có sẵn 150+ nội dung miễn phí). Đây là bằng chứng khách
+// tự đi kiểm chứng được, mạnh hơn mọi lời quảng cáo trên trang này.
+// TODO(chủ shop): dán link kênh thật vào. Để trống thì trang vẫn chạy,
+// chỉ là mấy chỗ nhắc tới kênh sẽ không bấm được.
+// `: string` là cố ý — không có nó thì TypeScript suy ra kiểu là hằng chuỗi
+// rỗng, và mọi chỗ kiểm tra `KENH_URL && ...` bị coi là luôn sai ngay lúc
+// biên dịch. Điền link thật vào là hết, nhưng cứ để đó cho chắc.
+export const KENH_URL: string = "";
+
+// Zalo và số điện thoại. Để trống cái nào thì cái đó tự ẩn khỏi trang —
+// đừng để link rỗng, khách bấm vào không ra gì là mất tin ngay.
+// TODO(chủ shop): điền số thật. Link Zalo có dạng https://zalo.me/84xxxxxxxxx
+export const ZALO_URL: string = "";
+export const SO_DIEN_THOAI: string = "";
+
 export const CONTACT = {
   gioLamViec: "9h tới 21h mỗi ngày",
   pageName: "English with Bubby",
@@ -29,6 +44,38 @@ export const UU_DAI = {
   moTa: "Giữ giá ưu đãi bằng cọc 300k nếu bạn chưa sắp xếp kịp học phí.",
 };
 
+// ── VÌ SAO HỌC MÃI VẪN KHÔNG HIỆU QUẢ ────────────────────────────────
+// Sáu cái gốc rễ, khác với mấy câu "triệu chứng" trong components/Problem.tsx.
+// Triệu chứng là cái khách CẢM THẤY, mấy cái dưới đây là cái khách CHƯA BIẾT
+// — đọc xong thì câu hỏi tiếp theo trong đầu họ đúng là "vậy phải học sao",
+// và đó là mục Phương pháp ngay bên dưới.
+export const LY_DO_THAT_BAI = [
+  {
+    ten: "Học không có đích",
+    moTa: "Không rõ mình cần tới đâu, nên cũng không có chiến lược nào cho vừa.",
+  },
+  {
+    ten: "Ôm hết mọi thứ",
+    moTa: "Không lọc được cái nào cần, cái nào bỏ được. Học nhiều mà không tới đâu.",
+  },
+  {
+    ten: "Không biết học để làm gì",
+    moTa: "Học ngữ pháp, học IPA, học thì — nhưng không ai nói rõ mấy thứ đó dùng vào lúc nào.",
+  },
+  {
+    ten: "Thuộc mẹo, không hiểu bản chất",
+    moTa: "Mẹo chỉ đúng trong đúng cái ví dụ đó. Ra câu khác là đứng hình lại.",
+  },
+  {
+    ten: "Biết mà không dùng được",
+    moTa: "Thiếu tư duy thực chiến, nên kiến thức nằm trong vở chứ không thành phản xạ.",
+  },
+  {
+    ten: "Không ai sửa cho",
+    moTa: "Tự học thì sai vẫn tưởng đúng, lặp lại đủ lâu thì thành thói quen khó gỡ.",
+  },
+];
+
 // ── KHÓA HỌC ─────────────────────────────────────────────────────────
 export type Khoa = {
   id: string;
@@ -36,6 +83,9 @@ export type Khoa = {
   tomTat: string;
   giaSale: string;
   giaGoc: string;
+  /** Giá quy ra một buổi. "2tr5" nghe to, "80k/buổi" nghe vừa túi — cùng một
+   *  số tiền. Nhớ tính lại mỗi lần đổi giá, sai chỗ này là mất uy tín. */
+  giaMoiBuoi: string;
   buoi: string;
   coaching: string;
   gomCo: string[];
@@ -50,6 +100,7 @@ export const KHOA_HOC: Khoa[] = [
     tomTat: "Sửa gốc phát âm để người ta nghe ra bạn đang nói gì.",
     giaSale: "500.000đ",
     giaGoc: "800.000đ",
+    giaMoiBuoi: "63k/buổi",
     buoi: "8 buổi",
     coaching: "1 tháng coaching 1-1",
     gomCo: [
@@ -67,6 +118,7 @@ export const KHOA_HOC: Khoa[] = [
       "Trọn bộ nền tảng: phát âm, từ vựng, kỹ năng dịch, giao tiếp thực chiến.",
     giaSale: "2.500.000đ",
     giaGoc: "3.200.000đ",
+    giaMoiBuoi: "78k/buổi",
     buoi: "32 buổi",
     coaching: "9 tháng coaching 1-1",
     gomCo: [
@@ -80,10 +132,11 @@ export const KHOA_HOC: Khoa[] = [
   },
   {
     id: "dich",
-    ten: "Khóa Kỹ Năng Dịch",
+    ten: "Khóa Kỹ Năng Dịch & Xây Vốn Từ",
     tomTat: "Phần lõi: xử lý chỗ tiếng Việt và tiếng Anh lệch nhau.",
     giaSale: "1.700.000đ",
     giaGoc: "2.100.000đ",
+    giaMoiBuoi: "81k/buổi",
     buoi: "21 buổi",
     coaching: "5 tháng coaching 1-1",
     gomCo: [
@@ -135,6 +188,30 @@ export const LO_TRINH = [
 ];
 
 export const TONG_BUOI = LO_TRINH.reduce((sum, phan) => sum + phan.buoi, 0);
+
+// ── KÊNH ENGLISH WITH BUBBY ─────────────────────────────────────────
+// Cái này để trong mục "Về Bubby". Nó trả lời câu hỏi thầm trong đầu khách
+// lạ: "ông này có thật không, hay lập page hôm qua để bán khóa?" — 150+ nội
+// dung miễn phí đăng công khai nhiều năm là câu trả lời không cãi được.
+//
+// TODO(chủ shop): cập nhật lại con số follower mỗi khi tròn mốc mới.
+export const KENH = {
+  soFollower: "70k+",
+  soNoiDung: "150+",
+  /** Các danh sách phát trên kênh — cho thấy nội dung có hệ thống, không đăng lẻ. */
+  danhSachPhat: ["Ngữ Pháp", "Phát Âm", "Từ Vựng & Luyện Dịch", "Tips Học Hữu Ích"],
+  /**
+   * Bài học quà tặng chuyên sâu, miễn phí, KHÔNG đổi email.
+   * Cố ý để ở đây như bằng chứng "bên này cho đi thật", chứ không dựng thành
+   * một cái phễu bắt điền email — phễu đó kéo về toàn người săn đồ free.
+   */
+  quaTang: [
+    "Phương pháp học ngữ pháp hiệu quả",
+    "Cách ghi nhớ các âm trong IPA",
+    "Ghi nhớ 12 thì trong 1 giờ",
+    "Phương pháp học từ vựng hiệu quả",
+  ],
+};
 
 // ── ẢNH ─────────────────────────────────────────────────────────────
 // Bỏ file ảnh thật vào web/public/img/ rồi sửa đường dẫn ở đây.
@@ -224,9 +301,12 @@ export const FAQ = [
 ];
 
 // ── THÔNG SỐ TIN CẬY ────────────────────────────────────────────────
+// Bốn con số này cố ý chọn loại khách TỰ ĐI KIỂM CHỨNG ĐƯỢC: mở kênh ra là
+// thấy follower và số video. Mấy chỉ số tự khen ("coaching 1-1", "giáo án tự
+// nghiên cứu") đã có nguyên một mục nói rồi, nhét lên đây chỉ loãng.
 export const CHI_SO = [
   { so: "10 năm", nhan: "kinh nghiệm xây gốc tiếng Anh" },
+  { so: `${KENH.soFollower}`, nhan: "người theo dõi kênh English with Bubby" },
+  { so: `${KENH.soNoiDung}`, nhan: "nội dung miễn phí cho người mất gốc" },
   { so: "VSTEP C1", nhan: "trung bình 8.5 cả 4 kỹ năng" },
-  { so: "1-1", nhan: "Bubby trực tiếp sửa từng bài" },
-  { so: `${TONG_BUOI} buổi`, nhan: "giáo án tự nghiên cứu, không đi mượn" },
 ];

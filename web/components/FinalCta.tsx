@@ -1,7 +1,13 @@
 import { LeadForm } from "./LeadForm";
 import { Reveal } from "./Reveal";
 import { Button, CTA, Eyebrow, MessengerIcon } from "./ui";
-import { CONTACT, FANPAGE_URL, MESSENGER_URL } from "@/lib/site";
+import {
+  CONTACT,
+  FANPAGE_URL,
+  MESSENGER_URL,
+  SO_DIEN_THOAI,
+  ZALO_URL,
+} from "@/lib/site";
 
 /**
  * Khối chốt. Đây là chỗ DUY NHẤT trên trang đảo sang nền màu đậm — cả
@@ -40,6 +46,33 @@ export function FinalCta() {
                 {CTA.fanpage}
               </Button>
             </div>
+
+            {/* Kênh phụ cho khách ngại Messenger — nhiều người Việt nhắn Zalo
+                quen tay hơn. Cố ý để dạng link chữ, không phải nút: thêm nút
+                thứ ba ở đây là bắt khách phải chọn, mà Messenger mới là chỗ
+                bot trả lời được ngay. Chưa điền số thì cả dòng tự ẩn. */}
+            {(ZALO_URL || SO_DIEN_THOAI) && (
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.95rem]">
+                {ZALO_URL && (
+                  <a
+                    href={ZALO_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-white underline-offset-4 hover:underline"
+                  >
+                    Nhắn Zalo
+                  </a>
+                )}
+                {SO_DIEN_THOAI && (
+                  <a
+                    href={`tel:${SO_DIEN_THOAI.replace(/[^\d+]/g, "")}`}
+                    className="font-semibold text-white underline-offset-4 hover:underline"
+                  >
+                    Gọi {SO_DIEN_THOAI}
+                  </a>
+                )}
+              </div>
+            )}
 
             <p className="font-mono text-xs text-white/60">
               {CONTACT.pageName} · trả lời {CONTACT.gioLamViec}

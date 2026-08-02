@@ -79,6 +79,13 @@
     text-wrap: pretty;
   }
 
+  /* Thanh đầu trang dính cao 4rem. Không có dòng này thì bấm link trong
+     thanh điều hướng sẽ cuộn tới đúng chỗ nhưng tiêu đề mục nằm KHUẤT
+     dưới thanh — khách tưởng bấm hụt. */
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+
   :focus-visible {
     outline: 3px solid var(--color-brand);
     outline-offset: 3px;
