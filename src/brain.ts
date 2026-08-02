@@ -131,8 +131,50 @@ function plusDays(days: number): string {
 }
 
 interface ChatCompletionResponse {
-  choices?: Array<{ message?: { content?: string | null } }>;
+  choices?: Array<{
+    message?: { content?: string | null };
+    finish_reason?: string | null;
+  }>;
+  usage?: { completion_tokens_details?: { reasoning_tokens?: number } };
   error?: { message?: string };
+}
+
+// Reasoning-capable models (deepseek-v4-flash) burn part of max_tokens on an
+// internal reasoning trace before the visible reply. On complex multi-branch
+// prompts that trace has been observed up to ~1600-1900 tokens combined with
+// the reply; 3072 leaves comfortable headroom. `reasoning.max_tokens` is NOT
+// a reliable cap (verified empirically: model still exceeded a 200-token cap)
+// so we don't rely on it — a generous max_tokens is the real safety margin.
+const MAX_TOKENS = 3072;
+// Same call, once, for the truncation retry — kept separate so the retry can
+// hand it a fresh/bigger budget without duplicating the whole request setup.
+const RETRY_MAX_TOKENS = 4096;
+const TRUNCATION_FALLBACK_TEXT =
+  "Để mình kiểm tra lại và phản hồi bạn sớm nhất nha 😊";
+
+async function callOpenRouter(
+  apiKey: string,
+  messages: unknown[],
+  maxTokens: number,
+): Promise<ChatCompletionResponse> {
+  const response = await fetch(OPENROUTER_URL, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": "https://englishwithbubby.com",
+      "X-Title": "English with Bubby Messenger Agent",
+    },
+    body: JSON.stringify({ model: MODEL, max_tokens: maxTokens, messages }),
+  });
+
+  const data = (await response.json()) as ChatCompletionResponse;
+  if (!response.ok) {
+    throw new Error(
+      `OpenRouter ${response.status}: ${data.error?.message ?? JSON.stringify(data)}`,
+    );
+  }
+  return data;
 }
 
 /**
@@ -160,29 +202,35 @@ export async function generateReply(psid: string): Promise<Reply> {
     : `Hệ thống CHƯA cấp quyền (chưa có email hợp lệ dạng tên@domain). TUYỆT ĐỐI KHÔNG nói "đã cấp quyền" / "mình cấp rồi". Nếu đang chờ email mà tin khách không phải địa chỉ email → nhắc gửi lại email.`;
   const dateBlock = `Hôm nay là ${today()}. ${promoLine}\n${emailLine}`;
 
-  const response = await fetch(OPENROUTER_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://englishwithbubby.com",
-      "X-Title": "English with Bubby Messenger Agent",
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 1024,
-      messages: [
-        { role: "system", content: `${SYSTEM_PROMPT}\n\n${dateBlock}` },
-        ...turns,
-      ],
-    }),
-  });
+  const messages = [
+    { role: "system", content: `${SYSTEM_PROMPT}\n\n${dateBlock}` },
+    ...turns,
+  ];
 
-  const data = (await response.json()) as ChatCompletionResponse;
-  if (!response.ok) {
-    throw new Error(
-      `OpenRouter ${response.status}: ${data.error?.message ?? JSON.stringify(data)}`,
+  let data = await callOpenRouter(apiKey, messages, MAX_TOKENS);
+  let truncated = data.choices?.[0]?.finish_reason === "length";
+  if (truncated) {
+    const reasoningTokens = data.usage?.completion_tokens_details?.reasoning_tokens;
+    console.warn(
+      `⚠️ OpenRouter truncated reply (finish_reason=length, reasoning_tokens=${reasoningTokens}) — retrying with a bigger budget`,
     );
+    data = await callOpenRouter(apiKey, messages, RETRY_MAX_TOKENS);
+    truncated = data.choices?.[0]?.finish_reason === "length";
+  }
+
+  if (truncated) {
+    // Both attempts got cut off. Markers are appended at the END of a reply,
+    // so a truncated string can't be trusted for events, and a partial
+    // sentence isn't safe to show a real customer — hand off instead of
+    // guessing. This mirrors what funnel.ts/server.ts already do for a
+    // model-issued [HANDOFF], so no changes are needed there.
+    console.error("🔔 OpenRouter truncated reply twice — forcing handoff");
+    return {
+      raw: `${TRUNCATION_FALLBACK_TEXT} ${HANDOFF_MARK}`,
+      text: TRUNCATION_FALLBACK_TEXT,
+      handoff: true,
+      events: [],
+    };
   }
 
   const modelOutput = (data.choices?.[0]?.message?.content ?? "").trim();
