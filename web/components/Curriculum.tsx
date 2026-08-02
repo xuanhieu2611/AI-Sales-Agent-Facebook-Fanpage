@@ -8,13 +8,12 @@ import { LO_TRINH, TONG_BUOI } from "@/lib/site";
  */
 export function Curriculum() {
   return (
-    <section id="lo-trinh" className="border-b border-line py-24 sm:py-32">
+    <section id="lo-trinh" className="border-y border-line bg-surface py-24 sm:py-32">
       <div className="shell">
         <Reveal>
           <SectionHead
-            eyebrow={`Lộ trình ${TONG_BUOI} buổi`}
             title="Bốn phần, và một phần chiếm hơn nửa lộ trình."
-            lead="Giáo án do Bubby tự nghiên cứu và thiết kế trong 10 năm. Tỉ lệ dưới đây là cố ý: kỹ năng dịch Việt → Anh mới là chỗ quyết định bạn có nói được hay không."
+            lead={`Tỉ lệ ${TONG_BUOI} buổi dưới đây là cố ý: kỹ năng dịch mới là chỗ quyết định bạn có nói được hay không.`}
           />
         </Reveal>
 
@@ -25,10 +24,8 @@ export function Curriculum() {
               <div
                 key={p.ten}
                 style={{ flexGrow: p.buoi }}
-                title={`${p.ten} — ${p.buoi} buổi`}
-                className={`rounded-full ${
-                  i === 2 ? "bg-brand" : "bg-ink/15"
-                }`}
+                title={`${p.ten}: ${p.buoi} buổi`}
+                className={`rounded-full ${i === 2 ? "bg-brand" : "bg-ink/12"}`}
               />
             ))}
           </div>

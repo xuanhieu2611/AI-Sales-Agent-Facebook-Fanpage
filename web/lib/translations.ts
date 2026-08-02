@@ -3,7 +3,7 @@
  *
  * Mỗi ví dụ là một lỗi có thật mà người Việt hay mắc khi dịch từng chữ một.
  * `literal` được cắt thành từng token; token nào `bad: true` sẽ được gạch
- * chân bằng nét sửa màu cam.
+ * chân bằng nét sửa màu đỏ.
  */
 
 export type Token = { t: string; bad?: boolean };
@@ -30,7 +30,7 @@ export const VI_DU: ViDu[] = [
     dung: "I've been working here for three years.",
     loai: "THÌ",
     giaiThich:
-      "Tiếng Việt không chia thì — chữ “rồi” gánh hết nghĩa hoàn thành. Tiếng Anh bắt buộc phải đổi hình thức động từ, và cần “for” trước khoảng thời gian.",
+      "Tiếng Việt không chia thì, chữ “rồi” gánh hết nghĩa hoàn thành. Tiếng Anh bắt buộc phải đổi hình thức động từ, và cần “for” trước khoảng thời gian.",
   },
   {
     vi: "Hôm qua tôi rất vui.",
@@ -44,7 +44,7 @@ export const VI_DU: ViDu[] = [
     dung: "I was really happy yesterday.",
     loai: "CÂU",
     giaiThich:
-      "Tiếng Việt nói thẳng “tôi vui”, không cần động từ. Tiếng Anh thì tính từ phải đi sau “to be” — và “to be” đó còn phải chia quá khứ.",
+      "Tiếng Việt nói thẳng “tôi vui”, không cần động từ. Tiếng Anh thì tính từ phải đi sau “to be”, và “to be” đó còn phải chia quá khứ.",
   },
   {
     vi: "Tôi không biết anh ấy đang ở đâu.",
@@ -70,6 +70,6 @@ export const VI_DU: ViDu[] = [
     dung: "How much is this shirt?",
     loai: "TỪ",
     giaiThich:
-      "“Tiền” trong tiếng Việt không dịch sang tiếng Anh — nó đã nằm sẵn trong “how much”. Dịch đủ chữ là thừa chữ.",
+      "“Tiền” trong tiếng Việt không dịch sang tiếng Anh, nó đã nằm sẵn trong “how much”. Dịch đủ chữ là thừa chữ.",
   },
 ];

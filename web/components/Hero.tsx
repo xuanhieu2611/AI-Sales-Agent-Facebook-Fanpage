@@ -1,88 +1,78 @@
-import { TranslateDemo } from "./TranslateDemo";
-import { Button, MessengerIcon } from "./ui";
-import { CHI_SO, MESSENGER_URL, TONG_BUOI } from "@/lib/site";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { YouTubeLite } from "./YouTubeLite";
+import { Button, CTA, Mark, MessengerIcon } from "./ui";
+import { MESSENGER_URL, VIDEO } from "@/lib/site";
 
+/**
+ * Đầu trang kiểu "xem video trước".
+ *
+ * Chữ ở đây chỉ có đúng ba việc: chặn khách lại, nói trong một câu bên
+ * mình chữa cái gì, rồi đẩy mắt xuống video. Mọi thứ còn lại để video nói.
+ * Đừng thêm đoạn văn nào vào khối này — thêm chữ ở đây là đẩy video
+ * xuống dưới màn hình, mà video mới là thứ giữ chân khách.
+ */
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-ink pt-8 pb-20 sm:pb-24">
-      {/* lưới rất mờ — gợi giấy kẻ ô, không phải hiệu ứng tech */}
+    <section className="relative overflow-hidden pb-16 sm:pb-20">
+      {/* vệt sáng xanh rất nhạt phía sau, để nền giấy không phẳng lì */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.045] [background-image:linear-gradient(to_right,white_1px,transparent_1px),linear-gradient(to_bottom,white_1px,transparent_1px)] [background-size:56px_56px]"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[34rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand-soft/70 blur-[120px]"
       />
 
-      <div className="shell relative">
-        {/* thanh điều hướng tối giản */}
-        <header className="flex items-center justify-between py-5">
-          <span className="font-display text-lg font-extrabold tracking-tight text-white">
-            English with Bubby
+      <div className="shell relative flex flex-col items-center pt-10 text-center sm:pt-14">
+        {/* Mốc cho StickyCta: thanh nút dưới màn hình hiện lên khi khối
+            chữ này trôi khỏi tầm nhìn, tức là đúng lúc khách bắt đầu xem
+            video. Đừng bọc cả video vào đây. */}
+        <div id="dau-trang" className="flex flex-col items-center gap-6">
+          <span className="eyebrow inline-flex w-fit items-center rounded-full border border-brand/25 bg-brand-soft/60 px-3.5 py-1.5 text-brand">
+            Coaching 1-1 · Xây gốc tiếng Anh
           </span>
-          <Button
-            href={MESSENGER_URL}
-            external
-            variant="outlineInk"
-            className="px-5 py-2.5 text-sm"
-          >
-            <MessengerIcon className="h-4 w-4" />
-            Nhắn tin
-          </Button>
-        </header>
 
-        <div className="grid items-start gap-12 pt-12 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:pt-20">
-          {/* ── cột trái: luận điểm ── */}
-          <div className="flex flex-col gap-7">
-            <span className="eyebrow inline-flex w-fit items-center gap-2 rounded-full border border-line-ink bg-white/5 px-3.5 py-1.5 text-muted-ink">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden />
-              Coaching 1-1 · Xây gốc tiếng Anh
-            </span>
+          {/* leading-[1.2]: xem ghi chú dấu tiếng Việt trong globals.css.
+              Vệt bút vàng làm lỗi cắt dấu lộ ra rõ hơn nữa.
 
-            <h1 className="text-[2.5rem] leading-[1.18] text-white sm:text-[3.4rem] lg:text-[3.9rem]">
-              Bạn không dở tiếng Anh.
-              <br />
-              <span className="text-brand-soft">
-                Bạn đang dịch từng chữ một.
-              </span>
-            </h1>
+              <br /> là cố ý: để chữ tự xuống dòng thì nó ngắt thành
+              "…dở tiếng / Anh." và cắt đúng giữa một cụm từ. Dấu chấm
+              cuối nằm TRONG <Mark> vì padding của vệt bút đẩy nó ra xa,
+              trông như bị lạc mất một khoảng trắng. */}
+          <h1 className="text-[2.1rem] leading-[1.2] text-ink sm:text-[2.9rem] lg:text-[3.4rem]">
+            Bạn không dở tiếng Anh.
+            <br />
+            Bạn đang <Mark>dịch từng chữ một.</Mark>
+          </h1>
 
-            <p className="max-w-[46ch] text-lg leading-relaxed text-muted-ink">
-              Đọc thì hiểu, mà tới lúc nói là đứng hình — vì tiếng Việt và
-              tiếng Anh lệch nhau ở ba chỗ:{" "}
-              <strong className="font-semibold text-white">Từ</strong>,{" "}
-              <strong className="font-semibold text-white">Câu</strong> và{" "}
-              <strong className="font-semibold text-white">Thì</strong>. Lộ trình{" "}
-              {TONG_BUOI} buổi của Bubby xử lý đúng ba chỗ đó, không dạy lan man.
-            </p>
-
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={MESSENGER_URL} external>
-                <MessengerIcon className="h-5 w-5" />
-                Nhắn tin nhận tư vấn lộ trình
-              </Button>
-              <Button href="#dang-ky" variant="outlineInk">
-                Để lại số điện thoại
-              </Button>
-            </div>
-
-            <p className="font-mono text-xs text-muted-ink/70">
-              Tư vấn miễn phí · Bubby trả lời trực tiếp 9h–21h
-            </p>
-          </div>
-
-          {/* ── cột phải: chứng minh ── */}
-          <TranslateDemo />
+          <p className="max-w-[52ch] text-lg leading-relaxed text-muted">
+            Đọc thì hiểu, tới lúc nói là đứng hình. Bên mình sửa đúng chỗ đó,
+            bằng giáo án xây gốc 32 buổi và coaching 1-1 với Bubby.
+          </p>
         </div>
 
-        {/* dải số liệu */}
-        <dl className="mt-16 grid grid-cols-2 gap-x-6 gap-y-8 border-t border-line-ink pt-10 lg:grid-cols-4">
-          {CHI_SO.map((c) => (
-            <div key={c.nhan} className="flex flex-col gap-1.5">
-              <dt className="font-display text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                {c.so}
-              </dt>
-              <dd className="text-sm leading-snug text-muted-ink">{c.nhan}</dd>
-            </div>
-          ))}
-        </dl>
+        {/* Lời nhắc bấm play — khách lạ cần được chỉ việc phải làm tiếp.
+            Giữ NGẮN: font mono rất rộng, câu dài là xuống hai dòng trên
+            điện thoại và mũi tên bị bỏ lại một mình ở dòng dưới. */}
+        <p className="mt-10 flex items-center gap-2 font-mono text-[0.8rem] text-brand sm:text-sm">
+          Xem 2 phút để biết bên mình dạy kiểu gì
+          <CaretDown weight="bold" aria-hidden className="h-4 w-4 shrink-0" />
+        </p>
+
+        <div className="mt-5 w-full max-w-3xl">
+          <YouTubeLite
+            id={VIDEO.gioiThieu}
+            title="English with Bubby dạy kiểu gì"
+            priority
+          />
+        </div>
+
+        <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <Button href={MESSENGER_URL} external>
+            <MessengerIcon className="h-5 w-5" />
+            {CTA.nhanTin}
+          </Button>
+          <Button href="#dang-ky" variant="outline">
+            {CTA.deLaiSo}
+          </Button>
+        </div>
       </div>
     </section>
   );

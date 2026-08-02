@@ -30,11 +30,11 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "English with Bubby — Xây gốc tiếng Anh, coaching 1-1",
+  title: "English with Bubby: Xây gốc tiếng Anh, coaching 1-1",
   description:
     "Người Việt nói tiếng Anh bị khựng vì dịch từng chữ một. Lộ trình 32 buổi coaching 1-1 của Bubby xử lý đúng ba chỗ tiếng Việt và tiếng Anh lệch nhau: Từ, Câu, Thì.",
   openGraph: {
-    title: "English with Bubby — Xây gốc tiếng Anh, coaching 1-1",
+    title: "English with Bubby: Xây gốc tiếng Anh, coaching 1-1",
     description:
       "Bạn không dở tiếng Anh. Bạn đang dịch từng chữ một. Lộ trình 32 buổi coaching 1-1 với Bubby.",
     type: "website",
@@ -43,7 +43,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0f1218",
+  // Trùng với --color-paper. Trang chỉ có một tông sáng duy nhất nên
+  // không khai báo biến thể tối ở đây.
+  themeColor: "#eef2f9",
 };
 
 export default function RootLayout({

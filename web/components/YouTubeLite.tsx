@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { Play } from "@phosphor-icons/react/dist/ssr";
 
 /**
  * Facade cho YouTube: chỉ tải ảnh thumbnail, tới khi bấm mới nhúng iframe.
@@ -12,16 +13,19 @@ export function YouTubeLite({
   id,
   title,
   className = "",
+  priority = false,
 }: {
   id: string;
   title: string;
   className?: string;
+  /** Bật cho video đầu trang để ảnh thumbnail tải sớm. */
+  priority?: boolean;
 }) {
   const [choi, setChoi] = useState(false);
 
   return (
     <div
-      className={`group relative aspect-video w-full overflow-hidden rounded-2xl border border-line-ink bg-ink-2 ${className}`}
+      className={`group relative aspect-video w-full overflow-hidden rounded-2xl border border-line bg-paper-2 ${className}`}
     >
       {choi ? (
         <iframe
@@ -42,23 +46,17 @@ export function YouTubeLite({
             src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
             alt=""
             fill
+            priority={priority}
             sizes="(max-width: 768px) 100vw, 640px"
             className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
-          <span className="absolute inset-0 bg-ink/30 transition-colors duration-300 group-hover:bg-ink/15" />
           {/* thumbnail có thể sáng màu (vd. ảnh chụp tài liệu) — cần lớp
               tối chân ảnh thì tiêu đề trắng mới đọc được */}
-          <span className="absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-ink/90 to-transparent" />
+          <span className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-ink/90 via-ink/45 to-transparent" />
 
           <span className="absolute inset-0 grid place-items-center">
             <span className="grid h-16 w-16 place-items-center rounded-full bg-white/95 shadow-lg transition-transform duration-300 group-hover:scale-110">
-              <svg
-                viewBox="0 0 24 24"
-                aria-hidden
-                className="ml-1 h-6 w-6 fill-ink"
-              >
-                <path d="M8 5.14v13.72L19 12 8 5.14Z" />
-              </svg>
+              <Play weight="fill" className="ml-0.5 h-6 w-6 text-brand" />
             </span>
           </span>
 

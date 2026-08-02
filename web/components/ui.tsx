@@ -1,7 +1,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-/* ── Messenger glyph ──────────────────────────────────────────────── */
+/* ── Messenger glyph ───────────────────────────────────────────────
+   Đây là logo thương hiệu của Messenger, không phải icon giao diện,
+   nên vẽ tay là đúng. Mọi icon còn lại trên trang lấy từ Phosphor. */
 export function MessengerIcon({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" aria-hidden className={className} fill="currentColor">
@@ -10,22 +12,36 @@ export function MessengerIcon({ className = "" }: { className?: string }) {
   );
 }
 
-/* ── Buttons ──────────────────────────────────────────────────────── */
+/* ── Nhãn CTA ──────────────────────────────────────────────────────
+   Mỗi hành động CHỈ có một cách gọi tên trên toàn trang. Khách đọc
+   lướt, thấy ba cách gọi khác nhau cho cùng một nút thì phải dừng lại
+   nghĩ xem chúng có khác nhau không. Đừng thêm nhãn mới ở đây. */
+export const CTA = {
+  nhanTin: "Nhắn tin tư vấn",
+  deLaiSo: "Để lại số điện thoại",
+  fanpage: "Xem thêm trên Fanpage",
+} as const;
+
+/* ── Buttons ──────────────────────────────────────────────────────
+   Nút không bao giờ dùng màu pastel. Pastel trên nút trông như nút
+   bị khoá, khách không bấm. Pastel để làm nền, xanh đậm để bấm. */
 type ButtonProps = {
   href: string;
   children: ReactNode;
-  variant?: "primary" | "ink" | "outline" | "outlineInk";
+  /** `onBrand` / `outlineOnBrand` chỉ dùng trên nền xanh đậm. */
+  variant?: "primary" | "outline" | "onBrand" | "outlineOnBrand";
   className?: string;
   external?: boolean;
 };
 
 const VARIANTS = {
   primary:
-    "bg-brand text-white hover:bg-brand-deep shadow-[0_10px_30px_-12px_rgba(58,49,232,0.85)]",
-  ink: "bg-white text-ink hover:bg-white/90",
-  outline: "border border-ink/20 text-ink hover:border-ink/50 hover:bg-ink/5",
-  outlineInk:
-    "border border-white/25 text-white hover:border-white/60 hover:bg-white/10",
+    "bg-brand text-white hover:bg-brand-deep shadow-[0_10px_24px_-14px_rgba(42,95,217,0.9)]",
+  outline:
+    "border border-ink/15 bg-surface text-ink hover:border-brand/50 hover:bg-brand-soft/50",
+  onBrand: "bg-white text-brand hover:bg-mark hover:text-ink",
+  outlineOnBrand:
+    "border border-white/45 text-white hover:border-white hover:bg-white/10",
 } as const;
 
 export function Button({
@@ -36,7 +52,7 @@ export function Button({
   external,
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-[0.95rem] font-semibold transition-all duration-200 active:scale-[0.98]";
+    "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap transition-all duration-200 active:scale-[0.98]";
   const props = external
     ? { target: "_blank", rel: "noopener noreferrer" }
     : {};
@@ -48,22 +64,32 @@ export function Button({
   );
 }
 
-/* ── Section scaffolding ──────────────────────────────────────────── */
+/* ── Vệt bút dạ quang ─────────────────────────────────────────────
+   Dùng để tô sáng đúng MỘT cụm từ trong một tiêu đề. Tô nhiều chỗ
+   thì thành ra không tô chỗ nào. */
+export function Mark({ children }: { children: ReactNode }) {
+  return <span className="highlight">{children}</span>;
+}
+
+/* ── Section scaffolding ──────────────────────────────────────────
+   `eyebrow` cố tình là tuỳ chọn và rất ít khi dùng. Nhãn nhỏ in hoa
+   trên mọi tiêu đề làm cả trang có cùng một nhịp, đọc rất máy móc.
+   Cả trang chỉ dùng 4 cái. */
 export function Eyebrow({
   children,
-  onInk = false,
+  onBrand = false,
 }: {
   children: ReactNode;
-  onInk?: boolean;
+  onBrand?: boolean;
 }) {
   return (
     <span
       className={`eyebrow inline-flex items-center gap-2 ${
-        onInk ? "text-muted-ink" : "text-brand"
+        onBrand ? "text-white/70" : "text-brand"
       }`}
     >
       <span
-        className={`h-px w-6 ${onInk ? "bg-line-ink" : "bg-brand/40"}`}
+        className={`h-px w-6 ${onBrand ? "bg-white/40" : "bg-brand/40"}`}
         aria-hidden
       />
       {children}
@@ -75,13 +101,13 @@ export function SectionHead({
   eyebrow,
   title,
   lead,
-  onInk = false,
+  onBrand = false,
   align = "left",
 }: {
   eyebrow?: string;
   title: ReactNode;
   lead?: ReactNode;
-  onInk?: boolean;
+  onBrand?: boolean;
   align?: "left" | "center";
 }) {
   return (
@@ -90,13 +116,13 @@ export function SectionHead({
         align === "center" ? "items-center text-center" : "items-start"
       }`}
     >
-      {eyebrow && <Eyebrow onInk={onInk}>{eyebrow}</Eyebrow>}
+      {eyebrow && <Eyebrow onBrand={onBrand}>{eyebrow}</Eyebrow>}
       {/* leading-[1.22] là bắt buộc: utility text-5xl của Tailwind kèm sẵn
           line-height:1, đè lên rule chung — mà 1.0 thì dấu tiếng Việt của
           dòng dưới đâm lên dòng trên. */}
       <h2
-        className={`max-w-[19ch] text-[2.1rem] leading-[1.22] sm:text-5xl lg:text-[3.4rem] ${
-          onInk ? "text-white" : "text-ink"
+        className={`max-w-[19ch] text-[2.1rem] leading-[1.22] sm:text-5xl lg:text-[3.2rem] ${
+          onBrand ? "text-white" : "text-ink"
         }`}
       >
         {title}
@@ -104,7 +130,7 @@ export function SectionHead({
       {lead && (
         <p
           className={`max-w-[52ch] text-[1.05rem] leading-relaxed ${
-            onInk ? "text-muted-ink" : "text-muted"
+            onBrand ? "text-white/75" : "text-muted"
           }`}
         >
           {lead}

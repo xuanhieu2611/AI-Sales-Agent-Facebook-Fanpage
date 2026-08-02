@@ -1,11 +1,10 @@
 import Image from "next/image";
 import { Reveal } from "./Reveal";
-import { Eyebrow } from "./ui";
 import { ANH } from "@/lib/site";
 
 export function About() {
   return (
-    <section id="ve-bubby" className="border-b border-line py-24 sm:py-32">
+    <section id="ve-bubby" className="border-y border-line bg-surface py-24 sm:py-32">
       <div className="shell">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
           <Reveal>
@@ -20,36 +19,26 @@ export function About() {
                 />
               </div>
               <figcaption className="font-mono text-xs text-muted">
-                Bubby · giảng viên & người trực tiếp coaching
+                Bubby, giảng viên và người trực tiếp coaching
               </figcaption>
             </figure>
           </Reveal>
 
           <Reveal>
             <div className="flex flex-col gap-7">
-              <Eyebrow>Người dạy bạn</Eyebrow>
-
               <h2 className="max-w-[18ch] text-[2.1rem] leading-[1.22] text-ink sm:text-5xl">
                 10 năm để viết ra một giáo án không đi mượn.
               </h2>
 
-              <div className="flex flex-col gap-5 text-[1.05rem] leading-relaxed text-muted">
-                <p>
-                  Bubby dạy tiếng Anh 10 năm, chuyên xây gốc và giao tiếp thực
-                  chiến, đạt trình độ{" "}
-                  <strong className="font-semibold text-ink">
-                    C1 kỳ thi VSTEP với điểm trung bình 8.5 cả 4 kỹ năng
-                  </strong>
-                  .
-                </p>
-                <p>
-                  Suốt 10 năm đó, Bubby tập trung nghiên cứu và thiết kế một
-                  giáo án riêng cho người mất gốc: đi trực diện vào các kiến
-                  thức nền tảng cốt lõi, rồi liên kết chúng lại thành kỹ năng
-                  nói — thay vì dạy rời rạc từng mảng như chương trình thông
-                  thường.
-                </p>
-              </div>
+              <p className="max-w-[54ch] text-[1.05rem] leading-relaxed text-muted">
+                Bubby dạy tiếng Anh 10 năm, chuyên xây gốc và giao tiếp thực
+                chiến, đạt{" "}
+                <strong className="font-semibold text-ink">
+                  C1 kỳ thi VSTEP, trung bình 8.5 cả 4 kỹ năng
+                </strong>
+                . Cả 10 năm đó dùng để viết một giáo án riêng cho người mất
+                gốc, thay vì dạy rời rạc từng mảng như chương trình thường.
+              </p>
 
               <blockquote className="border-l-2 border-brand pl-6">
                 <p className="font-display text-xl leading-[1.35] font-bold tracking-tight text-ink sm:text-2xl">

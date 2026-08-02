@@ -51,14 +51,13 @@ export function LeadForm() {
 
   if (trangThai === "xong") {
     return (
-      <div className="flex flex-col gap-3 rounded-2xl border border-line-ink bg-ink-2 p-8">
-        <span className="eyebrow text-brand-soft">Đã nhận</span>
-        <p className="font-display text-2xl font-extrabold tracking-tight text-white">
+      <div className="flex flex-col gap-3 rounded-xl border border-brand/25 bg-brand-soft/50 p-6">
+        <p className="font-display text-xl font-extrabold tracking-tight text-ink">
           Cảm ơn {ten.split(" ").slice(-1)[0]} nha!
         </p>
-        <p className="text-[0.95rem] leading-relaxed text-muted-ink">
-          Bubby sẽ gọi lại cho bạn trong khung 9h–21h. Nếu bạn muốn được tư vấn
-          ngay bây giờ thì cứ nhắn qua Messenger nha.
+        <p className="text-[0.95rem] leading-relaxed text-muted">
+          Bubby sẽ gọi lại cho bạn trong khung 9h tới 21h. Nếu bạn muốn được tư
+          vấn ngay bây giờ thì cứ nhắn qua Messenger nha.
         </p>
       </div>
     );
@@ -66,12 +65,12 @@ export function LeadForm() {
 
   const dangGui = trangThai === "dang-gui";
   const oInput =
-    "w-full rounded-xl border border-line-ink bg-ink-2 px-4 py-3.5 text-white placeholder:text-muted-ink/50 transition-colors focus:border-brand focus:outline-none";
+    "w-full rounded-xl border border-line bg-paper/60 px-4 py-3.5 text-ink placeholder:text-muted transition-colors focus:border-brand focus:bg-surface focus:outline-none";
 
   return (
     <form onSubmit={guiDi} noValidate className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="ten" className="eyebrow text-muted-ink">
+        <label htmlFor="ten" className="eyebrow text-muted">
           Tên của bạn
         </label>
         <input
@@ -86,7 +85,7 @@ export function LeadForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="sdt" className="eyebrow text-muted-ink">
+        <label htmlFor="sdt" className="eyebrow text-muted">
           Số điện thoại
         </label>
         <input
@@ -103,8 +102,8 @@ export function LeadForm() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="khoa" className="eyebrow text-muted-ink">
-          Bạn đang quan tâm khóa nào <span className="normal-case">(không bắt buộc)</span>
+        <label htmlFor="khoa" className="eyebrow text-muted">
+          Khóa quan tâm <span className="normal-case">(không bắt buộc)</span>
         </label>
         <select
           id="khoa"
@@ -131,12 +130,12 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={dangGui}
-        className="mt-1 inline-flex items-center justify-center rounded-full bg-brand px-6 py-3.5 text-[0.95rem] font-semibold text-white transition-all duration-200 hover:bg-brand-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-1 inline-flex items-center justify-center rounded-full bg-brand px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap text-white transition-all duration-200 hover:bg-brand-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {dangGui ? "Đang gửi…" : "Gửi số cho Bubby gọi lại"}
       </button>
 
-      <p className="font-mono text-xs leading-relaxed text-muted-ink/60">
+      <p className="font-mono text-xs leading-relaxed text-muted">
         Số của bạn chỉ dùng để tư vấn khóa học. Không gửi cho bên thứ ba.
       </p>
     </form>

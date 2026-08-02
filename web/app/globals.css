@@ -1,35 +1,55 @@
 @import "tailwindcss";
 
 /* ────────────────────────────────────────────────────────────────
-   Design tokens — "mực & giấy"
-   Cool paper, ink-black hero, electric indigo = action / "đúng",
-   rust = the correction marks. Two accents, each with a job.
+   Design tokens — "giấy xanh & bút dạ quang"
+   Nền giấy xanh pastel, chữ mực navy, xanh đậm = hành động,
+   vàng dạ quang = chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
+
+   BẢNG MÀU — mỗi màu một nhiệm vụ, không dùng lẫn:
+     brand (xanh đậm)  → nút bấm, link, chỗ đúng
+     mark  (vàng)      → tô sáng chỗ quan trọng, nền dải nhấn
+     flag  (đỏ)        → CHỈ dùng cho nét gạch chân chỗ sai
    ──────────────────────────────────────────────────────────────── */
 @theme {
-  --color-paper: #f2f3f7;
+  /* nền & mực */
+  --color-paper: #eef2f9;
+  --color-paper-2: #e3ebf7;
   --color-surface: #ffffff;
-  --color-ink: #0f1218;
-  --color-ink-2: #171b24;
-  --color-ink-3: #222834;
-  --color-muted: #5f6879;
-  --color-muted-ink: #97a0b2;
-  --color-brand: #3a31e8;
-  --color-brand-deep: #2a22c4;
-  --color-brand-soft: #e9e8fe;
-  --color-flag: #d2502a;
-  --color-flag-soft: #fbe9e2;
-  --color-line: #e0e3ea;
-  --color-line-ink: #2a3040;
+  --color-ink: #16233f;
+  --color-ink-soft: #33415e;
+  --color-muted: #516080;
+
+  /* hành động */
+  --color-brand: #2a5fd9;
+  --color-brand-deep: #1c46a8;
+  --color-brand-soft: #dae5fb;
+
+  /* nhấn mạnh */
+  --color-mark: #ffd75e;
+  --color-mark-soft: #fff3cd;
+
+  /* nét sửa lỗi — không dùng cho việc gì khác */
+  --color-flag: #c9453a;
+
+  --color-line: #d9e2f0;
 
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bevietnam), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
 
+/* ────────────────────────────────────────────────────────────────
+   HỆ BO GÓC — một hệ duy nhất cho cả trang, đừng trộn:
+     nút bấm, chip, badge   → rounded-full
+     thẻ, khối lớn, ảnh     → rounded-2xl  (16px)
+     ô nhập liệu, ảnh nhỏ   → rounded-xl   (12px)
+   ──────────────────────────────────────────────────────────────── */
+
 @layer base {
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    background: var(--color-paper);
   }
 
   body {
@@ -66,8 +86,8 @@
   }
 
   ::selection {
-    background: var(--color-brand);
-    color: #fff;
+    background: var(--color-mark);
+    color: var(--color-ink);
   }
 }
 
@@ -114,14 +134,31 @@
   }
 }
 
-/* The one hand-drawn mark in an otherwise precise page: the
-   correction squiggle under a mistranslated token. */
+/* Nét gạch chân bút đỏ dưới chỗ dịch sai. Đây là chỗ DUY NHẤT
+   trên trang dùng màu đỏ — nó có nghĩa "chỗ này sai". */
 @utility squiggle {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3E%3Cpath d='M0 4.2c1.5-2.8 3-2.8 4.5 0S9 7 10.5 4.2' fill='none' stroke='%23d2502a' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3E%3Cpath d='M0 4.2c1.5-2.8 3-2.8 4.5 0S9 7 10.5 4.2' fill='none' stroke='%23c9453a' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: repeat-x;
   background-position: 0 100%;
   background-size: 12px 6px;
   padding-bottom: 5px;
+}
+
+/* Vệt bút dạ quang vàng sau chữ. Vẽ bằng gradient nên nó ôm sát chân
+   chữ như tô tay, không phải một khối chữ nhật phẳng. */
+@utility highlight {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 12%,
+    var(--color-mark) 12%,
+    var(--color-mark) 92%,
+    transparent 92%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding-inline: 0.15em;
 }
 
 @media (prefers-reduced-motion: reduce) {

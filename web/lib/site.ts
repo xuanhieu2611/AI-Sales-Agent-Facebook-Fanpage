@@ -1,8 +1,8 @@
 /**
  * ╔══════════════════════════════════════════════════════════════════╗
  * ║  FILE BẠN CHỈNH SỬA cho trang landing.                            ║
- * ║  Giá, link, ưu đãi, thông tin liên hệ — sửa ở đây, không sửa      ║
- * ║  trong các file giao diện.                                        ║
+ * ║  Giá, link, ưu đãi, thông tin liên hệ, feedback học viên          ║
+ * ║  sửa ở đây, không sửa trong các file giao diện.                   ║
  * ║  Chỗ nào còn [ĐIỀN...] là chỗ cần điền thông tin thật vào.        ║
  * ╚══════════════════════════════════════════════════════════════════╝
  */
@@ -13,8 +13,12 @@
 // rồi ghép thành https://m.me/englishwithbubby
 export const MESSENGER_URL = "https://m.me/englishwithbubby";
 
+// Link Fanpage. Khách nào chưa sẵn sàng nhắn tin thì qua đây xem thêm bài
+// đăng, video, feedback rồi quay lại sau.
+export const FANPAGE_URL = "https://facebook.com/englishwithbubby";
+
 export const CONTACT = {
-  gioLamViec: "9h – 21h mỗi ngày",
+  gioLamViec: "9h tới 21h mỗi ngày",
   pageName: "English with Bubby",
 };
 
@@ -49,7 +53,7 @@ export const KHOA_HOC: Khoa[] = [
     buoi: "8 buổi",
     coaching: "1 tháng coaching 1-1",
     gomCo: [
-      "Hệ thống ký hiệu mặt chữ – số do Bubby tự nghiên cứu",
+      "Hệ thống ký hiệu mặt chữ và số do Bubby tự nghiên cứu",
       "Cách kết hợp âm, nối âm trong tiếng Anh",
       "Luyện ngữ điệu và luyện giọng",
       "Cách nhớ phát âm của từ nhiều âm tiết",
@@ -58,7 +62,7 @@ export const KHOA_HOC: Khoa[] = [
   },
   {
     id: "full",
-    ten: "Khóa Full — Xây Gốc + Giao Tiếp",
+    ten: "Khóa Full: Xây Gốc + Giao Tiếp",
     tomTat:
       "Trọn bộ nền tảng: phát âm, từ vựng, kỹ năng dịch, giao tiếp thực chiến.",
     giaSale: "2.500.000đ",
@@ -66,7 +70,7 @@ export const KHOA_HOC: Khoa[] = [
     buoi: "32 buổi",
     coaching: "9 tháng coaching 1-1",
     gomCo: [
-      "Cả 4 phần của lộ trình — không thiếu mảng nào",
+      "Cả 4 phần của lộ trình, không thiếu mảng nào",
       "Bubby sửa bài 1-1 chi tiết suốt khóa",
       "Hỗ trợ cọc 300k giữ giá ưu đãi",
       "Học linh hoạt theo giờ rảnh của bạn",
@@ -83,9 +87,9 @@ export const KHOA_HOC: Khoa[] = [
     buoi: "21 buổi",
     coaching: "5 tháng coaching 1-1",
     gomCo: [
-      "Xây dựng vốn từ + phản xạ từ vựng",
-      "Quy trình dịch Việt → Anh đầy đủ các bước",
-      "Ngữ pháp theo 3 phân khúc: Từ – Câu – Thì",
+      "Xây dựng vốn từ và phản xạ từ vựng",
+      "Quy trình dịch Việt sang Anh đầy đủ các bước",
+      "Ngữ pháp theo 3 phân khúc: Từ, Câu, Thì",
       "Tận dụng vốn từ sẵn có thay vì tra từ điển",
     ],
     videoId: "MMDzjWAL9ao",
@@ -93,8 +97,16 @@ export const KHOA_HOC: Khoa[] = [
 ];
 
 // ── VIDEO ────────────────────────────────────────────────────────────
+// `gioiThieu` NẰM NGAY TRONG PHẦN ĐẦU TRANG, ngay dưới câu tiêu đề. Đây
+// là thứ quan trọng nhất trên cả trang: khách lạ xem nó để biết bên mình
+// là ai và dạy kiểu gì, thay vì phải đọc.
+//
+// TODO(chủ shop): quay một video giới thiệu riêng, dài 60 tới 90 giây,
+// CÓ PHỤ ĐỀ CHÁY SẴN TRONG VIDEO (phần lớn khách xem trên điện thoại và
+// tắt tiếng). Xong thì thay ID bên dưới. Tạm thời đang dùng video mô hình
+// lớp cho khỏi trống chỗ.
 export const VIDEO = {
-  moHinhCoaching: "3D_fUgUmIAk",
+  gioiThieu: "3D_fUgUmIAk",
   moTaKhoaFull: "kpnz_RE1bPg",
 };
 
@@ -103,22 +115,22 @@ export const LO_TRINH = [
   {
     ten: "Phát âm",
     buoi: 8,
-    moTa: "Ghi nhớ và phát âm đúng bằng hệ thống ký hiệu mặt chữ – số riêng của Bubby, liên kết được với IPA. Kèm 2 buổi luyện ngữ điệu và luyện giọng.",
+    moTa: "Hệ thống ký hiệu mặt chữ và số riêng của Bubby, liên kết được với IPA. Kèm 2 buổi luyện ngữ điệu.",
   },
   {
     ten: "Kỹ năng học từ vựng",
     buoi: 2,
-    moTa: "Một routine tự học từ vựng mỗi ngày: xây vốn từ thực chiến, ghi nhớ, đặt câu, tạo phản xạ, và lọc – quản lý từ đã học.",
+    moTa: "Một routine tự học mỗi ngày: xây vốn từ, ghi nhớ, đặt câu, tạo phản xạ.",
   },
   {
-    ten: "Kỹ năng dịch Việt → Anh",
+    ten: "Kỹ năng dịch Việt sang Anh",
     buoi: 18,
-    moTa: "Phần lõi của giáo án. Xử lý các điểm khác biệt quan trọng giữa hai ngôn ngữ trong ba phân khúc Từ – Câu – Thì, cho tới khi bạn dịch được bất kỳ câu nào.",
+    moTa: "Phần lõi. Xử lý ba chỗ hai ngôn ngữ lệch nhau, cho tới khi bạn dịch được bất kỳ câu nào.",
   },
   {
     ten: "Giao tiếp thực chiến",
     buoi: 4,
-    moTa: "Đưa kỹ năng dịch vào nói trực tiếp: xử lý thông tin trong thời gian ngắn, quy trình luyện nói, tự sửa sai và luyện lại cho đúng.",
+    moTa: "Đưa kỹ năng dịch vào nói thật: xử lý nhanh, luyện nói, tự sửa sai.",
   },
 ];
 
@@ -132,8 +144,46 @@ export const ANH = {
 };
 
 // ── FEEDBACK HỌC VIÊN ───────────────────────────────────────────────
-// Ảnh đặt trong web/public/img/feedback/ — xem web/public/img/README.md
-// để biết cách thay ảnh thật. Thêm/bớt dòng thoải mái.
+//
+// Có 3 kiểu feedback, dùng cả 3 thì thuyết phục nhất:
+//
+//   1. FEEDBACK_NOI_BAT  → câu nói được đánh máy lại, chữ to, đọc được ngay
+//   2. FEEDBACK          → ảnh chụp màn hình thật, để khách tin là có thật
+//   3. FEEDBACK_VIDEO    → học viên nói trên camera, thuyết phục nhất
+//
+// Kiểu 1 và 3 đang để trống nên trang tạm thời chỉ hiện ảnh chụp. Điền vào
+// là các khối kia tự hiện ra, không cần sửa code.
+
+/** Câu feedback tiêu biểu, đánh máy lại cho dễ đọc. Lấy 3 câu là đủ. */
+export type FeedbackNoiBat = {
+  /** Trích nguyên văn, ngắn thôi, tối đa 3 dòng. */
+  cau: string;
+  /** Tên học viên. Nhớ xin phép trước khi đăng tên thật. */
+  ten: string;
+  /** Kết quả cụ thể, vd. "học xong khóa Full" hoặc "sau 4 tháng". */
+  ketQua: string;
+};
+
+// TODO(chủ shop): chép 3 câu feedback thật vào đây. Mẫu:
+//   { cau: "Lần đầu em nói với khách nước ngoài mà không phải dịch trong đầu.",
+//     ten: "Ngọc Ánh", ketQua: "học xong khóa Full" },
+export const FEEDBACK_NOI_BAT: FeedbackNoiBat[] = [];
+
+/** Video học viên tự quay. 2 tới 3 cái là đủ, đừng nhiều hơn. */
+export type FeedbackVideo = {
+  /** ID video YouTube (phần sau v= trong link). */
+  videoId: string;
+  /** Một dòng nói kết quả, hiện dưới video. */
+  ketQua: string;
+};
+
+// TODO(chủ shop): up video feedback lên YouTube (để chế độ "không công khai"
+// cũng được, vẫn nhúng được), rồi dán ID vào đây. Mẫu:
+//   { videoId: "abc123xyz", ketQua: "Minh Thư, đi phỏng vấn bằng tiếng Anh sau 5 tháng" },
+export const FEEDBACK_VIDEO: FeedbackVideo[] = [];
+
+// Ảnh chụp màn hình. Đặt trong web/public/img/feedback/
+// Xem web/public/img/README.md để biết cách thay ảnh thật.
 export const FEEDBACK = [
   { src: "/img/feedback/fb-01.svg", alt: "Feedback học viên về khóa phát âm" },
   { src: "/img/feedback/fb-02.svg", alt: "Feedback học viên về kỹ năng dịch" },
@@ -149,34 +199,34 @@ export const FEEDBACK = [
 export const FAQ = [
   {
     hoi: "Mất gốc hoàn toàn thì học được không?",
-    dap: "Được — giáo án này thiết kế riêng cho người bắt đầu và người mất gốc. Bubby dạy trực diện vào các kiến thức nền tảng cốt lõi, không giả định bạn đã biết gì trước đó.",
+    dap: "Được. Giáo án viết riêng cho người mất gốc, không giả định bạn đã biết gì trước đó.",
   },
   {
     hoi: "Coaching 1-1 là học kiểu gì? Online hay offline?",
-    dap: "Online, và bên mình chỉ có duy nhất mô hình này. Phần giảng lý thuyết đã được quay sẵn nên bạn học theo giờ rảnh, xem đi xem lại chỗ chưa hiểu. Phần chăm sóc thì Bubby làm trực tiếp 1-1: giải đáp thắc mắc, sửa từng bài tập, theo sát tiến độ của bạn.",
+    dap: "Online, và bên mình chỉ có mô hình này. Lý thuyết quay sẵn để bạn học theo giờ rảnh. Phần sửa bài và giải đáp thì Bubby làm trực tiếp 1-1.",
   },
   {
     hoi: "Một tuần học mấy buổi?",
-    dap: "Bạn học linh hoạt theo thời gian rảnh của mình, không cố định lịch. Trong quá trình học, bất cứ khi nào thắc mắc hay cần sửa bài thì nhắn trực tiếp cho Bubby trong khung giờ 9h – 21h mỗi ngày.",
+    dap: "Không cố định lịch, bạn học theo giờ rảnh. Cần sửa bài hay thắc mắc thì nhắn Bubby trong khung 9h tới 21h.",
   },
   {
-    hoi: "Bên mình có dạy TOEIC / IELTS không?",
-    dap: "Không. Bên mình dạy nền tảng gốc. Nhưng học viên có gốc chắc rồi thì vào luyện thi TOEIC/IELTS sau này sẽ nhanh và nhẹ hơn nhiều.",
+    hoi: "Bên mình có dạy TOEIC hay IELTS không?",
+    dap: "Không, bên mình dạy nền tảng gốc. Có gốc chắc rồi thì luyện thi sau này nhanh và nhẹ hơn nhiều.",
   },
   {
     hoi: "Học phí đóng một lần hay chia được?",
-    dap: "Bạn chuyển khoản học phí. Nếu chưa sắp xếp kịp, bên mình hỗ trợ cọc 300k để giữ giá ưu đãi cho bạn. Nhắn tin để Bubby trao đổi cụ thể nha.",
+    dap: "Bạn chuyển khoản học phí. Chưa sắp xếp kịp thì cọc 300k giữ giá ưu đãi. Nhắn tin để Bubby trao đổi cụ thể nha.",
   },
   {
     hoi: "Học xong mà không hiệu quả thì sao?",
-    dap: "Bubby theo sát 1-1 nên hầu như không có chuyện bạn học lệch mà không ai biết — mọi bài tập đều được sửa chi tiết và có hệ thống nhắc nhở theo tiến độ. Nếu bạn còn phân vân, học thử một buổi trước rồi quyết định cũng được.",
+    dap: "Bubby theo sát 1-1 nên không có chuyện bạn học lệch mà không ai biết. Còn phân vân thì học thử một buổi rồi quyết định.",
   },
 ];
 
 // ── THÔNG SỐ TIN CẬY ────────────────────────────────────────────────
 export const CHI_SO = [
   { so: "10 năm", nhan: "kinh nghiệm xây gốc tiếng Anh" },
-  { so: "VSTEP C1", nhan: "trung bình 8.5 / 4 kỹ năng" },
+  { so: "VSTEP C1", nhan: "trung bình 8.5 cả 4 kỹ năng" },
   { so: "1-1", nhan: "Bubby trực tiếp sửa từng bài" },
   { so: `${TONG_BUOI} buổi`, nhan: "giáo án tự nghiên cứu, không đi mượn" },
 ];

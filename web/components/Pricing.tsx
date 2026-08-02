@@ -1,16 +1,16 @@
+import { Check, Star } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
-import { Button, MessengerIcon, SectionHead } from "./ui";
+import { Button, CTA, MessengerIcon, SectionHead } from "./ui";
 import { KHOA_HOC, MESSENGER_URL, UU_DAI } from "@/lib/site";
 
 export function Pricing() {
   return (
-    <section id="hoc-phi" className="border-b border-line py-24 sm:py-32">
+    <section id="hoc-phi" className="py-24 sm:py-32">
       <div className="shell">
         <Reveal>
           <SectionHead
-            eyebrow="Học phí"
             title="Ba mức, tùy bạn muốn xây tới đâu."
-            lead="Khóa nhỏ để trải nghiệm trước cũng được — sau này muốn học tiếp phần còn lại thì mua bù, không mất tiền oan."
+            lead="Học khóa nhỏ trước cũng được. Sau này muốn học tiếp thì mua bù, không mất tiền oan."
           />
         </Reveal>
 
@@ -20,13 +20,13 @@ export function Pricing() {
               <article
                 className={`flex h-full flex-col gap-6 rounded-2xl border p-7 ${
                   k.noiBat
-                    ? "border-transparent bg-ink text-white lg:-mt-4 lg:pb-9"
+                    ? "border-transparent bg-brand text-white shadow-[0_24px_60px_-30px_rgba(42,95,217,0.9)] lg:-mt-4 lg:pb-9"
                     : "border-line bg-surface"
                 }`}
               >
                 <div className="flex flex-col gap-3">
                   {k.noiBat && UU_DAI.nhan && (
-                    <span className="eyebrow w-fit rounded-full bg-brand px-3 py-1.5 text-white">
+                    <span className="eyebrow w-fit rounded-full bg-mark px-3 py-1.5 text-ink">
                       {UU_DAI.nhan}
                     </span>
                   )}
@@ -39,7 +39,7 @@ export function Pricing() {
                   </h3>
                   <p
                     className={`text-sm leading-relaxed ${
-                      k.noiBat ? "text-muted-ink" : "text-muted"
+                      k.noiBat ? "text-white/80" : "text-muted"
                     }`}
                   >
                     {k.tomTat}
@@ -57,7 +57,7 @@ export function Pricing() {
                     </span>
                     <span
                       className={`font-mono text-sm line-through ${
-                        k.noiBat ? "text-muted-ink/70" : "text-muted/60"
+                        k.noiBat ? "text-white/60" : "text-muted/60"
                       }`}
                     >
                       {k.giaGoc}
@@ -65,7 +65,7 @@ export function Pricing() {
                   </div>
                   <span
                     className={`font-mono text-xs ${
-                      k.noiBat ? "text-muted-ink" : "text-muted"
+                      k.noiBat ? "text-white/75" : "text-muted"
                     }`}
                   >
                     {k.buoi} · {k.coaching}
@@ -74,30 +74,21 @@ export function Pricing() {
 
                 <ul
                   className={`flex flex-1 flex-col gap-3 border-t pt-6 ${
-                    k.noiBat ? "border-line-ink" : "border-line"
+                    k.noiBat ? "border-white/25" : "border-line"
                   }`}
                 >
                   {k.gomCo.map((g) => (
                     <li key={g} className="flex items-start gap-3">
-                      <svg
-                        viewBox="0 0 16 16"
+                      <Check
+                        weight="bold"
                         aria-hidden
-                        className={`mt-1 h-3.5 w-3.5 shrink-0 ${
-                          k.noiBat ? "text-brand-soft" : "text-brand"
+                        className={`mt-0.5 h-4 w-4 shrink-0 ${
+                          k.noiBat ? "text-mark" : "text-brand"
                         }`}
-                      >
-                        <path
-                          d="M2 8.5 6 12.5 14 3.5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      />
                       <span
                         className={`text-[0.92rem] leading-snug ${
-                          k.noiBat ? "text-muted-ink" : "text-muted"
+                          k.noiBat ? "text-white/85" : "text-muted"
                         }`}
                       >
                         {g}
@@ -109,11 +100,11 @@ export function Pricing() {
                 <Button
                   href={MESSENGER_URL}
                   external
-                  variant={k.noiBat ? "primary" : "outline"}
+                  variant={k.noiBat ? "onBrand" : "outline"}
                   className="w-full"
                 >
                   <MessengerIcon className="h-4 w-4" />
-                  {k.noiBat ? "Đăng ký khóa này" : "Đăng ký"}
+                  {CTA.nhanTin}
                 </Button>
               </article>
             </Reveal>
@@ -123,9 +114,7 @@ export function Pricing() {
         {UU_DAI.moTa && (
           <Reveal>
             <p className="mt-8 flex items-start gap-3 text-sm text-muted">
-              <span aria-hidden className="font-mono text-brand">
-                ★
-              </span>
+              <Star weight="fill" aria-hidden className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
               {UU_DAI.moTa}
             </p>
           </Reveal>
