@@ -47,3 +47,59 @@ export async function sendTyping(recipientId: string): Promise<void> {
     }),
   }).catch(() => {});
 }
+
+// Soft cap per Messenger bubble. business.ts's QUY_TAC already tells the model to put
+// price/deadline sentences "on their own line" precisely so they read as one thought —
+// so newlines are the primary split point; MAX_CHARS only kicks in for a long paragraph
+// that has no line breaks at all.
+const MAX_CHARS = 300;
+const SENTENCE_RE = /[^.!?…]+[.!?…]*\s*/g;
+
+/** Break a reply into human-sized chat bubbles: paragraph breaks first, then long
+ * paragraphs get packed sentence-by-sentence up to MAX_CHARS. */
+export function splitForMessenger(text: string): string[] {
+  const paragraphs = text
+    .split(/\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const chunks: string[] = [];
+  for (const para of paragraphs) {
+    if (para.length <= MAX_CHARS) {
+      chunks.push(para);
+      continue;
+    }
+    const sentences = para.match(SENTENCE_RE) ?? [para];
+    let current = "";
+    for (const s of sentences) {
+      if (current && current.length + s.length > MAX_CHARS) {
+        chunks.push(current.trim());
+        current = s;
+      } else {
+        current += s;
+      }
+    }
+    if (current.trim()) chunks.push(current.trim());
+  }
+  return chunks.length ? chunks : [text.trim()];
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+const INTER_MESSAGE_DELAY_MS = 700;
+
+/** Send a reply as one or more bubbles (see splitForMessenger), pausing with a
+ * typing indicator between them so a long reply reads like a real person chatting
+ * instead of one wall of text. */
+export async function sendReply(recipientId: string, text: string): Promise<void> {
+  const chunks = splitForMessenger(text);
+  for (let i = 0; i < chunks.length; i++) {
+    if (i > 0) {
+      await sendTyping(recipientId);
+      await sleep(INTER_MESSAGE_DELAY_MS);
+    }
+    await sendMessage(recipientId, chunks[i]);
+  }
+}

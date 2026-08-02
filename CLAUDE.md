@@ -1,4 +1,4 @@
-# CLAUDE.md
+# [CLAUDE.md](http://CLAUDE.md)
 
 Guidance for Claude Code when working in this repo.
 
@@ -56,7 +56,7 @@ recurring pitfalls — not every minor thing._
   they don't fit.)
 - **Model IDs must be full OpenRouter slugs** (`deepseek/deepseek-v4-flash`,
   `anthropic/claude-haiku-4.5`) — short names 404.
-- **Vietnamese needs `line-height` ≥ ~1.2 on headings.** Vietnamese stacks two
+- **Vietnamese needs** `line-height` **≥ ~1.2 on headings.** Vietnamese stacks two
   levels of marks (`ế` `ỗ` `ữ`), so ascenders run much taller than English. Below
   ~1.2 the next line's marks collide into the line above and get clipped — it
   looks exactly like a broken font missing its diacritics, and you will waste an
@@ -75,34 +75,34 @@ Customer → Messenger → webhook (server.ts) → funnel.ts → brain.ts → Op
                                                  └─ scheduler.ts (timed follow-ups: 20h/6h/deadline)
 ```
 
-- **`src/business.ts`** — THE file the owner edits. Shop info, courses/pricing, FAQ,
+- `src/business.ts` — THE file the owner edits. Shop info, courses/pricing, FAQ,
   sales script, tone rules, handoff rules. Plain Vietnamese text with `[ĐIỀN...]`
   placeholders. Non-technical; treat its content as owner-authored config.
-- **`src/prompt.ts`** — builds the system prompt from `business.ts`. Don't hardcode
+- `src/prompt.ts` — builds the system prompt from `business.ts`. Don't hardcode
   business facts here; read them from `business.ts`.
-- **`src/brain.ts`** — calls OpenRouter (OpenAI-compatible chat completions) with the
+- `src/brain.ts` — calls OpenRouter (OpenAI-compatible chat completions) with the
   system prompt + this customer's history + a small volatile date block (today / promo
   deadline). Parses `[HANDOFF]` and
   `[EVENT:course_sent|trial_sent|price_quoted|extend|gift_watched]`,
   strips them, returns `{text, handoff, events}`. Does NOT persist — the funnel does.
-- **`src/funnel.ts`** — orchestrator + the actual state machine. `handleCustomerMessage`
+- `src/funnel.ts` — orchestrator + the actual state machine. `handleCustomerMessage`
   is the single entry point (server + playground). Captures email (regex) → triggers
   automation + schedules the gift-expiry timer; applies the AI's events → stage changes,
   scheduling/cancelling jobs; a customer reply cancels the pending no-reply nags.
-- **`src/state.ts`** — `Store` interface with two backends: `PostgresStore` (Supabase,
+- `src/state.ts` — `Store` interface with two backends: `PostgresStore` (Supabase,
   when `DATABASE_URL` is set) and `MemoryStore` (playground / no DB). Tables:
   `conversations`, `messages` (last 20 turns), `scheduled_jobs`. `getStore()` picks one.
-- **`src/scheduler.ts`** — in-process poller (every `SCHEDULER_POLL_MS`, default 30s).
+- `src/scheduler.ts` — in-process poller (every `SCHEDULER_POLL_MS`, default 30s).
   Pulls due `scheduled_jobs`, re-checks guards (still silent? handed off? cold?), sends
   the templated follow-up from `business.ts` `FOLLOW_UPS`, and chains the next job.
-- **`src/automation.ts`** — POSTs the captured email to `GIFT_ACCESS_WEBHOOK_URL` (the
+- `src/automation.ts` — POSTs the captured email to `GIFT_ACCESS_WEBHOOK_URL` (the
   owner's Apps Script) to grant/extend the 24h Drive access. Logs only if URL unset.
-- **`src/facebook.ts`** — Messenger Send API (send text, typing indicator).
-- **`src/server.ts`** — Express webhook. GET verifies the token; POST handles text
-  messages AND `message_reactions` ("thả tim"). **Acks with `200` immediately** (Meta
+- `src/facebook.ts` — Messenger Send API (send text, typing indicator).
+- `src/server.ts` — Express webhook. GET verifies the token; POST handles text
+  messages AND `message_reactions` ("thả tim"). **Acks with** `200` **immediately** (Meta
   requires < 5s). If a conversation is `handedOff`, the bot stays silent. On boot it
   connects the DB and starts the scheduler.
-- **`src/playground.ts`** — local terminal chat to test the brain without Facebook.
+- `src/playground.ts` — local terminal chat to test the brain without Facebook.
 
 ### `web/` — the ads landing page (separate project)
 
@@ -175,7 +175,7 @@ webhook at `https://<ngrok>/webhook`. See README.md "Phần 2" for the full flow
 
 - **Handoff notifications:** currently only logs `🔔 CẦN NGƯỜI THẬT` — wire up a real
   alert (Telegram/email). See the `TODO` in `server.ts`.
-- **Fill the `[ĐIỀN...]` gaps** in `business.ts`: real `stk`, `soSanhDich` link,
+- **Fill the** `[ĐIỀN...]` **gaps** in `business.ts`: real `stk`, `soSanhDich` link,
   `hocThuPhatAm` link. And set `GIFT_ACCESS_WEBHOOK_URL` to the Apps Script.
 - **Long-lived Page token:** the dashboard token is short-lived; add a token-exchange
   step for production.

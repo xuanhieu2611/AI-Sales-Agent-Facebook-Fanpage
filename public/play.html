@@ -454,6 +454,32 @@
       log.appendChild(row);
     }
 
+    // Mirrors src/facebook.ts splitForMessenger — keeps this preview honest about
+    // how many bubbles a reply will actually become on real Messenger.
+    const SPLIT_MAX_CHARS = 300;
+    function splitForMessenger(text) {
+      const paragraphs = text.split(/\n+/).map((p) => p.trim()).filter(Boolean);
+      const chunks = [];
+      for (const para of paragraphs) {
+        if (para.length <= SPLIT_MAX_CHARS) {
+          chunks.push(para);
+          continue;
+        }
+        const sentences = para.match(/[^.!?…]+[.!?…]*\s*/g) || [para];
+        let current = "";
+        for (const s of sentences) {
+          if (current && current.length + s.length > SPLIT_MAX_CHARS) {
+            chunks.push(current.trim());
+            current = s;
+          } else {
+            current += s;
+          }
+        }
+        if (current.trim()) chunks.push(current.trim());
+      }
+      return chunks.length ? chunks : [text.trim()];
+    }
+
     function renderTurns(turns, handoff, notices) {
       const noticeList = Array.isArray(notices) ? notices : [];
       log.innerHTML = "";
@@ -474,13 +500,16 @@
 
       for (let i = 0; i < turns.length; i++) {
         const t = turns[i];
-        const row = document.createElement("div");
-        row.className = "row " + (t.role === "user" ? "user" : "assistant");
-        const el = document.createElement("div");
-        el.className = "bubble " + (t.role === "user" ? "user" : "assistant");
-        el.textContent = t.content;
-        row.appendChild(el);
-        log.appendChild(row);
+        const chunks = t.role === "assistant" ? splitForMessenger(t.content) : [t.content];
+        for (const chunk of chunks) {
+          const row = document.createElement("div");
+          row.className = "row " + (t.role === "user" ? "user" : "assistant");
+          const el = document.createElement("div");
+          el.className = "bubble " + (t.role === "user" ? "user" : "assistant");
+          el.textContent = chunk;
+          row.appendChild(el);
+          log.appendChild(row);
+        }
         flushNoticesUpTo(i + 1);
       }
       flushNoticesUpTo(Number.POSITIVE_INFINITY);

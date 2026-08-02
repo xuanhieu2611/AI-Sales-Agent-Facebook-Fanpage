@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { handleCustomerMessage } from "./funnel.js";
-import { sendMessage, sendTyping } from "./facebook.js";
+import { sendReply, sendTyping } from "./facebook.js";
 import { startScheduler } from "./scheduler.js";
 import { getStore } from "./state.js";
 import { getPlayNotices } from "./playNotices.js";
@@ -86,7 +86,7 @@ async function handleIncoming(senderId: string, text: string, kind: "text" | "re
 
     if (kind === "text") await sendTyping(senderId);
     const reply = await handleCustomerMessage(senderId, text, kind);
-    if (reply.text) await sendMessage(senderId, reply.text);
+    if (reply.text) await sendReply(senderId, reply.text);
     if (reply.handoff) {
       console.log(`🔔 CẦN NGƯỜI THẬT — khách ${senderId}: "${text}"`);
       // TODO: also notify yourself here (email / Telegram / Slack).
@@ -181,5 +181,5 @@ app.listen(PORT, async () => {
   console.log(`Webhook URL path: /webhook`);
   console.log(`Playground UI: /play`);
   await getStore(); // connect the DB up front so errors surface at boot
-  startScheduler(sendMessage); // fire the timed follow-ups
+  startScheduler(sendReply); // fire the timed follow-ups
 });
