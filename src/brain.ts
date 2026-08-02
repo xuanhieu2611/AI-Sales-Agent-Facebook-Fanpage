@@ -146,11 +146,13 @@ interface ChatCompletionResponse {
 // a reliable cap (verified empirically: model still exceeded a 200-token cap)
 // so we don't rely on it — a generous max_tokens is the real safety margin.
 const MAX_TOKENS = 3072;
-// Same call, once, for the truncation retry — kept separate so the retry can
-// hand it a fresh/bigger budget without duplicating the whole request setup.
+// Same call, once, for the retry below — kept separate so the retry can hand
+// it a fresh/bigger budget without duplicating the whole request setup.
 const RETRY_MAX_TOKENS = 4096;
-const TRUNCATION_FALLBACK_TEXT =
-  "Để mình kiểm tra lại và phản hồi bạn sớm nhất nha 😊";
+// Generic on purpose — covers truncation, transient API errors, and empty
+// completions alike, so it never claims something specific ("đã gửi info")
+// that may not actually be true.
+const FALLBACK_TEXT = "Bạn chờ mình xíu, mình sẽ phản hồi sớm nhất";
 
 async function callOpenRouter(
   apiKey: string,
@@ -175,6 +177,34 @@ async function callOpenRouter(
     );
   }
   return data;
+}
+
+type Attempt = { ok: true; text: string } | { ok: false; reason: string };
+
+/**
+ * One call, checked for every way it can fail to produce a trustworthy reply:
+ * network/API error, truncation (finish_reason "length" — markers are
+ * appended at the END of a reply, so a cut-off string can't be trusted for
+ * events either), or an empty completion.
+ */
+async function attempt(
+  apiKey: string,
+  messages: unknown[],
+  maxTokens: number,
+): Promise<Attempt> {
+  let data: ChatCompletionResponse;
+  try {
+    data = await callOpenRouter(apiKey, messages, maxTokens);
+  } catch (err) {
+    return { ok: false, reason: (err as Error).message };
+  }
+  if (data.choices?.[0]?.finish_reason === "length") {
+    const reasoningTokens = data.usage?.completion_tokens_details?.reasoning_tokens;
+    return { ok: false, reason: `finish_reason=length (reasoning_tokens=${reasoningTokens})` };
+  }
+  const text = (data.choices?.[0]?.message?.content ?? "").trim();
+  if (!text) return { ok: false, reason: "empty completion" };
+  return { ok: true, text };
 }
 
 /**
@@ -207,38 +237,28 @@ export async function generateReply(psid: string): Promise<Reply> {
     ...turns,
   ];
 
-  let data = await callOpenRouter(apiKey, messages, MAX_TOKENS);
-  let truncated = data.choices?.[0]?.finish_reason === "length";
-  if (truncated) {
-    const reasoningTokens = data.usage?.completion_tokens_details?.reasoning_tokens;
-    console.warn(
-      `⚠️ OpenRouter truncated reply (finish_reason=length, reasoning_tokens=${reasoningTokens}) — retrying with a bigger budget`,
-    );
-    data = await callOpenRouter(apiKey, messages, RETRY_MAX_TOKENS);
-    truncated = data.choices?.[0]?.finish_reason === "length";
+  let result = await attempt(apiKey, messages, MAX_TOKENS);
+  if (!result.ok) {
+    console.warn(`⚠️ OpenRouter attempt failed (${result.reason}) — retrying`);
+    result = await attempt(apiKey, messages, RETRY_MAX_TOKENS);
   }
 
-  if (truncated) {
-    // Both attempts got cut off. Markers are appended at the END of a reply,
-    // so a truncated string can't be trusted for events, and a partial
-    // sentence isn't safe to show a real customer — hand off instead of
-    // guessing. This mirrors what funnel.ts/server.ts already do for a
-    // model-issued [HANDOFF], so no changes are needed there.
-    console.error("🔔 OpenRouter truncated reply twice — forcing handoff");
+  if (!result.ok) {
+    // Both attempts failed — whether truncated, a transient API error, or an
+    // empty completion, none of those give us something safe to send or to
+    // parse markers from. Hand off instead of guessing, same as a
+    // model-issued [HANDOFF]; no changes needed in funnel.ts/server.ts.
+    console.error(`🔔 OpenRouter failed twice (${result.reason}) — forcing handoff`);
     return {
-      raw: `${TRUNCATION_FALLBACK_TEXT} ${HANDOFF_MARK}`,
-      text: TRUNCATION_FALLBACK_TEXT,
+      raw: `${FALLBACK_TEXT} ${HANDOFF_MARK}`,
+      text: FALLBACK_TEXT,
       handoff: true,
       events: [],
     };
   }
 
-  const modelOutput = (data.choices?.[0]?.message?.content ?? "").trim();
-  if (!modelOutput) {
-    throw new Error("OpenRouter returned an empty completion");
-  }
   // Scrub "Dạ" before storing too, so the history doesn't reinforce the habit.
-  const cleaned = stripDa(modelOutput);
+  const cleaned = stripDa(result.text);
 
   const handoff = cleaned.includes(HANDOFF_MARK);
   const events = [...new Set([...cleaned.matchAll(EVENT_RE)].map((m) => m[1] as FunnelEvent))];
