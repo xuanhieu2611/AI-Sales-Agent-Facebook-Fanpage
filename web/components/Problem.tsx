@@ -1,7 +1,6 @@
 import { Reveal } from "./Reveal";
 import { TranslateDemo } from "./TranslateDemo";
 import { Mark, SectionHead } from "./ui";
-import { LY_DO_THAT_BAI } from "@/lib/site";
 
 /**
  * Bốn câu này là lời khách tự nói với chính mình. Để nguyên giọng nói
@@ -60,40 +59,6 @@ export function Problem() {
           <TranslateDemo />
         </div>
 
-        {/* Sáu cái gốc rễ. Cố ý KHÔNG bọc thành thẻ: phía trên đã có bốn thẻ
-            trích lời và một khối dịch thử rồi, thêm sáu thẻ nữa là cả mục
-            thành một bãi hộp. Ở đây chỉ dùng đường kẻ và số thứ tự. */}
-        <div className="mt-20 border-t border-line pt-14">
-          <Reveal>
-            <h3 className="max-w-[20ch] text-[1.7rem] leading-[1.25] text-ink sm:text-[2.1rem]">
-              Vì sao bạn học mãi vẫn không hiệu quả?
-            </h3>
-          </Reveal>
-
-          <ol className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-            {LY_DO_THAT_BAI.map((l, i) => (
-              <Reveal key={l.ten}>
-                <li className="flex flex-col gap-2 border-t border-line/70 pt-4">
-                  <span className="font-mono text-xs text-muted/60">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <h4 className="font-display text-lg leading-[1.3] font-bold tracking-tight text-ink">
-                    {l.ten}
-                  </h4>
-                  <p className="max-w-[38ch] text-[0.95rem] leading-relaxed text-muted">
-                    {l.moTa}
-                  </p>
-                </li>
-              </Reveal>
-            ))}
-          </ol>
-
-          <Reveal>
-            <p className="mt-12 max-w-[44ch] text-balance font-display text-xl leading-[1.35] font-extrabold tracking-tight text-ink sm:text-2xl">
-              Sáu cái này đều quy về một chỗ. Mục ngay bên dưới là chỗ đó.
-            </p>
-          </Reveal>
-        </div>
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MESSENGER_URL } from "@/lib/site";
-import { CTA, MessengerIcon } from "./ui";
+import { MessengerIcon } from "./ui";
 
 /**
  * Thanh CTA dính đáy màn hình trên điện thoại. Traffic từ quảng cáo phần
@@ -58,8 +58,8 @@ export function StickyCta() {
         rel="noopener noreferrer"
         className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 py-3.5 text-sm font-semibold whitespace-nowrap text-white active:scale-[0.98]"
       >
-        <MessengerIcon className="h-4 w-4" />
-        {CTA.nhanTin}
+          <MessengerIcon className="h-4 w-4" />
+          Nhận lộ trình phù hợp
       </a>
     </div>
   );

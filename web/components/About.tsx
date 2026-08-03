@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
+import { AssetPlaceholder } from "./AssetPlaceholder";
 import { Reveal } from "./Reveal";
 import { ANH, KENH, KENH_URL } from "@/lib/site";
 
@@ -11,15 +11,13 @@ export function About() {
         <div className="grid gap-12 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
           <Reveal>
             <figure className="flex flex-col gap-3">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line bg-brand-soft">
-                <Image
-                  src={ANH.bubby}
-                  alt="Bubby, giảng viên của English with Bubby"
-                  fill
-                  sizes="(max-width: 1024px) 100vw, 352px"
-                  className="object-cover"
-                />
-              </div>
+              <AssetPlaceholder
+                className="aspect-[4/5] w-full rounded-2xl"
+                title="Chân dung Bubby"
+                description="Ảnh dọc 4:5, nhìn thẳng hoặc đang dạy; nền gọn, ánh sáng ban ngày, mặc như khi đứng lớp. Đây là ảnh để khách biết người trực tiếp coaching là ai."
+                src={ANH.bubby}
+                alt="Bubby, giảng viên của English with Bubby"
+              />
               <figcaption className="font-mono text-xs text-muted">
                 Bubby, giảng viên và người trực tiếp coaching
               </figcaption>

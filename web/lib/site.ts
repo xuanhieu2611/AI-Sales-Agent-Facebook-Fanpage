@@ -44,38 +44,6 @@ export const UU_DAI = {
   moTa: "Giữ giá ưu đãi bằng cọc 300k nếu bạn chưa sắp xếp kịp học phí.",
 };
 
-// ── VÌ SAO HỌC MÃI VẪN KHÔNG HIỆU QUẢ ────────────────────────────────
-// Sáu cái gốc rễ, khác với mấy câu "triệu chứng" trong components/Problem.tsx.
-// Triệu chứng là cái khách CẢM THẤY, mấy cái dưới đây là cái khách CHƯA BIẾT
-// — đọc xong thì câu hỏi tiếp theo trong đầu họ đúng là "vậy phải học sao",
-// và đó là mục Phương pháp ngay bên dưới.
-export const LY_DO_THAT_BAI = [
-  {
-    ten: "Học không có đích",
-    moTa: "Không rõ mình cần tới đâu, nên cũng không có chiến lược nào cho vừa.",
-  },
-  {
-    ten: "Ôm hết mọi thứ",
-    moTa: "Không lọc được cái nào cần, cái nào bỏ được. Học nhiều mà không tới đâu.",
-  },
-  {
-    ten: "Không biết học để làm gì",
-    moTa: "Học ngữ pháp, học IPA, học thì — nhưng không ai nói rõ mấy thứ đó dùng vào lúc nào.",
-  },
-  {
-    ten: "Thuộc mẹo, không hiểu bản chất",
-    moTa: "Mẹo chỉ đúng trong đúng cái ví dụ đó. Ra câu khác là đứng hình lại.",
-  },
-  {
-    ten: "Biết mà không dùng được",
-    moTa: "Thiếu tư duy thực chiến, nên kiến thức nằm trong vở chứ không thành phản xạ.",
-  },
-  {
-    ten: "Không ai sửa cho",
-    moTa: "Tự học thì sai vẫn tưởng đúng, lặp lại đủ lâu thì thành thói quen khó gỡ.",
-  },
-];
-
 // ── KHÓA HỌC ─────────────────────────────────────────────────────────
 export type Khoa = {
   id: string;
@@ -219,6 +187,13 @@ export const KENH = {
 export const ANH = {
   bubby: "/img/bubby.svg", // ảnh dọc, tỉ lệ 4:5
 };
+
+/**
+ * Bật khi duyệt giao diện với chủ shop: ảnh/video sẽ hiện thành khung brief
+ * thay vì giả làm asset thật. Khi đã bỏ asset thật vào public/img, đổi thành
+ * false để các khung chân dung/video tự hiển thị nội dung thật.
+ */
+export const SHOW_REVIEW_PLACEHOLDERS = true;
 
 // ── FEEDBACK HỌC VIÊN ───────────────────────────────────────────────
 //

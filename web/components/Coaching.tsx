@@ -1,7 +1,8 @@
 import { Reveal } from "./Reveal";
 import { SectionHead } from "./ui";
+import { AssetPlaceholder } from "./AssetPlaceholder";
 import { YouTubeLite } from "./YouTubeLite";
-import { VIDEO } from "@/lib/site";
+import { SHOW_REVIEW_PLACEHOLDERS, VIDEO } from "@/lib/site";
 
 const CACH_VAN_HANH = [
   {
@@ -52,10 +53,19 @@ export function Coaching() {
           </div>
 
           <Reveal>
-            <YouTubeLite
-              id={VIDEO.moTaKhoaFull}
-              title={`Bên trong khóa 32 buổi Xây Gốc và Giao Tiếp`}
-            />
+            {SHOW_REVIEW_PLACEHOLDERS ? (
+              <AssetPlaceholder
+                type="video"
+                className="aspect-video rounded-2xl"
+                title="Video 60–90 giây: Bên trong buổi coaching"
+                description="Dùng thumbnail lấy từ video thật: Bubby đang chữa một câu / nhận xét bài học viên trên màn hình. Video có phụ đề cháy sẵn; 5 giây đầu nói ngay người mất gốc được giải quyết gì."
+              />
+            ) : (
+              <YouTubeLite
+                id={VIDEO.moTaKhoaFull}
+                title="Bên trong khóa 32 buổi Xây Gốc và Giao Tiếp"
+              />
+            )}
           </Reveal>
         </div>
       </div>

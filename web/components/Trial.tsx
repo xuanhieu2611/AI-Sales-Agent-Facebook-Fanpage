@@ -1,4 +1,4 @@
-import { Button, CTA, MessengerIcon } from "./ui";
+import { Button, MessengerIcon } from "./ui";
 import { MESSENGER_URL } from "@/lib/site";
 
 /**
@@ -23,7 +23,7 @@ export function Trial() {
 
           <Button href={MESSENGER_URL} external className="shrink-0">
             <MessengerIcon className="h-5 w-5" />
-            {CTA.nhanTin}
+            Đăng ký học thử 12 thì
           </Button>
         </div>
       </div>

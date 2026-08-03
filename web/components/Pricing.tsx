@@ -1,6 +1,6 @@
 import { Check, Star } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
-import { Button, CTA, MessengerIcon, SectionHead } from "./ui";
+import { Button, MessengerIcon, SectionHead } from "./ui";
 import { KHOA_HOC, MESSENGER_URL, UU_DAI } from "@/lib/site";
 
 export function Pricing() {
@@ -117,7 +117,9 @@ export function Pricing() {
                   className="w-full"
                 >
                   <MessengerIcon className="h-4 w-4" />
-                  {CTA.nhanTin}
+                  {k.id === "full"
+                    ? "Hỏi xem khóa Full có hợp không"
+                    : `Hỏi về ${k.ten.replace("Khóa ", "")}`}
                 </Button>
               </article>
             </Reveal>

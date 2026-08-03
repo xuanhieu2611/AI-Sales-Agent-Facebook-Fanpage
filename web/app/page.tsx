@@ -19,7 +19,7 @@ import { StickyCta } from "@/components/StickyCta";
  * hoàn toàn chưa biết bên mình là ai:
  *
  *   cái gì đây → có thật không → mình có đúng kiểu này không → dạy sao →
- *   học cái gì → học kiểu gì → ai học rồi → ai dạy → bao nhiêu tiền →
+ *   học kiểu gì → ai dạy → học cái gì → bao nhiêu tiền →
  *   thử trước được không → còn thắc mắc gì → nhắn đi
  *
  * Đừng đảo thứ tự này nếu không có lý do. Đưa giá lên sớm là mất khách,
@@ -31,22 +31,22 @@ export default function Home() {
       <SiteHeader />
 
       <main>
-        {/* 1 — một câu tiêu đề rồi tới video, khách lười đọc vẫn nắm được */}
+        {/* 1 — lời hứa + người trực tiếp coaching */}
         <Hero />
-        {/* 2 — lý do tin, ngay dưới video */}
+        {/* 2 — lý do tin, ngay dưới lời hứa */}
         <Proof />
-        {/* 3 — soi gương + khối dịch thử: đúng cái khách đang gặp */}
+        {/* 3 — bằng chứng xã hội lên sớm: khách lạ cần thấy người thật trước */}
+        <Feedback />
+        {/* 4 — soi gương + khối dịch thử: đúng cái khách đang gặp */}
         <Problem />
-        {/* 4 — chẩn đoán: Từ / Câu / Thì, kèm ví dụ thật */}
+        {/* 5 — chẩn đoán: Từ / Câu / Thì, kèm ví dụ thật */}
         <Method />
-        {/* 5 — lộ trình 32 buổi, có tỉ lệ thật */}
-        <Curriculum />
         {/* 6 — mô hình lớp + video bên trong khóa */}
         <Coaching />
-        {/* 7 — bằng chứng xã hội */}
-        <Feedback />
-        {/* 8 — người dạy */}
+        {/* 7 — người dạy */}
         <About />
+        {/* 8 — lộ trình 32 buổi, có tỉ lệ thật */}
+        <Curriculum />
         {/* 9 — giá */}
         <Pricing />
         {/* 10 — lối vào cho người còn phân vân */}
