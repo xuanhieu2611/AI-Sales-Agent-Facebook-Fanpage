@@ -10,7 +10,6 @@ import { CONTACT, MESSENGER_URL } from "@/lib/site";
  */
 const DE_MUC = [
   { nhan: "Lộ trình", href: "#lo-trinh" },
-  { nhan: "Mô hình lớp", href: "#mo-hinh" },
   { nhan: "Feedback", href: "#feedback" },
   { nhan: "Học phí", href: "#hoc-phi" },
 ];
@@ -24,7 +23,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-line/80 bg-paper/85 backdrop-blur-md">
       <div className="shell flex h-16 items-center justify-between gap-4">
-        <span className="font-display text-base font-extrabold tracking-tight text-ink sm:text-lg">
+        {/* whitespace-nowrap: trên màn 390px, nút nhắn tin ăn hết ~175px nên
+            tên page bị bẻ thành hai dòng ("English with" / "Bubby") và đội
+            thanh đầu trang cao lên. Tên thương hiệu xuống dòng giữa chừng
+            đọc như trang vỡ layout. */}
+        <span className="font-display text-[0.95rem] font-extrabold tracking-tight whitespace-nowrap text-ink sm:text-lg">
           {CONTACT.pageName}
         </span>
 
@@ -48,7 +51,7 @@ export function SiteHeader() {
           className="px-5 py-2.5 text-sm"
         >
           <MessengerIcon className="h-4 w-4" />
-          {CTA.nhanTin}
+          {CTA.loTrinhNgan}
         </Button>
       </div>
     </header>

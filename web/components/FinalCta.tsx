@@ -40,7 +40,7 @@ export function FinalCta() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button href={MESSENGER_URL} external variant="onBrand">
                 <MessengerIcon className="h-5 w-5" />
-                {CTA.nhanTin}
+                {CTA.loTrinh}
               </Button>
               <Button href={FANPAGE_URL} external variant="outlineOnBrand">
                 {CTA.fanpage}

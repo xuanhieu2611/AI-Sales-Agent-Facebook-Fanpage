@@ -3,9 +3,15 @@ import Image from "next/image";
 import { SHOW_REVIEW_PLACEHOLDERS } from "@/lib/site";
 
 /**
- * Chỉ dùng trong bản duyệt giao diện. Khối này cố ý không giả làm ảnh thật:
- * nó cho chủ shop biết CHÍNH XÁC cần tìm / chụp asset nào, nhưng trang review
- * vẫn có nhịp và tỷ lệ ảnh giống lúc đưa asset thật vào.
+ * Khung brief cho asset chưa có. Nó cố ý không giả làm ảnh thật: nó nói cho
+ * chủ shop biết CHÍNH XÁC cần chụp cái gì, nhưng vẫn giữ đúng tỷ lệ và nhịp
+ * của ảnh thật để bản duyệt không bị lệch layout.
+ *
+ * TỰ NHẬN BIẾT theo đuôi file: mọi ảnh giữ chỗ trong repo đều là `.svg`, nên
+ * `src` trỏ vào `.svg` (hoặc chưa có `src`) nghĩa là asset chưa có thật. Chủ
+ * shop chỉ cần thả ảnh thật vào `public/img/` và sửa đường dẫn — ĐÚNG Ô ĐÓ tự
+ * chuyển sang ảnh thật, không phải bật tắt gì. Trước đây phải lật một cờ
+ * chung cho cả trang, nghĩa là chỉ cần một asset chưa có là kẹt cả trang.
  */
 export function AssetPlaceholder({
   title,
@@ -14,21 +20,38 @@ export function AssetPlaceholder({
   className = "",
   src,
   alt,
+  viTriAnh = "object-center",
+  sizes = "(max-width: 1024px) 100vw, 50vw",
 }: {
   title: string;
   description: string;
   type?: "image" | "video" | "chat";
   className?: string;
-  /** Khi tắt REVIEW_PLACEHOLDERS, ảnh thật này sẽ thay hẳn khung brief. */
+  /** Trỏ vào file `.svg` (hoặc bỏ trống) = chưa có ảnh thật, hiện khung brief. */
   src?: string;
   alt?: string;
+  /**
+   * Ảnh bị cắt theo `object-cover`, nên phần nào của ảnh được giữ lại là do
+   * class này quyết định (`object-top`, `object-left-top`, `object-[50%_30%]`…).
+   * PHẢI CHỈNH LẠI mỗi khi thay ảnh: mỗi tấm chụp có chỗ quan trọng nằm một
+   * kiểu, không có giá trị nào đúng cho mọi ảnh.
+   */
+  viTriAnh?: string;
+  sizes?: string;
 }) {
   const Icon = type === "video" ? Play : ImageSquare;
+  const daCoAnhThat = Boolean(src) && !src!.endsWith(".svg");
 
-  if (!SHOW_REVIEW_PLACEHOLDERS && src) {
+  if (daCoAnhThat && !SHOW_REVIEW_PLACEHOLDERS) {
     return (
       <div className={`relative overflow-hidden bg-brand-soft ${className}`}>
-        <Image src={src} alt={alt ?? title} fill sizes="(max-width: 1024px) 100vw, 50vw" className="object-cover" />
+        <Image
+          src={src!}
+          alt={alt ?? title}
+          fill
+          sizes={sizes}
+          className={`object-cover ${viTriAnh}`}
+        />
       </div>
     );
   }

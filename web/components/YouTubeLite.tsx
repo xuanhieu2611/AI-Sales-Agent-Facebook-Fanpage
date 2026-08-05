@@ -14,12 +14,20 @@ export function YouTubeLite({
   title,
   className = "",
   priority = false,
+  hienTieuDe = true,
 }: {
   id: string;
   title: string;
   className?: string;
   /** Bật cho video đầu trang để ảnh thumbnail tải sớm. */
   priority?: boolean;
+  /**
+   * Tắt khi ngay phía trên video đã có sẵn một dòng tiêu đề nói y hệt (mốc
+   * "Bước 1/Bước 2" ở đầu trang). In cùng một câu hai lần cách nhau 60px
+   * đọc như trang bị lặp. Tắt cái NHÌN THẤY thôi — `aria-label` của nút phát
+   * vẫn giữ nguyên `title`, người dùng trình đọc màn hình không mất gì.
+   */
+  hienTieuDe?: boolean;
 }) {
   const [choi, setChoi] = useState(false);
 
@@ -60,11 +68,13 @@ export function YouTubeLite({
             </span>
           </span>
 
-          <span className="absolute inset-x-0 bottom-0 p-5 text-left">
-            <span className="font-display text-base font-bold tracking-tight text-white drop-shadow sm:text-lg">
-              {title}
+          {hienTieuDe && (
+            <span className="absolute inset-x-0 bottom-0 p-5 text-left">
+              <span className="font-display text-base font-bold tracking-tight text-white drop-shadow sm:text-lg">
+                {title}
+              </span>
             </span>
-          </span>
+          )}
         </button>
       )}
     </div>

@@ -17,7 +17,13 @@ export function MessengerIcon({ className = "" }: { className?: string }) {
    lướt, thấy ba cách gọi khác nhau cho cùng một nút thì phải dừng lại
    nghĩ xem chúng có khác nhau không. Đừng thêm nhãn mới ở đây. */
 export const CTA = {
-  nhanTin: "Nhắn tin tư vấn",
+  /** Nhãn chính của hành động "qua Messenger". Dùng ở đầu trang, thanh dính
+   *  đáy và khối chốt — ba chỗ khách đang trong mạch đọc, phải trùng khớp. */
+  loTrinh: "Nhận lộ trình phù hợp",
+  /** Bản ngắn, CHỈ dùng cho nút trên thanh đầu trang. Ngoại lệ có chủ đích:
+   *  chỗ đó hẹp (điện thoại còn phải chứa cả tên page), và thanh đầu trang
+   *  là chrome đứng ngoài mạch đọc, không phải một CTA trong bài. */
+  loTrinhNgan: "Nhắn tin tư vấn",
   deLaiSo: "Để lại số điện thoại",
   fanpage: "Xem thêm trên Fanpage",
 } as const;

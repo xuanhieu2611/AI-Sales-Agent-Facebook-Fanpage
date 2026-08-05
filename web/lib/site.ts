@@ -118,17 +118,26 @@ export const KHOA_HOC: Khoa[] = [
 ];
 
 // ── VIDEO ────────────────────────────────────────────────────────────
-// `gioiThieu` NẰM NGAY TRONG PHẦN ĐẦU TRANG, ngay dưới câu tiêu đề. Đây
-// là thứ quan trọng nhất trên cả trang: khách lạ xem nó để biết bên mình
-// là ai và dạy kiểu gì, thay vì phải đọc.
+// HAI VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
+// đoạn văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 //
-// TODO(chủ shop): quay một video giới thiệu riêng, dài 60 tới 90 giây,
-// CÓ PHỤ ĐỀ CHÁY SẴN TRONG VIDEO (phần lớn khách xem trên điện thoại và
-// tắt tiếng). Xong thì thay ID bên dưới. Tạm thời đang dùng video mô hình
-// lớp cho khỏi trống chỗ.
+//   `gioiThieu`  → Bước 1: "Vì sao bạn học mãi không hiệu quả?"
+//                  Nói trúng chỗ khách đang kẹt. KHÔNG bán gì ở video này.
+//   `giaiPhap`   → Bước 2: "EnglishWithBubby giúp được gì cho bạn?"
+//                  Bên mình là ai, chữa kiểu gì, mô hình bài quay sẵn +
+//                  coaching 1-1 chạy ra sao.
+//
+// Hai yêu cầu bắt buộc cho cả hai:
+//   1. DƯỚI 75 GIÂY. Traffic quảng cáo phần lớn rời trang trước giây 30;
+//      video hai phút thì gần như không ai xem tới video sau.
+//   2. PHỤ ĐỀ CHÁY SẴN TRONG VIDEO. Khách xem trên điện thoại và tắt tiếng
+//      — không có phụ đề thì coi như không có video.
+//
+// TODO(chủ shop): cả hai đang mượn tạm video cũ cho khỏi trống chỗ. Quay
+// video riêng cho từng bước rồi thay ID vào đây.
 export const VIDEO = {
   gioiThieu: "3D_fUgUmIAk",
-  moTaKhoaFull: "kpnz_RE1bPg",
+  giaiPhap: "kpnz_RE1bPg",
 };
 
 // ── LỘ TRÌNH 32 BUỔI ────────────────────────────────────────────────
@@ -158,16 +167,11 @@ export const LO_TRINH = [
 export const TONG_BUOI = LO_TRINH.reduce((sum, phan) => sum + phan.buoi, 0);
 
 // ── KÊNH ENGLISH WITH BUBBY ─────────────────────────────────────────
-// Cái này để trong mục "Về Bubby". Nó trả lời câu hỏi thầm trong đầu khách
-// lạ: "ông này có thật không, hay lập page hôm qua để bán khóa?" — 150+ nội
-// dung miễn phí đăng công khai nhiều năm là câu trả lời không cãi được.
+// Trả lời câu hỏi thầm trong đầu khách lạ: "ông này có thật không, hay lập
+// page hôm qua để bán khóa?" — nội dung miễn phí đăng công khai nhiều năm
+// là câu trả lời không cãi được.
 //
-// TODO(chủ shop): cập nhật lại con số follower mỗi khi tròn mốc mới.
 export const KENH = {
-  soFollower: "70k+",
-  soNoiDung: "150+",
-  /** Các danh sách phát trên kênh — cho thấy nội dung có hệ thống, không đăng lẻ. */
-  danhSachPhat: ["Ngữ Pháp", "Phát Âm", "Từ Vựng & Luyện Dịch", "Tips Học Hữu Ích"],
   /**
    * Bài học quà tặng chuyên sâu, miễn phí, KHÔNG đổi email.
    * Cố ý để ở đây như bằng chứng "bên này cho đi thật", chứ không dựng thành
@@ -181,6 +185,93 @@ export const KENH = {
   ],
 };
 
+// ── NỀN TẢNG CÔNG KHAI ──────────────────────────────────────────────
+// Dải bằng chứng nằm NGAY DƯỚI hai video đầu trang. Đây là chỗ khách lạ
+// chuyển từ "nghe hay đấy" sang "ừ, có thật".
+//
+// Cố ý dùng ẢNH CHỤP MÀN HÌNH kênh thật chứ không phải con số gõ tay:
+// con số nằm trên trang bán hàng thì vẫn chỉ là lời tự khen, còn ảnh chụp
+// có tên kênh và nút theo dõi là thứ khách tự bấm sang kiểm chứng được.
+//
+// Vì vậy MỖI THẺ PHẢI CÓ `url` thật. Ảnh chụp mà bấm không đi đâu thì nó
+// tụt lại thành lời tự khen, đúng thứ mình đang tránh — thẻ nào chưa có
+// link sẽ tự hiện dạng không bấm được để bạn thấy mà điền nốt.
+export type NenTang = {
+  id: string;
+  /** Tên nền tảng, viết đúng như khách quen gọi. */
+  ten: string;
+  /** @handle hoặc tên kênh, đúng y như trên nền tảng đó. */
+  taiKhoan: string;
+  /** Con số to trên thẻ. */
+  soLieu: string;
+  /** Con số đó là gì. Ngắn thôi, khách đọc lướt. */
+  nhan: string;
+  url: string;
+  /** Ảnh chụp màn hình trang kênh. Xem web/public/img/README.md. */
+  anh: string;
+  /**
+   * Phần nào của ảnh được giữ lại khi cắt. Ba tấm chụp có tỉ lệ khác hẳn
+   * nhau (TikTok dọc dài, YouTube ngang rộng, Fanpage dọc vừa) nên mỗi tấm
+   * cần một giá trị riêng. THAY ẢNH LÀ PHẢI CHỈNH LẠI CHỖ NÀY.
+   */
+  viTriAnh: string;
+  /** Mô tả khung giữ chỗ lúc duyệt giao diện — không hiện với khách. */
+  brief: string;
+};
+
+// ⚠ CON SỐ Ở ĐÂY PHẢI KHỚP VỚI ẢNH CHỤP NGAY BÊN CẠNH NÓ.
+// Cả dải này sống bằng việc khách đối chiếu được số với ảnh. Ghi "150+ video"
+// cạnh tấm ảnh in rõ "59 videos" thì không chỉ mất tác dụng — nó chứng minh
+// ngược lại rằng bên mình nói số không đáng tin. Chụp lại ảnh thì cập nhật số.
+export const NEN_TANG: NenTang[] = [
+  {
+    id: "tiktok",
+    ten: "TikTok",
+    taiKhoan: "@englishwithbubby",
+    soLieu: "70.6K",
+    nhan: "người theo dõi",
+    url: "https://www.tiktok.com/@englishwithbubby",
+    anh: "/img/kenh/tiktok.jpg",
+    // Ảnh chụp cả màn hình điện thoại, rất dài. Lấy phần đầu là đủ: avatar,
+    // tên kênh, dòng 70.6K Followers, nút Follow.
+    viTriAnh: "object-top",
+    brief:
+      "Chụp đầu trang TikTok: tên kênh, số follower, vài video đầu. Crop 4:3.",
+  },
+  {
+    id: "youtube",
+    ten: "YouTube",
+    taiKhoan: "@englishwithbubby",
+    soLieu: "59",
+    nhan: "video dạy miễn phí",
+    url: "https://www.youtube.com/@englishwithbubby",
+    // Bản đã cắt sẵn từ `youtube.png`. Ảnh gốc là screenshot màn hình máy tính
+    // rộng 2704px — nhét nguyên tấm vào thẻ rộng ~380px thì dòng "476
+    // subscribers • 59 videos" bé tới mức không đọc nổi, mà đọc được con số
+    // mới là toàn bộ lý do dải này tồn tại. Cắt lấy riêng khối đầu trang thì
+    // chữ to gấp ba. Chụp lại kênh thì nhớ cắt lại tương tự (hoặc chụp bằng
+    // điện thoại cho khung hẹp sẵn như tấm TikTok).
+    anh: "/img/kenh/youtube-header.png",
+    viTriAnh: "object-top",
+    brief:
+      "Chụp trang kênh YouTube: tên kênh, subscriber, và lưới video bên dưới.",
+  },
+  {
+    id: "facebook",
+    ten: "Fanpage",
+    taiKhoan: CONTACT.pageName,
+    soLieu: "10K",
+    nhan: "người theo dõi",
+    url: FANPAGE_URL,
+    anh: "/img/kenh/facebook.png",
+    // Đẩy khung xuống ~30%: tên page và dòng "10K followers" nằm dưới ảnh bìa,
+    // bám mép trên là cắt mất đúng hai thứ đáng giá nhất của tấm này.
+    viTriAnh: "object-[50%_30%]",
+    brief:
+      "Chụp Fanpage: ảnh bìa, tên page, số người theo dõi, huy hiệu phản hồi nhanh nếu có.",
+  },
+];
+
 // ── ẢNH ─────────────────────────────────────────────────────────────
 // Bỏ file ảnh thật vào web/public/img/ rồi sửa đường dẫn ở đây.
 // Hiện đang dùng ảnh giữ chỗ. Xem web/public/img/README.md.
@@ -189,11 +280,14 @@ export const ANH = {
 };
 
 /**
- * Bật khi duyệt giao diện với chủ shop: ảnh/video sẽ hiện thành khung brief
- * thay vì giả làm asset thật. Khi đã bỏ asset thật vào public/img, đổi thành
- * false để các khung chân dung/video tự hiển thị nội dung thật.
+ * ÉP cả trang hiện khung brief thay cho ảnh thật, kể cả những ô đã có ảnh.
+ * Chỉ bật khi muốn rà lại xem còn thiếu asset nào.
+ *
+ * Bình thường KHÔNG CẦN ĐỤNG TỚI: từng ô tự biết mình đã có ảnh thật hay
+ * chưa dựa vào đuôi file (`.svg` = ảnh giữ chỗ). Thả ảnh thật vào
+ * `public/img/` rồi sửa đường dẫn là ô đó tự đổi.
  */
-export const SHOW_REVIEW_PLACEHOLDERS = true;
+export const SHOW_REVIEW_PLACEHOLDERS = false;
 
 // ── FEEDBACK HỌC VIÊN ───────────────────────────────────────────────
 //
@@ -234,17 +328,52 @@ export type FeedbackVideo = {
 //   { videoId: "abc123xyz", ketQua: "Minh Thư, đi phỏng vấn bằng tiếng Anh sau 5 tháng" },
 export const FEEDBACK_VIDEO: FeedbackVideo[] = [];
 
-// Ảnh chụp màn hình. Đặt trong web/public/img/feedback/
-// Xem web/public/img/README.md để biết cách thay ảnh thật.
-export const FEEDBACK = [
-  { src: "/img/feedback/fb-01.svg", alt: "Feedback học viên về khóa phát âm" },
-  { src: "/img/feedback/fb-02.svg", alt: "Feedback học viên về kỹ năng dịch" },
-  { src: "/img/feedback/fb-03.svg", alt: "Feedback học viên về mô hình coaching 1-1" },
-  { src: "/img/feedback/fb-04.svg", alt: "Feedback học viên sau khi học xong lộ trình" },
-  { src: "/img/feedback/fb-05.svg", alt: "Feedback học viên về cách Bubby sửa bài" },
-  { src: "/img/feedback/fb-06.svg", alt: "Feedback học viên về buổi học thử 12 thì" },
-  { src: "/img/feedback/fb-07.svg", alt: "Feedback học viên về tiến bộ giao tiếp" },
-  { src: "/img/feedback/fb-08.svg", alt: "Feedback học viên giới thiệu bạn bè" },
+/**
+ * Ảnh chụp bình luận thật dưới video TikTok/YouTube. Đặt trong
+ * web/public/img/feedback/ — xem web/public/img/README.md.
+ *
+ * `rong` / `cao` là kích thước pixel THẬT của tấm ảnh. Bắt buộc phải đúng:
+ * trang dùng nó để chừa sẵn chỗ nên ảnh tải xong không làm giật cả trang.
+ * Lấy số bằng cách bấm chuột phải > Get Info trên máy Mac, hoặc chạy:
+ *
+ *     sips -g pixelWidth -g pixelHeight web/public/img/feedback/fb-01.jpeg
+ *
+ * Ảnh hiện NGUYÊN TẤM theo chiều ngang, không bị cắt — nên cứ crop sát vào
+ * đúng một bình luận là đẹp nhất. Crop rộng lấy cả màn hình thì chữ bé lại
+ * và không ai đọc.
+ */
+export type AnhFeedback = {
+  src: string;
+  alt: string;
+  rong: number;
+  cao: number;
+};
+
+export const FEEDBACK: AnhFeedback[] = [
+  {
+    src: "/img/feedback/fb-01.jpeg",
+    alt: "Bình luận: “hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn, đến đứa tiếp thu chậm như t còn hiểu”",
+    rong: 1290,
+    cao: 391,
+  },
+  {
+    src: "/img/feedback/fb-02.png",
+    alt: "Bình luận: “vid của a dạy hay, dễ hiểu lắm ạ”",
+    rong: 774,
+    cao: 172,
+  },
+  {
+    src: "/img/feedback/fb-03.png",
+    alt: "Bình luận: “video anh dạy siu dễ hiểu và thực tế lắm luôn ạ”",
+    rong: 782,
+    cao: 180,
+  },
+  {
+    src: "/img/feedback/fb-04.png",
+    alt: "Bình luận: “úi anh này giảng hay lắm luôn á cực dễ hiểu”",
+    rong: 770,
+    cao: 166,
+  },
 ];
 
 // ── CÂU HỎI THƯỜNG GẶP ──────────────────────────────────────────────
@@ -273,15 +402,4 @@ export const FAQ = [
     hoi: "Học xong mà không hiệu quả thì sao?",
     dap: "Bubby theo sát 1-1 nên không có chuyện bạn học lệch mà không ai biết. Còn phân vân thì học thử một buổi rồi quyết định.",
   },
-];
-
-// ── THÔNG SỐ TIN CẬY ────────────────────────────────────────────────
-// Bốn con số này cố ý chọn loại khách TỰ ĐI KIỂM CHỨNG ĐƯỢC: mở kênh ra là
-// thấy follower và số video. Mấy chỉ số tự khen ("coaching 1-1", "giáo án tự
-// nghiên cứu") đã có nguyên một mục nói rồi, nhét lên đây chỉ loãng.
-export const CHI_SO = [
-  { so: "10 năm", nhan: "kinh nghiệm xây gốc tiếng Anh" },
-  { so: `${KENH.soFollower}`, nhan: "người theo dõi kênh English with Bubby" },
-  { so: `${KENH.soNoiDung}`, nhan: "nội dung miễn phí cho người mất gốc" },
-  { so: "VSTEP C1", nhan: "trung bình 8.5 cả 4 kỹ năng" },
 ];
