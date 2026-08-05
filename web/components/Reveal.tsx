@@ -11,9 +11,12 @@ import type { ReactNode } from "react";
 export function Reveal({
   children,
   className = "",
+  as: The = "div",
 }: {
   children: ReactNode;
   className?: string;
+  /** Đổi sang `li` khi bọc từng mục trong `ul` — `div` con của `ul` là HTML sai. */
+  as?: "div" | "li";
 }) {
-  return <div className={`reveal ${className}`}>{children}</div>;
+  return <The className={`reveal ${className}`}>{children}</The>;
 }

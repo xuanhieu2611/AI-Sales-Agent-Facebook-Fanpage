@@ -1,10 +1,14 @@
 # Ảnh và video cho landing page
 
-Hiện tất cả ảnh đang là **ảnh giữ chỗ** (file `.svg` có chữ). Thay bằng ảnh
-thật theo hướng dẫn dưới.
-
-Sau khi bỏ file vào đây, sửa đường dẫn trong **`web/lib/site.ts`** — không cần
+Bỏ file ảnh vào đây, rồi sửa đường dẫn trong **`web/lib/site.ts`** — không cần
 đụng vào code giao diện.
+
+**Ô nào chưa có ảnh thật thì tự hiện khung brief** ghi rõ cần chụp cái gì.
+Trang nhận biết bằng đuôi file: đường dẫn còn trỏ vào `.svg` nghĩa là ảnh giữ
+chỗ. Thay bằng `.jpg`/`.png`/`.webp` là **đúng ô đó** đổi sang ảnh thật, các ô
+khác không ảnh hưởng. Không phải bật tắt gì thêm.
+
+Đang còn thiếu: **ảnh chân dung Bubby** (mục 1).
 
 ---
 
@@ -27,12 +31,88 @@ export const ANH = {
 
 ---
 
-## 2. Feedback học viên
+## 2. Ảnh chụp kênh — `kenh/`
 
-Trang có **ba kiểu feedback**. Dùng đủ cả ba thì thuyết phục nhất, vì mỗi
-kiểu làm một việc khác nhau.
+Ba tấm này nằm **ngay dưới hai video đầu trang**, ở dải "Không cần tin lời
+bên mình". Chúng làm một việc mà con số gõ tay không làm được: khách **bấm
+vào là sang thẳng kênh thật** để tự soi.
 
-### 2a. Câu nói nổi bật (chữ đánh máy) — thuyết phục nhất trên điện thoại
+| | |
+|---|---|
+| Vị trí trên trang | Dải kênh, ngay sau hai video đầu trang |
+| Khung hiển thị | **8:5 (ngang)**, ảnh bị cắt cho vừa khung |
+| Định dạng | `.jpg`, `.png` hoặc `.webp` |
+| Số lượng | 3 tấm: TikTok, YouTube, Fanpage |
+
+**Chụp bằng điện thoại.** Khung hẹp nên chữ tự to, thả vào thẻ là đọc được
+ngay. Ảnh chụp màn hình máy tính rộng gấp ba, nhét vào thẻ ~380px thì dòng
+follower bé tới mức không ai đọc nổi — mà **đọc được con số mới là toàn bộ lý
+do dải này tồn tại**. (Tấm YouTube hiện tại chụp trên máy tính nên đã phải cắt
+riêng khối đầu trang ra file `youtube-header.png`.)
+
+Cần thấy rõ: **ảnh đại diện, tên kênh, và số người theo dõi**.
+
+Bỏ file vào `web/public/img/kenh/`, rồi trong `web/lib/site.ts` sửa `NEN_TANG`:
+
+```ts
+{
+  id: "tiktok",
+  soLieu: "70.6K",                // ← phải khớp với số in trong ảnh
+  url: "https://www.tiktok.com/@englishwithbubby",   // ← BẮT BUỘC điền
+  anh: "/img/kenh/tiktok.jpg",
+  viTriAnh: "object-top",         // ← xem giải thích bên dưới
+  ...
+}
+```
+
+**`url` là bắt buộc.** Thẻ nào chưa có link sẽ tự hiện dạng bấm không được —
+mà ảnh chụp không bấm được thì lại tụt về thành lời tự khen, đúng thứ dải
+này sinh ra để tránh.
+
+**`soLieu` phải khớp với con số in trong chính tấm ảnh đó.** Ghi "150+ video"
+cạnh tấm ảnh in rõ "59 videos" thì không chỉ mất tác dụng — nó chứng minh
+ngược lại rằng bên mình nói số không đáng tin.
+
+**`viTriAnh` quyết định phần nào của ảnh được giữ khi cắt.** Ảnh chụp mỗi
+nền tảng một tỉ lệ khác nhau nên **thay ảnh là phải chỉnh lại giá trị này**,
+rồi mở trang xem lại xem số follower có còn nằm trong khung không:
+
+| Giá trị | Giữ lại phần nào |
+|---|---|
+| `object-top` | Mép trên (ảnh dọc dài như TikTok) |
+| `object-left-top` | Góc trên trái (ảnh ngang rộng) |
+| `object-[50%_30%]` | Đẩy khung xuống 30% (khi chữ nằm dưới ảnh bìa, như Fanpage) |
+
+---
+
+## 3. Feedback học viên
+
+Trang có **ba kiểu feedback**, và chúng hiện **theo đúng thứ tự dưới đây**:
+video trước, rồi mới tới chữ và ảnh. Cùng một mạch với đầu trang — khách xem
+xong hai video rồi mới đọc. Dùng đủ cả ba thì thuyết phục nhất.
+
+### 3a. Video học viên tự quay — mạnh nhất, để lên đầu
+
+Đây là thứ khó dựng giả nhất, nên cũng đáng tin nhất. Bạn nói có một cái rồi,
+đó chính là chỗ để nó.
+
+Up lên YouTube (để chế độ "không công khai" cũng nhúng được), rồi lấy phần
+ID trong link. Ví dụ link `youtube.com/watch?v=abc123xyz` thì ID là
+`abc123xyz`.
+
+```ts
+export const FEEDBACK_VIDEO: FeedbackVideo[] = [
+  { videoId: "abc123xyz", ketQua: "Minh Thư, đi phỏng vấn bằng tiếng Anh sau 5 tháng" },
+];
+```
+
+**2 tới 3 cái là đủ**, đừng nhiều hơn. Video nên ngắn, dưới 1 phút. Có một
+cái thì nó tự hiện to ra giữa mục, không bị co lại thành ô nhỏ.
+
+`ketQua` là dòng chữ dưới video — viết **kết quả cụ thể**, đừng viết "bạn A
+review khóa học".
+
+### 3b. Câu nói nổi bật (chữ đánh máy) — đọc được ngay khi lướt
 
 Ảnh chụp tin nhắn ở cỡ nhỏ thì không ai đọc nổi. Ba câu này được đánh máy
 lại nên đọc được ngay khi lướt qua.
@@ -55,67 +135,70 @@ Và **nhớ xin phép học viên** trước khi đăng tên thật.
 
 Để trống mảng này thì khối đó tự ẩn, trang vẫn chạy bình thường.
 
-### 2b. Video học viên tự quay — thuyết phục nhất, nhưng phải bấm mới xem
-
-Up lên YouTube (để chế độ "không công khai" cũng nhúng được), rồi lấy phần
-ID trong link. Ví dụ link `youtube.com/watch?v=abc123xyz` thì ID là
-`abc123xyz`.
-
-```ts
-export const FEEDBACK_VIDEO: FeedbackVideo[] = [
-  { videoId: "abc123xyz", ketQua: "Minh Thư, đi phỏng vấn bằng tiếng Anh sau 5 tháng" },
-];
-```
-
-**2 tới 3 cái là đủ**, đừng nhiều hơn. Video nên ngắn, dưới 1 phút.
-
-### 2c. Ảnh chụp màn hình — chứng minh mấy cái trên là có thật
+### 3c. Ảnh chụp bình luận — chứng minh mấy cái trên là có thật
 
 | | |
 |---|---|
-| Vị trí trên trang | Mục "Học viên nói gì", phần tường ảnh phía dưới |
-| Tỉ lệ | **3:4 (dọc)** — ảnh chụp màn hình điện thoại là vừa đẹp |
+| Vị trí trên trang | Mục "Học viên nói gì", phần cuối |
+| Tỉ lệ | **Ngang, dẹt** — crop sát vào đúng một bình luận |
 | Định dạng | `.jpg`, `.png` hoặc `.webp` |
-| Số lượng | Đang để 8 ô. Thêm/bớt bao nhiêu cũng được. |
+| Số lượng | Đang có 4. Thêm bớt bao nhiêu cũng được. |
 
-Ảnh trong lưới bị cắt theo **phần trên** (`object-top`), nên crop sẵn sao cho
-câu feedback nằm ở nửa trên. Khách **bấm vào ảnh là phóng to đọc được cả
-tấm**, nên phần dưới bị cắt trong lưới cũng không mất đi đâu.
+Ảnh hiện **nguyên tấm, rộng hết cột, không bị cắt tí nào** — nên cứ crop sát
+vào đúng một bình luận là đẹp và dễ đọc nhất. Crop rộng lấy cả màn hình thì
+chữ co lại và không ai đọc.
 
-**Nhớ che tên/ảnh đại diện học viên** nếu chưa xin phép đăng.
+**Nhớ che tên/ảnh đại diện** nếu chưa xin phép đăng.
+
+Mỗi tấm cần thêm **kích thước pixel thật** (`rong` × `cao`). Trang dùng nó để
+chừa sẵn chỗ, ảnh tải xong không làm giật cả trang. Lấy số bằng cách bấm chuột
+phải > Get Info trên máy Mac, hoặc chạy:
+
+```bash
+sips -g pixelWidth -g pixelHeight web/public/img/feedback/fb-01.jpeg
+```
 
 ```ts
-export const FEEDBACK = [
-  { src: "/img/feedback/fb-01.jpg", alt: "Feedback học viên về khóa phát âm" },
-  // ... đổi hết .svg thành .jpg
+export const FEEDBACK: AnhFeedback[] = [
+  {
+    src: "/img/feedback/fb-01.jpeg",
+    alt: "Bình luận: “hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn”",
+    rong: 1290,
+    cao: 391,
+  },
 ];
 ```
 
-`alt` là mô tả cho người khiếm thị và cho Google — viết đúng nội dung feedback,
-đừng để chung chung.
+`alt` là mô tả cho người khiếm thị và cho Google — **chép luôn câu bình luận
+vào đó**, đừng để chung chung kiểu "feedback học viên".
 
 ---
 
-## 3. Video giới thiệu (quan trọng nhất)
+## 4. Hai video đầu trang (quan trọng nhất)
 
-Video này nằm **ngay trong phần đầu trang**, ngay dưới câu tiêu đề. Nó là thứ
-quan trọng nhất trên cả trang: khách lạ xem nó thay vì đọc.
+Hai video này **là cả nửa trên của trang**. Khách từ quảng cáo không đọc đoạn
+văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 
-| | |
-|---|---|
-| Độ dài | **60 tới 90 giây**, đừng dài hơn |
-| Phụ đề | **Bắt buộc cháy sẵn trong video** |
-| Nội dung | Bubby là ai · dạy kiểu gì · vì sao cách này khác · mời nhắn tin |
+| | Bước 1 — `gioiThieu` | Bước 2 — `giaiPhap` |
+|---|---|---|
+| Tiêu đề trên trang | "Vì Sao Bạn Học Mãi Không Hiệu Quả?" | "EnglishWithBubby Giúp Được Gì Cho Bạn?" |
+| Việc nó làm | Nói trúng chỗ khách đang kẹt | Bên mình là ai, chữa kiểu gì |
+| Nội dung | Vì sao học mãi vẫn không nói được | Cách dạy: bài quay sẵn + coaching 1-1, lộ trình ra sao |
+| **Không** làm gì | **Không bán gì ở video này** | Không kể lể dài, để giá cho phần dưới |
 
-Vì sao phụ đề là bắt buộc: phần lớn khách xem trên điện thoại và **tắt tiếng**.
-Không có phụ đề thì coi như không có video.
+Hai điều bắt buộc cho **cả hai** video:
+
+1. **Dưới 75 giây.** Traffic quảng cáo phần lớn rời trang trước giây 30. Video
+   một mà dài hai phút thì gần như không ai xem tới video hai.
+2. **Phụ đề cháy sẵn trong video.** Khách xem trên điện thoại và **tắt tiếng**.
+   Không có phụ đề thì coi như không có video.
 
 Up lên YouTube rồi sửa trong `web/lib/site.ts`:
 
 ```ts
 export const VIDEO = {
-  gioiThieu: "ID_VIDEO_MOI",   // ← thay vào đây
-  // ...
+  gioiThieu: "ID_VIDEO_BUOC_1",   // ← thay vào đây
+  giaiPhap:  "ID_VIDEO_BUOC_2",   // ← và đây
 };
 ```
 

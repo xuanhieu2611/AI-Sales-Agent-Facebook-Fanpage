@@ -5,55 +5,51 @@ import { SectionHead } from "./ui";
 import { YouTubeLite } from "./YouTubeLite";
 import { FEEDBACK, FEEDBACK_NOI_BAT, FEEDBACK_VIDEO } from "@/lib/site";
 
-const NEN = ["bg-surface", "bg-mark-soft/70", "bg-brand-soft/60"];
-
 /**
- * Bằng chứng xã hội đứng ngay dưới lời hứa đầu trang. Khi chưa gắn asset thật,
- * bản duyệt vẫn cho thấy đúng loại bằng chứng cần dùng, thay vì giả ảnh feedback.
+ * Bằng chứng xã hội, đứng ngay sau dải kênh công khai. Khi chưa gắn asset
+ * thật, bản duyệt vẫn cho thấy đúng loại bằng chứng cần dùng, thay vì giả
+ * ảnh feedback.
+ *
+ * TIÊU ĐỀ PHẢI KHỚP VỚI BẰNG CHỨNG THẬT SỰ CÓ. Bản trước đề "Người học xong
+ * nói" và mở bài "nghe học viên tự kể trước" — nhưng bên dưới không có một
+ * video học viên nào, cũng không có câu nào của người đã học xong khóa, chỉ
+ * có bình luận của người xem video miễn phí. Hứa to hơn thứ đưa ra là kiểu
+ * mất uy tín tệ nhất, vì khách phát hiện ra ngay trong ba giây.
+ *
+ * Nên tiêu đề giờ nói đúng cái đang có (người XEM nói), và phần mở bài biến
+ * chính chỗ đó thành lợi thế: mới chỉ là đồ miễn phí mà người ta đã nói vậy.
+ * Có video học viên thật rồi thì đổi lại thành "người học xong nói" — lúc đó
+ * câu ấy mới đúng.
+ *
+ * Video học viên (nếu có) vẫn đứng TRƯỚC tường ảnh: video là thứ khó dựng
+ * nhất nên cũng đáng tin nhất. Đừng đẩy nó xuống dưới.
  */
 export function Feedback() {
+  // `.svg` = ảnh giữ chỗ còn sót lại, không đưa cho khách xem.
+  const anhThat = FEEDBACK.filter((f) => !f.src.endsWith(".svg"));
   const coFeedbackThat =
-    FEEDBACK_NOI_BAT.length > 0 ||
-    FEEDBACK_VIDEO.length > 0 ||
-    FEEDBACK.some((f) => !f.src.endsWith(".svg"));
+    FEEDBACK_NOI_BAT.length > 0 || FEEDBACK_VIDEO.length > 0 || anhThat.length > 0;
 
   return (
     <section id="feedback" className="bg-paper-2/45 py-24 sm:py-32">
       <div className="shell">
         <Reveal>
           <SectionHead
-            eyebrow="Học viên nói gì"
-            title="Kết quả thật cần được thấy trước khi khách đọc tiếp."
-            lead="Ba mẩu feedback ngắn, có thật, đọc được ngay trên điện thoại thuyết phục hơn một tường ảnh nhỏ không ai kịp xem."
+            title="Người xem nói, không phải bên mình nói."
+            lead="Toàn bộ bên dưới là bình luận thật dưới video miễn phí trên kênh. Chưa ai trong số này trả một đồng học phí nào."
           />
         </Reveal>
 
         {coFeedbackThat ? (
           <>
-            {FEEDBACK_NOI_BAT.length > 0 && (
-              <div className="mt-14 grid gap-5 lg:grid-cols-3">
-                {FEEDBACK_NOI_BAT.map((f, i) => (
-                  <Reveal key={f.cau}>
-                    <figure
-                      className={`flex h-full flex-col gap-5 rounded-2xl border border-line p-7 ${
-                        NEN[i % NEN.length]
-                      }`}
-                    >
-                      <blockquote className="font-display text-xl leading-[1.4] font-bold tracking-tight text-ink">
-                        “{f.cau}”
-                      </blockquote>
-                      <figcaption className="mt-auto flex flex-col gap-0.5 text-sm">
-                        <span className="font-semibold text-ink">{f.ten}</span>
-                        <span className="text-muted">{f.ketQua}</span>
-                      </figcaption>
-                    </figure>
-                  </Reveal>
-                ))}
-              </div>
-            )}
-
             {FEEDBACK_VIDEO.length > 0 && (
-              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              <div
+                className={`mt-14 grid gap-5 ${
+                  FEEDBACK_VIDEO.length === 1
+                    ? "max-w-3xl"
+                    : "sm:grid-cols-2 lg:grid-cols-3"
+                }`}
+              >
                 {FEEDBACK_VIDEO.map((v) => (
                   <Reveal key={v.videoId} className="flex flex-col gap-3">
                     <YouTubeLite id={v.videoId} title={v.ketQua} />
@@ -63,12 +59,11 @@ export function Feedback() {
               </div>
             )}
 
-            {FEEDBACK.some((f) => !f.src.endsWith(".svg")) && (
-              <div className="mt-14 flex flex-col gap-5">
-                <p className="text-[0.95rem] text-muted">
-                  Ảnh chụp từ tin nhắn học viên. Bấm vào ảnh để đọc rõ.
-                </p>
-                <FeedbackWall anh={FEEDBACK.filter((f) => !f.src.endsWith(".svg"))} />
+            {/* Ảnh chụp và câu đánh máy đi CHUNG một tường, không tách hai
+                khối. Xem chú thích `tron()` trong FeedbackWall.tsx. */}
+            {(anhThat.length > 0 || FEEDBACK_NOI_BAT.length > 0) && (
+              <div className={FEEDBACK_VIDEO.length > 0 ? "mt-10" : "mt-14"}>
+                <FeedbackWall anh={anhThat} cau={FEEDBACK_NOI_BAT} />
               </div>
             )}
           </>
@@ -96,7 +91,7 @@ export function Feedback() {
                 <article className="flex h-full flex-col justify-between rounded-2xl border border-brand/20 bg-brand p-7 text-white shadow-[0_18px_45px_-36px_rgba(22,35,63,0.65)]">
                   <span className="eyebrow text-white/65">VIDEO FEEDBACK (NẾU CÓ)</span>
                   <p className="mt-8 font-display text-xl leading-[1.35] font-bold tracking-tight">
-                    Học viên tự nói 30–60 giây: trước đây kẹt gì, sau đó dùng được vào đâu.
+                    Học viên tự nói 30 tới 60 giây: trước đây kẹt gì, sau đó dùng được vào đâu.
                   </p>
                   <p className="mt-7 text-sm text-white/70">Đặt thumbnail thật ở đây, phụ đề cháy sẵn.</p>
                 </article>
