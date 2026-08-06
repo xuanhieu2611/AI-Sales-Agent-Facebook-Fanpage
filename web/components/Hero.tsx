@@ -88,7 +88,7 @@ export function Hero() {
           href={MESSENGER_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-5 text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors hover:decoration-brand"
+          className="mt-5 text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-brand"
         >
           Thấy đúng chỗ mình đang kẹt rồi? Nhắn Bubby luôn
         </Link>
@@ -132,7 +132,7 @@ export function Hero() {
               trước đây chữ hứa "xem học viên nói gì" mà lại nhảy sang mục kênh. */}
           <Link
             href="#feedback"
-            className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-brand"
+            className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:text-brand"
           >
             Hoặc kéo xuống xem người học nói gì
             <CaretDown weight="bold" aria-hidden className="h-4 w-4 shrink-0" />

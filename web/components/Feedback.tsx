@@ -39,10 +39,12 @@ export function Feedback() {
             lead="Toàn bộ bên dưới là bình luận thật dưới video miễn phí trên kênh. Chưa ai trong số này trả một đồng học phí nào."
           />
         </Reveal>
+      </div>
 
-        {coFeedbackThat ? (
-          <>
-            {FEEDBACK_VIDEO.length > 0 && (
+      {coFeedbackThat ? (
+        <>
+          {FEEDBACK_VIDEO.length > 0 && (
+            <div className="shell">
               <div
                 className={`mt-14 grid gap-5 ${
                   FEEDBACK_VIDEO.length === 1
@@ -57,17 +59,19 @@ export function Feedback() {
                   </Reveal>
                 ))}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Ảnh chụp và câu đánh máy đi CHUNG một tường, không tách hai
-                khối. Xem chú thích `tron()` trong FeedbackWall.tsx. */}
-            {(anhThat.length > 0 || FEEDBACK_NOI_BAT.length > 0) && (
-              <div className={FEEDBACK_VIDEO.length > 0 ? "mt-10" : "mt-14"}>
-                <FeedbackWall anh={anhThat} cau={FEEDBACK_NOI_BAT} />
-              </div>
-            )}
-          </>
-        ) : (
+          {/* Tấm ghim + dải cuộn. `FeedbackWall` tự bọc `shell` cho từng phần
+              vì dải cuộn CỐ Ý tràn ra ngoài lề — xem FeedbackWall.tsx. */}
+          {(anhThat.length > 0 || FEEDBACK_NOI_BAT.length > 0) && (
+            <div className={FEEDBACK_VIDEO.length > 0 ? "mt-12" : "mt-14 sm:mt-16"}>
+              <FeedbackWall anh={anhThat} cau={FEEDBACK_NOI_BAT} />
+            </div>
+          )}
+        </>
+      ) : (
+        <div className="shell">
           <div className="mt-14 grid gap-5 lg:grid-cols-[1.18fr_0.82fr]">
             <Reveal>
               <AssetPlaceholder
@@ -98,8 +102,8 @@ export function Feedback() {
               </Reveal>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }

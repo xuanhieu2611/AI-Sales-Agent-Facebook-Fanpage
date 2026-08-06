@@ -36,6 +36,11 @@
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bevietnam), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* chuyển động — đường cong mạnh hơn ease mặc định của CSS */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 /* ────────────────────────────────────────────────────────────────
@@ -101,7 +106,7 @@
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -109,15 +114,66 @@
   }
 }
 
+@keyframes growX {
+  from {
+    opacity: 0;
+    transform: scaleX(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
 /* Hiện dần khi cuộn tới — thuần CSS, không JS.
    Trình duyệt không hỗ trợ scroll-driven animation thì bỏ qua khối này
-   và nội dung hiện bình thường. Không bao giờ ẩn nội dung mặc định. */
+   và nội dung hiện bình thường. Không bao giờ ẩn nội dung mặc định.
+   Dùng linear vì tiến độ gắn với cuộn (scrub); ease-out dành cho UI
+   tương tác (nút, sticky bar). */
 @utility reveal {
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
       animation: fadeUp linear both;
       animation-timeline: view();
       animation-range: entry 0% cover 18%;
+    }
+  }
+}
+
+/* Stagger cho các mục reveal xếp cạnh nhau — lệch range thay vì delay,
+   vì delay + scroll timeline dễ bị “nhảy” khi cuộn nhanh. */
+@utility reveal-d1 {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation-range: entry 4% cover 20%;
+    }
+  }
+}
+
+@utility reveal-d2 {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation-range: entry 8% cover 22%;
+    }
+  }
+}
+
+@utility reveal-d3 {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation-range: entry 12% cover 24%;
+    }
+  }
+}
+
+/* Thanh tỉ lệ lộ trình — scale từ mép trái, gắn với cuộn như reveal. */
+@utility reveal-bar {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: growX linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+      transform-origin: left center;
     }
   }
 }
@@ -180,9 +236,139 @@
   mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
 
+/* ── Feedback flood — hai cột cuộn dọc vô hạn (“cuộn bình luận”) ──
+   Track chứa 2 set giống hệt; translateY(-50%) = đúng một set.
+   Linear vì đây là chuyển động liên tục (marquee), không phải UI tương tác.
+   Không pause khi hover — volume phải chạy suốt. Chỉ chạy khi `.is-in-view`
+   (trong viewport + tab đang hiện). Reduced-motion: ẩn khối này
+   (motion-reduce:hidden), hiện masonry tĩnh.
+
+   KHỐI NÀY CỐ Ý TRÀN RA NGOÀI `shell`. Ảnh chụp bình luận là chữ 15px của
+   TikTok: nhốt trong 74rem rồi chia hai cột thì mỗi cột còn ~360px, chữ co
+   lại còn nửa cỡ thật và không ai đọc nổi. Tràn hết bề ngang thì mỗi cột
+   ~700px, gần đúng cỡ ảnh gốc. Chốt trần 96rem để trên màn siêu rộng ảnh
+   không bị nở to hơn cỡ thật rồi mờ. */
+@keyframes feedback-marquee-y {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+.feedback-flood {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 96rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  height: min(68vh, 30rem);
+  overflow: hidden;
+  /* Mờ dần cả bốn mép: trên/dưới để đọc ra “nhìn lén vào một thread dài”,
+     hai bên để dải chảy ra khỏi trang thay vì bị chặt cụt ở mép màn hình.
+     `intersect` = giao của hai lớp mặt nạ; thiếu nó thì chỉ lớp cuối có tác
+     dụng. `-webkit-mask-composite: source-in` là cùng phép đó cho Safari cũ. */
+  -webkit-mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
+  mask-image:
+    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
+    linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+
+  @media (width >= 640px) {
+    gap: 1rem;
+    padding-inline: 2rem;
+    height: min(76vh, 40rem);
+  }
+
+  /* Chia hai cột từ 1024px, KHÔNG phải từ 640px: ở khoảng giữa (điện thoại
+     ngang, tablet dọc) hai cột làm mỗi cột còn ~300px, chữ trong ảnh chụp
+     nhỏ hơn cả bản gốc trên điện thoại. Một cột rộng luôn thắng hai cột hẹp
+     ở đây, vì thứ phải đọc được là chữ nằm TRONG ảnh. */
+  @media (width >= 1024px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.feedback-flood-lane {
+  height: 100%;
+  overflow: hidden;
+}
+
+.feedback-marquee-track {
+  display: flex;
+  flex-direction: column;
+  /* Mặc định paused — chỉ chạy khi viewport vào tầm nhìn (tiết kiệm GPU
+     trên 4G / tab nền). Linear = cảm giác “đang chảy”, không ease. */
+  animation: feedback-marquee-y linear infinite;
+  animation-play-state: paused;
+}
+
+.feedback-flood.is-in-view .feedback-marquee-track {
+  animation-play-state: running;
+  will-change: transform;
+}
+
+.feedback-marquee-reverse {
+  animation-direction: reverse;
+  /* Lệch pha với lane kia — hai cột không “khớp nhịp” như screensaver. */
+  animation-delay: -37s;
+}
+
+.feedback-marquee-set {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  /* Khớp gap — nửa vòng lặp gồm cả khoảng trống cuối set. */
+  padding-bottom: 0.75rem;
+
+  @media (width >= 640px) {
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Thụt lề so le cho từng tấm: dải trông như chồng ảnh chụp dán lên tường,
+   không phải bảng ô đều tăm tắp. Chỉ từ 640px trở lên — trên điện thoại mỗi
+   pixel bề ngang là chữ trong ảnh to thêm được một chút. */
+@media (width >= 640px) {
+  .feedback-marquee-set > *:nth-child(3n + 2) {
+    margin-inline-start: 1.5rem;
+  }
+
+  .feedback-marquee-set > *:nth-child(3n) {
+    margin-inline-end: 2rem;
+  }
+}
+
+/* Giữ opacity/màu để vẫn hiểu được trạng thái; tắt chuyển động vị trí. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal-bar {
+    animation: none !important;
+  }
+
+  /* Ẩn dải cuộn PHẢI nằm ở đây, không phải bằng `motion-reduce:hidden` trên
+     component: `.feedback-flood` là rule CSS thường (ngoài @layer), mà style
+     ngoài layer luôn thắng utility của Tailwind — nên `display: grid` bên trên
+     đè mất `display: none` của utility, và người tắt chuyển động nhìn thấy CẢ
+     dải cuộn LẪN bản tĩnh bên dưới. */
+  .feedback-flood {
+    display: none;
+  }
+
+  .feedback-marquee-track {
+    animation: none !important;
+    transform: none !important;
   }
 
   *,
@@ -190,6 +376,8 @@
   *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+    /* Không animate transform/box-shadow — màu & opacity vẫn chuyển được. */
+    transition-property: color, background-color, border-color, opacity,
+      text-decoration-color, fill, stroke !important;
   }
 }

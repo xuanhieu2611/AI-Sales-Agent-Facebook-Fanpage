@@ -15,8 +15,11 @@ export function Pricing() {
         </Reveal>
 
         <div className="mt-14 grid items-start gap-5 lg:grid-cols-3">
-          {KHOA_HOC.map((k) => (
-            <Reveal key={k.id}>
+          {KHOA_HOC.map((k, i) => (
+            <Reveal
+              key={k.id}
+              className={i === 1 ? "reveal-d1" : i === 2 ? "reveal-d2" : ""}
+            >
               <article
                 className={`flex h-full flex-col gap-6 rounded-2xl border p-7 ${
                   k.noiBat
