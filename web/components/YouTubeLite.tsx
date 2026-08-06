@@ -56,14 +56,14 @@ export function YouTubeLite({
             fill
             priority={priority}
             sizes="(max-width: 768px) 100vw, 640px"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            className="object-cover"
           />
           {/* thumbnail có thể sáng màu (vd. ảnh chụp tài liệu) — cần lớp
               tối chân ảnh thì tiêu đề trắng mới đọc được */}
           <span className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-ink/90 via-ink/45 to-transparent" />
 
           <span className="absolute inset-0 grid place-items-center">
-            <span className="grid h-16 w-16 place-items-center rounded-full bg-white/95 shadow-lg transition-transform duration-300 group-hover:scale-110">
+            <span className="grid h-16 w-16 place-items-center rounded-full bg-white/95 shadow-lg transition-transform duration-[160ms] ease-[var(--ease-out)] group-active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:group-hover:scale-[1.05]">
               <Play weight="fill" className="ml-0.5 h-6 w-6 text-brand" />
             </span>
           </span>

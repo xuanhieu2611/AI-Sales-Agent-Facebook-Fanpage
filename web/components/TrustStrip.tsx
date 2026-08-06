@@ -55,8 +55,11 @@ export function TrustStrip() {
             <TheKenhLon nenTang={chinh} />
           </Reveal>
 
-          {phu.map((n) => (
-            <Reveal key={n.id} className="h-full">
+          {phu.map((n, i) => (
+            <Reveal
+              key={n.id}
+              className={`h-full ${i === 0 ? "reveal-d1" : "reveal-d2"}`}
+            >
               <TheKenhNho nenTang={n} />
             </Reveal>
           ))}
@@ -89,9 +92,9 @@ export function TrustStrip() {
 }
 
 const KHUNG =
-  "group flex h-full flex-col rounded-2xl border border-line bg-paper-2/45 p-5 transition-all duration-200";
+  "group flex h-full flex-col rounded-2xl border border-line bg-paper-2/45 p-5 transition-[border-color,background-color,box-shadow,transform] duration-200 ease-[var(--ease-out)]";
 const KHUNG_BAM =
-  "hover:border-brand/40 hover:bg-paper-2/80 hover:shadow-[0_20px_50px_-34px_rgba(22,35,63,0.75)]";
+  "active:scale-[0.99] [@media(hover:hover)_and_(pointer:fine)]:hover:border-brand/40 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-paper-2/80 [@media(hover:hover)_and_(pointer:fine)]:hover:shadow-[0_20px_50px_-34px_rgba(22,35,63,0.75)]";
 
 /**
  * Cả thẻ là một link, không phải mỗi chữ "Xem kênh" — trên điện thoại ngón

@@ -42,12 +42,13 @@ type ButtonProps = {
 
 const VARIANTS = {
   primary:
-    "bg-brand text-white hover:bg-brand-deep shadow-[0_10px_24px_-14px_rgba(42,95,217,0.9)]",
+    "bg-brand text-white shadow-[0_10px_24px_-14px_rgba(42,95,217,0.9)] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-deep",
   outline:
-    "border border-ink/15 bg-surface text-ink hover:border-brand/50 hover:bg-brand-soft/50",
-  onBrand: "bg-white text-brand hover:bg-mark hover:text-ink",
+    "border border-ink/15 bg-surface text-ink [@media(hover:hover)_and_(pointer:fine)]:hover:border-brand/50 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-soft/50",
+  onBrand:
+    "bg-white text-brand [@media(hover:hover)_and_(pointer:fine)]:hover:bg-mark [@media(hover:hover)_and_(pointer:fine)]:hover:text-ink",
   outlineOnBrand:
-    "border border-white/45 text-white hover:border-white hover:bg-white/10",
+    "border border-white/45 text-white [@media(hover:hover)_and_(pointer:fine)]:hover:border-white [@media(hover:hover)_and_(pointer:fine)]:hover:bg-white/10",
 } as const;
 
 export function Button({
@@ -58,7 +59,7 @@ export function Button({
   external,
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap transition-all duration-200 active:scale-[0.98]";
+    "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap transition-[transform,background-color,border-color,color] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.97]";
   const props = external
     ? { target: "_blank", rel: "noopener noreferrer" }
     : {};

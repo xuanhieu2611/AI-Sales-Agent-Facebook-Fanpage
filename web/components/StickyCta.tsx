@@ -48,7 +48,7 @@ export function StickyCta() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/95 p-3 backdrop-blur-md transition-transform duration-300 lg:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/95 p-3 backdrop-blur-md transition-transform duration-[280ms] ease-[var(--ease-drawer)] lg:hidden ${
         hien ? "translate-y-0" : "translate-y-full"
       }`}
     >
@@ -56,10 +56,10 @@ export function StickyCta() {
         href={MESSENGER_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 py-3.5 text-sm font-semibold whitespace-nowrap text-white active:scale-[0.98]"
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 py-3.5 text-sm font-semibold whitespace-nowrap text-white transition-[transform,background-color] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-deep"
       >
-          <MessengerIcon className="h-4 w-4" />
-          {CTA.loTrinh}
+        <MessengerIcon className="h-4 w-4" />
+        {CTA.loTrinh}
       </a>
     </div>
   );

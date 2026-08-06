@@ -65,7 +65,7 @@ export function LeadForm() {
 
   const dangGui = trangThai === "dang-gui";
   const oInput =
-    "w-full rounded-xl border border-line bg-paper/60 px-4 py-3.5 text-ink placeholder:text-muted transition-colors focus:border-brand focus:bg-surface focus:outline-none";
+    "w-full rounded-xl border border-line bg-paper/60 px-4 py-3.5 text-ink placeholder:text-muted transition-[border-color,background-color] duration-[160ms] ease focus:border-brand focus:bg-surface focus:outline-none";
 
   return (
     <form onSubmit={guiDi} noValidate className="flex flex-col gap-4">
@@ -130,7 +130,7 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={dangGui}
-        className="mt-1 inline-flex items-center justify-center rounded-full bg-brand px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap text-white transition-all duration-200 hover:bg-brand-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-1 inline-flex items-center justify-center rounded-full bg-brand px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap text-white transition-[transform,background-color,opacity] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.97] disabled:cursor-not-allowed disabled:opacity-60 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-deep"
       >
         {dangGui ? "Đang gửi…" : "Gửi số cho Bubby gọi lại"}
       </button>

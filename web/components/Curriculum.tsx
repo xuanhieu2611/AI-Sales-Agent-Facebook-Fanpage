@@ -17,9 +17,9 @@ export function Curriculum() {
           />
         </Reveal>
 
-        {/* thanh tỉ lệ */}
-        <Reveal>
-          <div className="mt-14 flex h-3 w-full gap-1 overflow-hidden rounded-full">
+        {/* thanh tỉ lệ — scaleX từ trái: giải thích tỉ lệ, không chỉ trang trí */}
+        <div className="reveal-bar mt-14">
+          <div className="flex h-3 w-full gap-1 overflow-hidden rounded-full">
             {LO_TRINH.map((p, i) => (
               <div
                 key={p.ten}
@@ -29,7 +29,7 @@ export function Curriculum() {
               />
             ))}
           </div>
-        </Reveal>
+        </div>
 
         <ol className="mt-4">
           {LO_TRINH.map((p, i) => (

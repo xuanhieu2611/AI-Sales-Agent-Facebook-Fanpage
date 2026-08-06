@@ -38,7 +38,7 @@ export function SiteHeader() {
             <Link
               key={m.href}
               href={m.href}
-              className="text-sm font-medium text-muted transition-colors hover:text-brand"
+              className="text-sm font-medium text-muted transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:text-brand"
             >
               {m.nhan}
             </Link>

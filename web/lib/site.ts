@@ -341,12 +341,40 @@ export const FEEDBACK_VIDEO: FeedbackVideo[] = [];
  * Ảnh hiện NGUYÊN TẤM theo chiều ngang, không bị cắt — nên cứ crop sát vào
  * đúng một bình luận là đẹp nhất. Crop rộng lấy cả màn hình thì chữ bé lại
  * và không ai đọc.
+ *
+ * Dải ảnh cuộn rộng gần trọn bề ngang màn hình, mỗi cột tối đa ~760px, nên
+ * ảnh crop rộng khoảng 700–1300px là vừa đẹp, không bị nở mờ.
  */
 export type AnhFeedback = {
   src: string;
   alt: string;
   rong: number;
   cao: number;
+  /** Xem `TrichDan`. Chỉ tấm được ghim đầu mục mới cần. */
+  trichDan?: TrichDan;
+};
+
+/**
+ * Bản đánh máy lại của CHÍNH bình luận trong ảnh, dùng cho tấm ghim đứng đầu
+ * mục feedback: chữ to đọc được ngay, còn tấm ảnh nằm ngay bên cạnh là bằng
+ * chứng là câu đó có thật.
+ *
+ * KHÔNG được viết lại cho hay hơn. Phải trùng nguyên văn với ảnh, giữ cả chữ
+ * viết tắt và lỗi chính tả — sai một chữ là khách đối chiếu ra ngay, mà cả
+ * mục này sống bằng việc khách tin.
+ *
+ * Ảnh nào có `trichDan` thì ảnh đó được ghim. Muốn đổi tấm ghim thì chuyển
+ * khối này sang ảnh khác.
+ */
+export type TrichDan = {
+  /** Nguyên văn bình luận. */
+  cau: string;
+  /** Cụm được tô bút vàng. PHẢI là một đoạn con của `cau`, không thì bỏ trống. */
+  toSang?: string;
+  /** Tên người bình luận, đúng như hiện trong ảnh. */
+  ten: string;
+  /** Nơi và ngày, vd. "Bình luận TikTok · 28.9.2025". */
+  nguon: string;
 };
 
 export const FEEDBACK: AnhFeedback[] = [
@@ -355,6 +383,12 @@ export const FEEDBACK: AnhFeedback[] = [
     alt: "Bình luận: “hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn, đến đứa tiếp thu chậm như t còn hiểu”",
     rong: 1290,
     cao: 391,
+    trichDan: {
+      cau: "hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn, đến đứa tiếp thu chậm như t còn hiểu :) từ ghét môn anh g thấy nó cũng dễ",
+      toSang: "từ ghét môn anh g thấy nó cũng dễ",
+      ten: "Bá chủ bò",
+      nguon: "Bình luận TikTok · 28.9.2025",
+    },
   },
   {
     src: "/img/feedback/fb-02.png",
