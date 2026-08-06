@@ -35,8 +35,7 @@ export function Feedback() {
       <div className="shell">
         <Reveal>
           <SectionHead
-            title="Người xem nói, không phải bên mình nói."
-            lead="Toàn bộ bên dưới là bình luận thật dưới video miễn phí trên kênh. Chưa ai trong số này trả một đồng học phí nào."
+            title="Cảm nhận của học viên tại EnglishwithBubby"
           />
         </Reveal>
       </div>

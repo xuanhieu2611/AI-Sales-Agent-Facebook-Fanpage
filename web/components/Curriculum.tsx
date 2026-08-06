@@ -1,6 +1,6 @@
 import { Reveal } from "./Reveal";
 import { SectionHead } from "./ui";
-import { LO_TRINH, TONG_BUOI } from "@/lib/site";
+import { LO_TRINH } from "@/lib/site";
 
 /**
  * Thanh tỉ lệ 32 buổi. Đây là thông tin thật, không phải trang trí:
@@ -12,8 +12,7 @@ export function Curriculum() {
       <div className="shell">
         <Reveal>
           <SectionHead
-            title="Bốn phần, và một phần chiếm hơn nửa lộ trình."
-            lead={`Tỉ lệ ${TONG_BUOI} buổi dưới đây là cố ý: kỹ năng dịch mới là chỗ quyết định bạn có nói được hay không.`}
+            title="Thông tin Khóa Học"
           />
         </Reveal>
 

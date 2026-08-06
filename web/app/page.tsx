@@ -1,6 +1,5 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
-import { TrustStrip } from "@/components/TrustStrip";
 import { Curriculum } from "@/components/Curriculum";
 import { Feedback } from "@/components/Feedback";
 import { Pricing } from "@/components/Pricing";
@@ -16,8 +15,8 @@ import { StickyCta } from "@/components/StickyCta";
  *   người học xong nói sao → học cái gì →
  *   bao nhiêu tiền → nhắn đi
  *
- * Nửa trên CỐ Ý KHÔNG CÓ CHỮ ĐỂ ĐỌC: hai video rồi tới ảnh chụp kênh và
- * feedback. Traffic quảng cáo trên điện thoại không đọc đoạn văn, nên mọi
+ * Nửa trên CỐ Ý KHÔNG CÓ CHỮ ĐỂ ĐỌC: hai video rồi tới feedback. Traffic
+ * quảng cáo trên điện thoại không đọc đoạn văn, nên mọi
  * thứ phải thuyết phục được ở dạng xem. Chữ để dành cho nửa dưới, chỗ
  * khách đã quan tâm đủ để muốn biết chi tiết.
  *
@@ -32,15 +31,13 @@ export default function Home() {
       <main>
         {/* 1 — lời hứa + video vấn đề + video giải pháp + nút */}
         <Hero />
-        {/* 2 — có thật không: ảnh chụp kênh thật, bấm sang kiểm chứng được */}
-        <TrustStrip />
-        {/* 3 — bằng chứng xã hội lên sớm: khách lạ cần thấy người thật trước */}
+        {/* 2 — bằng chứng xã hội */}
         <Feedback />
-        {/* 4 — lộ trình 32 buổi, có tỉ lệ thật */}
+        {/* 3 — lộ trình 32 buổi, có tỉ lệ thật */}
         <Curriculum />
-        {/* 5 — giá */}
+        {/* 4 — giá */}
         <Pricing />
-        {/* 6 — chốt: Messenger, Fanpage, hoặc để lại SĐT */}
+        {/* 5 — chốt: Messenger, Fanpage, hoặc để lại SĐT */}
         <FinalCta />
       </main>
 

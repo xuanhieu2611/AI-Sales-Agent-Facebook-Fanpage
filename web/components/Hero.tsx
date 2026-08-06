@@ -1,13 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { ReactNode } from "react";
 import { CaretDown, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import { YouTubeLite } from "./YouTubeLite";
 import { AssetPlaceholder } from "./AssetPlaceholder";
 import { Button, CTA, Mark, MessengerIcon } from "./ui";
-import { CONTACT, MESSENGER_URL, SHOW_REVIEW_PLACEHOLDERS, VIDEO } from "@/lib/site";
+import {
+  BANG_CHUNG_TIKTOK,
+  CONTACT,
+  MESSENGER_URL,
+  SHOW_REVIEW_PLACEHOLDERS,
+  VIDEO,
+} from "@/lib/site";
 
 /**
- * Hero theo format "lời hứa lớn → hai video → nút". Với dịch vụ coaching cá
+ * Hero theo format "lời hứa lớn → hai video → bằng chứng TikTok → nút". Với dịch vụ coaching cá
  * nhân, video là bằng chứng sớm nhất: khách thấy Bubby nói và dạy thế nào
  * trước khi phải đọc bất cứ thứ gì bên dưới.
  *
@@ -44,10 +51,6 @@ export function Hero() {
         {/* Mốc cho StickyCta: sau khi khách đã thấy lời hứa, thanh Messenger
             sẽ xuất hiện trên điện thoại trong lúc họ xem video. */}
         <div id="dau-trang" className="flex max-w-[76rem] flex-col items-center gap-6">
-          <span className="eyebrow inline-flex w-fit items-center rounded-full border border-brand/25 bg-brand-soft/60 px-3.5 py-1.5 text-brand">
-            Coaching 1-1 · Xây gốc tiếng Anh
-          </span>
-
           {/* Ngắt dòng bằng tay, ở MỌI cỡ màn hình. Thả cho tự xuống dòng thì
               cụm được tô vàng bị cắt làm đôi giữa chừng ("mất" ở cuối dòng
               trên, "gốc tiếng Anh" ở dòng dưới) và vệt bút gãy thành hai
@@ -60,14 +63,6 @@ export function Hero() {
             Nơi dành riêng cho các bạn <br />
             <Mark>mất gốc tiếng Anh</Mark>
           </h1>
-
-          {/* MỘT dòng, không phải đoạn văn. Câu tiêu đề ở trên mới chỉ nói
-              "chỗ này dành cho ai"; dòng này nói "học xong thì được gì" —
-              thiếu nó thì cả nửa trên không hứa hẹn điều gì cả.
-              Không nới thành đoạn: traffic quảng cáo không đọc đoạn văn. */}
-          <p className="max-w-[46ch] text-[1.05rem] leading-relaxed text-ink-soft sm:text-[1.15rem]">
-            Học lại từ gốc, và có Bubby trực tiếp sửa bài cho bạn suốt khóa.
-          </p>
         </div>
 
         <BuocXem so={1}>Vì sao bạn học mãi không hiệu quả?</BuocXem>
@@ -112,6 +107,12 @@ export function Hero() {
           )}
         </KhungVideo>
 
+        {/* Sau khi hiểu cách Bubby dạy, khách thấy bằng chứng theo một mạch
+            dễ tin: kênh thật → playlist bài học thật → phản hồi thật. Ảnh
+            giữ nguyên tỉ lệ, không ép vào ba ô nhỏ bằng nhau: screenshot có
+            chữ bên trong, bị crop hoặc thu bé quá thì mất luôn lý do tồn tại. */}
+        <TikTokProof />
+
         {/* id để StickyCta biết đường tự ẩn khi nút này đang hiện trên màn
             hình — hai nút giống hệt nhau chồng lên nhau trông như lỗi. */}
         <div id="cta-dau-trang" className="mt-10 flex flex-col items-center gap-3">
@@ -138,6 +139,58 @@ export function Hero() {
             <CaretDown weight="bold" aria-hidden className="h-4 w-4 shrink-0" />
           </Link>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function TikTokProof() {
+  return (
+    <section
+      aria-labelledby="tiktok-proof-title"
+      className="mt-12 w-full max-w-[76rem] sm:mt-16"
+    >
+      <div className="mx-auto max-w-[42rem] text-center">
+        <p className="font-mono text-xs font-semibold tracking-[0.08em] text-brand">
+          NHÌN TỪ TIKTOK CỦA BUBBY
+        </p>
+        <h2
+          id="tiktok-proof-title"
+          className="mt-3 text-[1.8rem] leading-[1.25] text-ink sm:text-[2.35rem]"
+        >
+          Có kênh thật, bài học thật, người xem thật.
+        </h2>
+      </div>
+
+      {/* Mobile dùng dải ngang rộng gần cả màn hình. Nếu nhét ba ảnh vào một
+          hàng, chữ trong ảnh sẽ nhỏ đến mức không đọc nổi. Desktop đủ rộng
+          để khách nhìn cả ba câu chuyện cùng lúc. */}
+      <div className="-mr-4 mt-7 overflow-x-auto pb-4 pl-4 [scrollbar-width:thin] sm:-mr-6 sm:pl-6 lg:mx-0 lg:mt-9 lg:overflow-visible lg:px-0 lg:pb-0">
+        <ol className="grid auto-cols-[minmax(17.5rem,82vw)] grid-flow-col gap-4 pr-4 sm:auto-cols-[minmax(21rem,31rem)] sm:gap-5 sm:pr-6 lg:grid-flow-row lg:grid-cols-3 lg:items-start lg:gap-6 lg:pr-0">
+          {BANG_CHUNG_TIKTOK.map((anh, index) => (
+            <li
+              key={anh.src}
+              className={`overflow-hidden rounded-2xl border border-line bg-surface p-2.5 shadow-[0_22px_48px_-38px_rgba(22,35,63,0.8)] ${
+                index === 1 ? "lg:mt-8" : index === 2 ? "lg:mt-3" : ""
+              }`}
+            >
+              <div className="flex items-baseline justify-between gap-3 px-2.5 pb-3 pt-1.5">
+                <span className="font-mono text-[0.65rem] font-bold tracking-[0.06em] text-brand">
+                  {anh.nhan}
+                </span>
+                <span className="truncate text-sm font-semibold text-ink-soft">{anh.tieuDe}</span>
+              </div>
+              <Image
+                src={anh.src}
+                alt={anh.alt}
+                width={anh.rong}
+                height={anh.cao}
+                sizes="(max-width: 1023px) 82vw, 400px"
+                className="h-auto w-full rounded-xl border border-line/70"
+              />
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
