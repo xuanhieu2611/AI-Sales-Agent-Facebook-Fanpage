@@ -85,18 +85,22 @@ export function Hero() {
             dải Bubby phía trên đã nói đủ, ảnh chỉ để nhìn thấy là có thật. */}
         <TikTokProof />
 
+        <h2 className="mt-8 max-w-[22ch] text-center font-display text-[1.2rem] leading-[1.3] font-extrabold tracking-tight text-ink sm:mt-10 sm:max-w-none sm:text-[1.6rem] sm:leading-[1.25]">
+          Chiến Lược Học Toàn Diện Cho Người Mất Gốc
+        </h2>
+
         <KhungVideo>
           {SHOW_REVIEW_PLACEHOLDERS ? (
             <AssetPlaceholder
               type="video"
               className="aspect-video rounded-2xl"
-              title="Video: English with Bubby giúp được gì cho bạn"
+              title="Video: Chiến Lược Học Toàn Diện Cho Người Mất Gốc"
               description="Bubby giải thích khóa học, cách dạy, và lộ trình sẽ giúp học viên như thế nào. Video có phụ đề cháy sẵn."
             />
           ) : (
             <YouTubeLite
               id={VIDEO.giaiPhap}
-              title="English with Bubby giúp được gì cho bạn"
+              title="Chiến Lược Học Toàn Diện Cho Người Mất Gốc"
               hienTieuDe={false}
             />
           )}
@@ -115,18 +119,19 @@ export function Hero() {
 }
 
 /**
- * Ba ảnh TikTok nhỏ, không tiêu đề — nằm giữa dải Bubby và video Bước 2.
+ * Ba ảnh TikTok nhỏ + link kênh — nằm giữa dải Bubby và video Bước 2.
  * Chỉ cần nhìn thấy kênh / playlist / feedback là có thật. Cắt lấy phần đầu
  * (object-top): follower, playlist, bình luận đều nằm ở đó; giữ nguyên tấm
- * dọc thì dải này cao hơn cả video và tranh mất chỗ.
+ * dọc thì dải này cao hơn cả video và tranh mất chỗ. Link TikTok đứng dưới
+ * ảnh, sau khi khách đã thấy bằng chứng.
  */
 function TikTokProof() {
   return (
     <div
       aria-label="Ảnh chụp kênh TikTok của Bubby"
-      className="mt-6 w-full max-w-2xl sm:mt-7"
+      className="mt-6 flex w-full max-w-2xl flex-col items-center sm:mt-7"
     >
-      <ul className="grid grid-cols-3 gap-3 sm:gap-4">
+      <ul className="grid w-full grid-cols-3 gap-3 sm:gap-4">
         {BANG_CHUNG_TIKTOK.map((anh) => (
           <li
             key={anh.src}
@@ -144,6 +149,14 @@ function TikTokProof() {
           </li>
         ))}
       </ul>
+      <Link
+        href={BUBBY.tiktokUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-4 text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-brand"
+      >
+        Xem TikTok {BUBBY.taiKhoan}
+      </Link>
     </div>
   );
 }
@@ -203,7 +216,7 @@ function AiLaBubby() {
           </div>
         </div>
 
-        <p className="max-w-[36ch] text-center text-[0.92rem] leading-relaxed text-ink-soft">
+        <p className="max-w-[52ch] text-center text-[0.92rem] leading-relaxed text-ink-soft">
           {BUBBY.tomTat}
         </p>
 
@@ -215,7 +228,7 @@ function AiLaBubby() {
                 i > 0 ? "border-l border-line" : ""
               }`}
             >
-              <span className="font-display text-[1.15rem] leading-none font-extrabold tracking-tight text-ink sm:text-[1.3rem]">
+              <span className="font-display text-[1.15rem] leading-[1.2] font-extrabold tracking-tight text-ink sm:text-[1.3rem]">
                 {muc.so}
               </span>
               <span className="mt-1.5 text-center text-[0.72rem] leading-snug text-muted">
@@ -224,15 +237,6 @@ function AiLaBubby() {
             </li>
           ))}
         </ul>
-
-        <Link
-          href={BUBBY.tiktokUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-brand"
-        >
-          Xem TikTok {BUBBY.taiKhoan}
-        </Link>
       </div>
     </aside>
   );

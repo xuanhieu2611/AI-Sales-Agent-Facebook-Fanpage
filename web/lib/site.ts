@@ -178,13 +178,13 @@ export const VIDEO = {
 export const BUBBY = {
   ten: "Bubby",
   vaiTro: "Giảng viên · coaching 1-1 trực tiếp",
-  /** Một dòng. Không dài hơn một câu. */
+  /** Đoạn giới thiệu kênh — hiện dưới tên Bubby, trước dải số. */
   tomTat:
-    "10 năm dạy tiếng Anh, chuyên xây gốc và giao tiếp cho người Việt mất gốc.",
-  soFollower: "70.6K",
+    "Với hơn 70k follower trên Tiktok, English With Bubby được biết đến là một kênh chuyên về xây gốc tiếng Anh thực chiến với hơn 150 clip chia sẻ phân thành các tập trên 4 danh sách phát để các bạn có thể lần lượt xây lại kiến thức nền tảng từ Ngữ Pháp, Phát Âm, Từ Vựng - Luyện Dịch",
+  soFollower: "70k+",
   nhanFollower: "theo dõi TikTok",
   namDay: "10 năm",
-  nhanNamDay: "dạy tiếng Anh",
+  nhanNamDay: "chuyên xây gốc tiếng Anh",
   chungChi: "C1 VSTEP",
   nhanChungChi: "TB 8.5 cả 4 kỹ năng",
   taiKhoan: "@englishwithbubby",
@@ -210,7 +210,7 @@ export const BANG_CHUNG_TIKTOK: AnhTikTok[] = [
     nhan: "01 · Kênh TikTok",
     tieuDe: "@englishwithbubby",
     src: "/img/kenh/tiktok.jpg",
-    alt: "Trang TikTok Xây Gốc TA Cùng Bubby với 70.6K người theo dõi",
+    alt: "Trang TikTok Xây Gốc TA Cùng Bubby với hơn 70k người theo dõi",
     rong: 1170,
     cao: 2397,
   },
