@@ -1,7 +1,13 @@
 import { Check, Star } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
 import { Button, MessengerIcon, SectionHead } from "./ui";
-import { KHOA_HOC, MESSENGER_URL, UU_DAI } from "@/lib/site";
+import {
+  BAI_HOC_QUA_TANG,
+  KHOA_HOC,
+  MESSENGER_URL,
+  UU_DAI,
+  messengerVoiTinNhan,
+} from "@/lib/site";
 
 export function Pricing() {
   return (
@@ -9,29 +15,33 @@ export function Pricing() {
       <div className="shell">
         <Reveal>
           <SectionHead
-            title="Học phí"
+            title="Thông Tin Khóa Học"
           />
         </Reveal>
 
-        <div className="mt-14 grid items-start gap-5 lg:grid-cols-3">
+        <div className="mt-14 grid gap-5 lg:grid-cols-3">
           {KHOA_HOC.map((k, i) => (
             <Reveal
               key={k.id}
-              className={i === 1 ? "reveal-d1" : i === 2 ? "reveal-d2" : ""}
+              className={`h-full ${i === 1 ? "reveal-d1" : i === 2 ? "reveal-d2" : ""}`}
             >
               <article
                 className={`flex h-full flex-col gap-6 rounded-2xl border p-7 ${
                   k.noiBat
-                    ? "border-transparent bg-brand text-white shadow-[0_24px_60px_-30px_rgba(42,95,217,0.9)] lg:-mt-4 lg:pb-9"
+                    ? "border-transparent bg-brand text-white shadow-[0_24px_60px_-30px_rgba(42,95,217,0.9)]"
                     : "border-line bg-surface"
                 }`}
               >
                 <div className="flex flex-col gap-3">
-                  {k.noiBat && UU_DAI.nhan && (
-                    <span className="eyebrow w-fit rounded-full bg-mark px-3 py-1.5 text-ink">
-                      {UU_DAI.nhan}
-                    </span>
-                  )}
+                  {/* Chừa chỗ badge trên mọi thẻ — Full có nhãn ƯU ĐÃI, hai thẻ
+                      kia giữ chiều cao tương đương để tên khóa / giá thẳng hàng. */}
+                  <div className="flex min-h-[1.875rem] items-center">
+                    {k.noiBat && UU_DAI.nhan ? (
+                      <span className="eyebrow w-fit rounded-full bg-mark px-3 py-1.5 text-ink">
+                        {UU_DAI.nhan}
+                      </span>
+                    ) : null}
+                  </div>
                   {/* min-h = đúng 2 dòng. Tên khóa dài ngắn khác nhau, không
                       chốt chiều cao thì giá của ba thẻ lệch nhau theo bậc
                       thang khi xếp ngang — nhìn như trang bị vỡ. */}
@@ -136,6 +146,52 @@ export function Pricing() {
             </p>
           </Reveal>
         )}
+
+        {/* Bài học thử — chọn 1 → mở Messenger với tin nhắn sẵn.
+            Vòng radio = tín hiệu "chọn một", không phải danh sách đọc suông. */}
+        <Reveal>
+          <aside className="mt-16 border-t border-line pt-12 sm:mt-20 sm:pt-14">
+            <p className="eyebrow text-brand">Bài học thử</p>
+            <h3 className="mt-4 max-w-[42ch] text-2xl leading-[1.25] text-ink sm:text-3xl">
+              {BAI_HOC_QUA_TANG.tieuDe}
+            </h3>
+
+            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+              {BAI_HOC_QUA_TANG.danhSach.map((baiHoc) => {
+                const tinNhan = BAI_HOC_QUA_TANG.mauTinNhan.replace(
+                  "{ten}",
+                  baiHoc,
+                );
+                return (
+                  <li key={baiHoc}>
+                    <a
+                      href={messengerVoiTinNhan(tinNhan)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group flex items-start gap-3.5 rounded-2xl border border-line bg-surface px-4 py-4 transition-[border-color,background-color,transform] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.99] [@media(hover:hover)_and_(pointer:fine)]:hover:border-brand/45 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-soft/55"
+                    >
+                      <span
+                        aria-hidden
+                        className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-ink/20 transition-colors duration-[160ms] ease-[var(--ease-out)] [@media(hover:hover)_and_(pointer:fine)]:group-hover:border-brand"
+                      >
+                        <span className="h-2 w-2 rounded-full bg-transparent transition-colors duration-[160ms] ease-[var(--ease-out)] [@media(hover:hover)_and_(pointer:fine)]:group-hover:bg-brand" />
+                      </span>
+                      <span className="flex min-w-0 flex-col gap-1">
+                        <span className="text-[0.97rem] font-medium leading-snug text-ink">
+                          {baiHoc}
+                        </span>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted transition-colors duration-[160ms] ease-[var(--ease-out)] [@media(hover:hover)_and_(pointer:fine)]:group-hover:text-brand">
+                          <MessengerIcon className="h-3.5 w-3.5" />
+                          Chọn bài này
+                        </span>
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </aside>
+        </Reveal>
       </div>
     </section>
   );

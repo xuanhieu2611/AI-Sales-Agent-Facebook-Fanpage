@@ -22,11 +22,10 @@ npx eslint .     # lint
 | Giá, tên khóa, nội dung khóa | `lib/site.ts` |
 | Link Messenger (`m.me/...`) | `lib/site.ts` → `MESSENGER_URL` |
 | Số Zalo, link kênh | `lib/site.ts` → `ZALO_SO_DIEN_THOAI`, `KENH_URL` |
-| Số follower, danh sách phát, bài quà tặng | `lib/site.ts` → `KENH` |
+| Số follower, danh sách phát | `lib/site.ts` → `BUBBY` |
 | Nhãn ưu đãi ("Ưu đãi tháng này") | `lib/site.ts` → `UU_DAI` |
 | Câu hỏi thường gặp | `lib/site.ts` → `FAQ` |
 | "Vì sao học mãi vẫn không hiệu quả" | `lib/site.ts` → `LY_DO_THAT_BAI` |
-| Lộ trình 32 buổi | `lib/site.ts` → `LO_TRINH` |
 | Ví dụ trong khối "Dịch thử" | `lib/translations.ts` |
 | Ảnh Bubby, ảnh feedback | `public/img/` → xem `public/img/README.md` |
 
@@ -46,7 +45,7 @@ không cần đụng vào `components/`.
       `lib/site.ts` đang để trống. Trống thì mấy chỗ đó tự ẩn, trang không lỗi
       — nhưng khối "150+ nội dung miễn phí" mất nút bấm qua kênh và khách không
       có lựa chọn nhắn Zalo.
-- [ ] **Kiểm lại số follower** — `KENH.soFollower` đang ghi `70k+`. Con số cũ
+- [ ] **Kiểm lại số follower** — `BUBBY.soFollower` đang ghi `70.6K`. Con số cũ
       hơn thực tế thì phí, mà cao hơn thực tế thì khách mở kênh ra là biết.
 - [ ] **Đổi ad copy** — trang này bán thẳng vào vấn đề, không phát quà miễn phí
       nữa. Quảng cáo vẫn chạy nội dung "tặng bài học free" thì sẽ kéo về đúng

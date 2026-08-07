@@ -1,12 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import type { ReactNode } from "react";
-import { CaretDown, CheckCircle } from "@phosphor-icons/react/dist/ssr";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { YouTubeLite } from "./YouTubeLite";
 import { AssetPlaceholder } from "./AssetPlaceholder";
-import { Button, CTA, Mark, MessengerIcon } from "./ui";
 import {
+  ANH,
   BANG_CHUNG_TIKTOK,
+  BUBBY,
   CONTACT,
   MESSENGER_URL,
   SHOW_REVIEW_PLACEHOLDERS,
@@ -14,24 +15,17 @@ import {
 } from "@/lib/site";
 
 /**
- * Hero theo format "lời hứa lớn → hai video → bằng chứng TikTok → nút". Với dịch vụ coaching cá
- * nhân, video là bằng chứng sớm nhất: khách thấy Bubby nói và dạy thế nào
- * trước khi phải đọc bất cứ thứ gì bên dưới.
+ * Hero theo format "lời hứa lớn → hai video → bằng chứng TikTok". Với dịch vụ
+ * coaching cá nhân, video là bằng chứng sớm nhất: khách thấy Bubby nói và dạy
+ * thế nào trước khi phải đọc bất cứ thứ gì bên dưới.
  *
- * Hero này CỐ Ý cao hơn một màn hình. Thứ tự lời hứa → video 1 → video 2 →
- * nút là mạch bán hàng của chủ shop, đừng nén lại cho vừa màn hình đầu.
+ * Hero này CỐ Ý cao hơn một màn hình. Thứ tự lời hứa → video 1 → Bubby + ảnh
+ * TikTok → video 2 là mạch bán hàng của chủ shop, đừng nén lại cho vừa màn
+ * hình đầu.
  *
  * Hai video được ĐÁNH SỐ (Bước 1, Bước 2) vì cái số kéo người xem hết video
- * một sang video hai. Nhưng NÚT THÌ KHÔNG ĐÁNH SỐ, cố ý:
- *
- *   - "Bước 3" nói dối về cấu trúc trang. Dưới nút này còn sáu mục nữa;
- *     khách đọc thấy bước cuối rồi không bấm sẽ tưởng mình đi lạc.
- *   - Bước 1 và 2 không tốn gì của khách. Bấm nút thì tốn: họ phải nhắn tin
- *     cho người lạ. Đánh số ba cái như nhau là hứa một đằng đòi một nẻo.
- *
- * Nút vẫn phải nằm ĐÚNG CHỖ NÀY. Xem xong hai video là lúc khách tin nhất
- * trên cả trang; bắt người đã bị thuyết phục cuộn tiếp đi tìm chỗ bấm là
- * mất họ. StickyCta chỉ là lưới đỡ, không thay được nút trong mạch đọc.
+ * một sang video hai. Nút Messenger không nằm trong hero nữa — StickyCta
+ * (điện thoại) và thanh đầu trang lo phần nhắn tin.
  */
 export function Hero() {
   return (
@@ -51,17 +45,12 @@ export function Hero() {
         {/* Mốc cho StickyCta: sau khi khách đã thấy lời hứa, thanh Messenger
             sẽ xuất hiện trên điện thoại trong lúc họ xem video. */}
         <div id="dau-trang" className="flex max-w-[76rem] flex-col items-center gap-6">
-          {/* Ngắt dòng bằng tay, ở MỌI cỡ màn hình. Thả cho tự xuống dòng thì
-              cụm được tô vàng bị cắt làm đôi giữa chừng ("mất" ở cuối dòng
-              trên, "gốc tiếng Anh" ở dòng dưới) và vệt bút gãy thành hai
-              mẩu — nhìn như lỗi hiển thị. Ngắt ở đây thì cả cụm luôn nằm
-              trọn một dòng và ăn đúng một vệt bút. */}
-          {/* 2.1rem trên điện thoại là cỡ LỚN NHẤT mà cụm "mất gốc tiếng Anh"
-              còn nằm vừa một dòng ở màn 390px. To hơn là nó tụt chữ "Anh"
-              xuống dòng riêng và vệt bút vàng gãy làm hai mẩu. */}
+          {/* Ngắt dòng bằng tay để cụm "mất gốc tiếng Anh" luôn nằm trọn một
+              dòng. 2.1rem trên điện thoại là cỡ lớn nhất còn vừa một dòng ở
+              màn 390px. */}
           <h1 className="max-w-[20ch] text-[2.1rem] leading-[1.22] text-ink sm:text-[3.3rem] lg:text-[3.9rem]">
             Nơi dành riêng cho các bạn <br />
-            <Mark>mất gốc tiếng Anh</Mark>
+            mất gốc tiếng Anh
           </h1>
         </div>
 
@@ -90,6 +79,12 @@ export function Hero() {
 
         <BuocXem so={2}>{CONTACT.pageName} giúp được gì cho bạn?</BuocXem>
 
+        <AiLaBubby />
+
+        {/* Ba ảnh TikTok trước video: kênh → playlist → feedback. Không chữ —
+            dải Bubby phía trên đã nói đủ, ảnh chỉ để nhìn thấy là có thật. */}
+        <TikTokProof />
+
         <KhungVideo>
           {SHOW_REVIEW_PLACEHOLDERS ? (
             <AssetPlaceholder
@@ -107,92 +102,139 @@ export function Hero() {
           )}
         </KhungVideo>
 
-        {/* Sau khi hiểu cách Bubby dạy, khách thấy bằng chứng theo một mạch
-            dễ tin: kênh thật → playlist bài học thật → phản hồi thật. Ảnh
-            giữ nguyên tỉ lệ, không ép vào ba ô nhỏ bằng nhau: screenshot có
-            chữ bên trong, bị crop hoặc thu bé quá thì mất luôn lý do tồn tại. */}
-        <TikTokProof />
-
-        {/* id để StickyCta biết đường tự ẩn khi nút này đang hiện trên màn
-            hình — hai nút giống hệt nhau chồng lên nhau trông như lỗi. */}
-        <div id="cta-dau-trang" className="mt-10 flex flex-col items-center gap-3">
-          <Button href={MESSENGER_URL} external className="px-7">
-            <MessengerIcon className="h-5 w-5" />
-            {CTA.loTrinh}
-          </Button>
-
-          {/* Dòng này trả lời nỗi sợ ngay tại giây bấm nút: "nhắn vào có phải
-              gặp bot không, có ai rep không". Đừng bỏ, và đừng tách rời nút. */}
-          <p className="flex items-center gap-2 text-sm leading-relaxed text-muted">
-            <CheckCircle weight="fill" aria-hidden className="h-4 w-4 shrink-0 text-brand" />
-            Bubby trực tiếp tư vấn, {CONTACT.gioLamViec}
-          </p>
-
-          {/* Nói thẳng là trang còn tiếp, để người chưa sẵn sàng bấm không
-              tưởng mình vừa đi tới cuối đường. Link phải trỏ đúng mục feedback:
-              trước đây chữ hứa "xem học viên nói gì" mà lại nhảy sang mục kênh. */}
-          <Link
-            href="#feedback"
-            className="mt-3 inline-flex items-center gap-1.5 text-sm text-muted transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:text-brand"
-          >
-            Hoặc kéo xuống xem người học nói gì
-            <CaretDown weight="bold" aria-hidden className="h-4 w-4 shrink-0" />
-          </Link>
-        </div>
+        <Link
+          href="#feedback"
+          className="mt-8 inline-flex items-center gap-1.5 text-sm text-muted transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:text-brand"
+        >
+          Hoặc kéo xuống xem người học nói gì
+          <CaretDown weight="bold" aria-hidden className="h-4 w-4 shrink-0" />
+        </Link>
       </div>
     </section>
   );
 }
 
+/**
+ * Ba ảnh TikTok nhỏ, không tiêu đề — nằm giữa dải Bubby và video Bước 2.
+ * Chỉ cần nhìn thấy kênh / playlist / feedback là có thật. Cắt lấy phần đầu
+ * (object-top): follower, playlist, bình luận đều nằm ở đó; giữ nguyên tấm
+ * dọc thì dải này cao hơn cả video và tranh mất chỗ.
+ */
 function TikTokProof() {
   return (
-    <section
-      aria-labelledby="tiktok-proof-title"
-      className="mt-12 w-full max-w-[76rem] sm:mt-16"
+    <div
+      aria-label="Ảnh chụp kênh TikTok của Bubby"
+      className="mt-6 w-full max-w-2xl sm:mt-7"
     >
-      <div className="mx-auto max-w-[42rem] text-center">
-        <p className="font-mono text-xs font-semibold tracking-[0.08em] text-brand">
-          NHÌN TỪ TIKTOK CỦA BUBBY
-        </p>
-        <h2
-          id="tiktok-proof-title"
-          className="mt-3 text-[1.8rem] leading-[1.25] text-ink sm:text-[2.35rem]"
-        >
-          Có kênh thật, bài học thật, người xem thật.
-        </h2>
-      </div>
-
-      {/* Mobile dùng dải ngang rộng gần cả màn hình. Nếu nhét ba ảnh vào một
-          hàng, chữ trong ảnh sẽ nhỏ đến mức không đọc nổi. Desktop đủ rộng
-          để khách nhìn cả ba câu chuyện cùng lúc. */}
-      <div className="-mr-4 mt-7 overflow-x-auto pb-4 pl-4 [scrollbar-width:thin] sm:-mr-6 sm:pl-6 lg:mx-0 lg:mt-9 lg:overflow-visible lg:px-0 lg:pb-0">
-        <ol className="grid auto-cols-[minmax(17.5rem,82vw)] grid-flow-col gap-4 pr-4 sm:auto-cols-[minmax(21rem,31rem)] sm:gap-5 sm:pr-6 lg:grid-flow-row lg:grid-cols-3 lg:items-start lg:gap-6 lg:pr-0">
-          {BANG_CHUNG_TIKTOK.map((anh, index) => (
-            <li
-              key={anh.src}
-              className={`overflow-hidden rounded-2xl border border-line bg-surface p-2.5 shadow-[0_22px_48px_-38px_rgba(22,35,63,0.8)] ${
-                index === 1 ? "lg:mt-8" : index === 2 ? "lg:mt-3" : ""
-              }`}
-            >
-              <div className="flex items-baseline justify-between gap-3 px-2.5 pb-3 pt-1.5">
-                <span className="font-mono text-[0.65rem] font-bold tracking-[0.06em] text-brand">
-                  {anh.nhan}
-                </span>
-                <span className="truncate text-sm font-semibold text-ink-soft">{anh.tieuDe}</span>
-              </div>
+      <ul className="grid grid-cols-3 gap-3 sm:gap-4">
+        {BANG_CHUNG_TIKTOK.map((anh) => (
+          <li
+            key={anh.src}
+            className="overflow-hidden rounded-xl border border-line bg-surface p-1.5 shadow-[0_14px_32px_-26px_rgba(22,35,63,0.75)]"
+          >
+            <div className="relative aspect-3/4 overflow-hidden rounded-lg">
               <Image
                 src={anh.src}
                 alt={anh.alt}
-                width={anh.rong}
-                height={anh.cao}
-                sizes="(max-width: 1023px) 82vw, 400px"
-                className="h-auto w-full rounded-xl border border-line/70"
+                fill
+                sizes="(max-width: 639px) 30vw, 220px"
+                className="object-cover object-top"
               />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * Dải ngắn "Bubby là ai" giữa tiêu đề Bước 2 và video. Khách vừa đọc xong
+ * câu hỏi "giúp được gì" thì cần biết người trong video sắp nói là ai — rồi
+ * mới xem. Cố ý nhỏ: bằng chứng kênh nằm ở dải TikTok phía dưới, đừng tranh
+ * chỗ với video. Ba ảnh TikTok nhỏ đứng ngay dưới dải này, trước video.
+ *
+ * Vạch dọc mờ phía trên cùng kiểu với BuocXem: nối tiêu đề xuống dải này,
+ * rồi xuống ảnh và video, để cả khối Bước 2 đọc thành một mạch.
+ */
+function AiLaBubby() {
+  const daCoAnhThat = !ANH.bubby.endsWith(".svg");
+  const chiSo = [
+    { so: BUBBY.soFollower, nhan: BUBBY.nhanFollower },
+    { so: BUBBY.namDay, nhan: BUBBY.nhanNamDay },
+    { so: BUBBY.chungChi, nhan: BUBBY.nhanChungChi },
+  ];
+
+  return (
+    <aside
+      aria-label="Bubby là ai"
+      className="mt-6 flex w-full max-w-lg flex-col items-center sm:mt-7"
+    >
+      <span
+        aria-hidden
+        className="h-10 w-px bg-linear-to-b from-transparent to-brand/35 sm:h-12"
+      />
+
+      <div className="mt-4 flex w-full flex-col items-center gap-4">
+        <div className="flex items-center gap-3.5 text-left">
+          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-line bg-brand-soft sm:h-16 sm:w-16">
+            {daCoAnhThat ? (
+              <Image
+                src={ANH.bubby}
+                alt={`Ảnh chân dung ${BUBBY.ten}`}
+                fill
+                sizes="64px"
+                className="object-cover object-top"
+              />
+            ) : (
+              <span
+                aria-hidden
+                className="grid h-full w-full place-items-center font-display text-lg font-extrabold text-brand"
+              >
+                B
+              </span>
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="font-display text-[1.15rem] leading-[1.25] font-extrabold tracking-tight text-ink sm:text-[1.25rem]">
+              {BUBBY.ten}
+            </p>
+            <p className="mt-0.5 text-sm text-muted">{BUBBY.vaiTro}</p>
+          </div>
+        </div>
+
+        <p className="max-w-[36ch] text-center text-[0.92rem] leading-relaxed text-ink-soft">
+          {BUBBY.tomTat}
+        </p>
+
+        <ul className="flex w-full max-w-md flex-wrap items-stretch justify-center gap-y-3 border-y border-line py-4">
+          {chiSo.map((muc, i) => (
+            <li
+              key={muc.nhan}
+              className={`flex min-w-[6.5rem] flex-1 flex-col items-center px-3 ${
+                i > 0 ? "border-l border-line" : ""
+              }`}
+            >
+              <span className="font-display text-[1.15rem] leading-none font-extrabold tracking-tight text-ink sm:text-[1.3rem]">
+                {muc.so}
+              </span>
+              <span className="mt-1.5 text-center text-[0.72rem] leading-snug text-muted">
+                {muc.nhan}
+              </span>
             </li>
           ))}
-        </ol>
+        </ul>
+
+        <Link
+          href={BUBBY.tiktokUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-brand"
+        >
+          Xem TikTok {BUBBY.taiKhoan}
+        </Link>
       </div>
-    </section>
+    </aside>
   );
 }
 

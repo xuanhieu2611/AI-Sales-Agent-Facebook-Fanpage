@@ -13,6 +13,11 @@
 // rồi ghép thành https://m.me/englishwithbubby
 export const MESSENGER_URL = "https://m.me/englishwithbubby";
 
+/** Mở Messenger với sẵn một câu — dùng khi khách chọn bài học thử. */
+export function messengerVoiTinNhan(tinNhan: string) {
+  return `${MESSENGER_URL}?text=${encodeURIComponent(tinNhan)}`;
+}
+
 // Link Fanpage. Khách nào chưa sẵn sàng nhắn tin thì qua đây xem thêm bài
 // đăng, video, feedback rồi quay lại sau.
 export const FANPAGE_URL = "https://facebook.com/englishwithbubby";
@@ -48,7 +53,7 @@ export const CONTACT = {
 // Sửa mỗi khi đổi chương trình. Để trống `nhan` nếu muốn ẩn hết badge ưu đãi.
 export const UU_DAI = {
   nhan: "Ưu đãi tháng này",
-  moTa: "Giữ giá ưu đãi bằng cọc 300k nếu bạn chưa sắp xếp kịp học phí.",
+  moTa: "Hỗ trợ đặt cọc 300k để giá ưu đãi",
 };
 
 // ── KHÓA HỌC ─────────────────────────────────────────────────────────
@@ -87,6 +92,23 @@ export const KHOA_HOC: Khoa[] = [
     videoId: "KR5BFR5SUwA",
   },
   {
+    id: "dich",
+    ten: "Khóa Kỹ Năng Dịch & Xây Vốn Từ",
+    tomTat: "Phần lõi: xử lý chỗ tiếng Việt và tiếng Anh lệch nhau.",
+    giaSale: "1.700.000đ",
+    giaGoc: "2.100.000đ",
+    giaMoiBuoi: "81k/buổi",
+    buoi: "21 buổi",
+    coaching: "5 tháng coaching 1-1",
+    gomCo: [
+      "Xây dựng vốn từ và phản xạ từ vựng",
+      "Quy trình dịch Việt sang Anh đầy đủ các bước",
+      "Ngữ pháp theo 3 phân khúc: Từ, Câu, Thì",
+      "Tận dụng vốn từ sẵn có thay vì tra từ điển",
+    ],
+    videoId: "MMDzjWAL9ao",
+  },
+  {
     id: "full",
     ten: "Khóa Full: Xây Gốc + Giao Tiếp",
     tomTat:
@@ -105,34 +127,23 @@ export const KHOA_HOC: Khoa[] = [
     noiBat: true,
     videoId: "kpnz_RE1bPg",
   },
-  {
-    id: "dich",
-    ten: "Khóa Kỹ Năng Dịch & Xây Vốn Từ",
-    tomTat: "Phần lõi: xử lý chỗ tiếng Việt và tiếng Anh lệch nhau.",
-    giaSale: "1.700.000đ",
-    giaGoc: "2.100.000đ",
-    giaMoiBuoi: "81k/buổi",
-    buoi: "21 buổi",
-    coaching: "5 tháng coaching 1-1",
-    gomCo: [
-      "Xây dựng vốn từ và phản xạ từ vựng",
-      "Quy trình dịch Việt sang Anh đầy đủ các bước",
-      "Ngữ pháp theo 3 phân khúc: Từ, Câu, Thì",
-      "Tận dụng vốn từ sẵn có thay vì tra từ điển",
-    ],
-    videoId: "MMDzjWAL9ao",
-  },
 ];
 
-// ── BÀI HỌC QUÀ TẶNG ───────────────────────────────────────────────
-// Các bài chuyên sâu miễn phí Bubby dành cho cộng đồng. Giữ danh sách ở
-// đây để phần giao diện không phải tự chứa nội dung bán hàng.
-export const BAI_HOC_QUA_TANG = [
-  "Phương Pháp Học Ngữ Pháp Hiệu Quả",
-  "Cách Ghi Nhớ Các Âm Trong IPA",
-  "Ghi Nhớ 12 Thì Trong 1h",
-  "Phương Pháp Học Từ Vựng Hiệu Quả",
-] as const;
+// ── BÀI HỌC THỬ ─────────────────────────────────────────────────────
+// Các bài trải nghiệm khi khách đang tìm hiểu khóa. Mỗi mục mở Messenger
+// với tin nhắn sẵn — không phải cổng xin email.
+export const BAI_HOC_QUA_TANG = {
+  tieuDe:
+    "Khi tìm hiểu khóa học, bạn có thể chọn 1 trong những bài học thử sau đây để trải nghiệm trước:",
+  /** Mẫu tin nhắn gắn vào m.me khi khách bấm một bài. `{ten}` = tên bài. */
+  mauTinNhan: "Mình muốn học thử: {ten}",
+  danhSach: [
+    "Phương Pháp Học Ngữ Pháp Hiệu Quả",
+    "Cách Ghi Nhớ Các Âm Trong IPA",
+    "Ghi Nhớ 12 Thì Trong 1h",
+    "Phương Pháp Học Từ Vựng Hiệu Quả",
+  ],
+} as const;
 
 // ── VIDEO ────────────────────────────────────────────────────────────
 // HAI VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
@@ -157,11 +168,34 @@ export const VIDEO = {
   giaiPhap: "kpnz_RE1bPg",
 };
 
+// ── BUBBY LÀ AI ─────────────────────────────────────────────────────
+// Dải ngắn nằm giữa tiêu đề Bước 2 và video giải pháp. Chỉ cần khách biết
+// người sắp xuất hiện trong video là ai, có thật, và đã dạy bao lâu — đừng
+// viết dài ở đây, bằng chứng kênh nằm ở dải TikTok phía dưới.
+//
+// TODO(chủ shop): cập nhật `soFollower` mỗi khi tròn mốc mới. Con số phải
+// khớp với ảnh chụp TikTok ở BANG_CHUNG_TIKTOK.
+export const BUBBY = {
+  ten: "Bubby",
+  vaiTro: "Giảng viên · coaching 1-1 trực tiếp",
+  /** Một dòng. Không dài hơn một câu. */
+  tomTat:
+    "10 năm dạy tiếng Anh, chuyên xây gốc và giao tiếp cho người Việt mất gốc.",
+  soFollower: "70.6K",
+  nhanFollower: "theo dõi TikTok",
+  namDay: "10 năm",
+  nhanNamDay: "dạy tiếng Anh",
+  chungChi: "C1 VSTEP",
+  nhanChungChi: "TB 8.5 cả 4 kỹ năng",
+  taiKhoan: "@englishwithbubby",
+  tiktokUrl: "https://www.tiktok.com/@englishwithbubby",
+};
+
 // ── BẰNG CHỨNG TIKTOK ──────────────────────────────────────────────
-// Ba ảnh này nằm ngay sau video Bước 2. Chúng kể theo đúng thứ tự khách cần
-// kiểm chứng: có kênh thật → có nội dung học thật → có người xem phản hồi.
-// Giữ ảnh nguyên tấm, không crop: chữ trong screenshot phải đọc được thì mới
-// có sức thuyết phục. Đổi ảnh thì cập nhật luôn `rong` / `cao` bên dưới.
+// Ba ảnh nhỏ nằm giữa dải "Bubby là ai" và video Bước 2 — không tiêu đề,
+// chỉ ảnh. Thứ tự: kênh thật → nội dung học thật → phản hồi thật.
+// Trên trang bị cắt lấy phần đầu (object-top) vì dải này phải nhỏ; `rong` /
+// `cao` vẫn ghi kích thước file gốc để Next biết tỉ lệ.
 export type AnhTikTok = {
   nhan: string;
   tieuDe: string;
@@ -197,32 +231,6 @@ export const BANG_CHUNG_TIKTOK: AnhTikTok[] = [
     cao: 1656,
   },
 ];
-
-// ── LỘ TRÌNH 32 BUỔI ────────────────────────────────────────────────
-export const LO_TRINH = [
-  {
-    ten: "Phát âm",
-    buoi: 8,
-    moTa: "Hệ thống ký hiệu mặt chữ và số riêng của Bubby, liên kết được với IPA. Kèm 2 buổi luyện ngữ điệu.",
-  },
-  {
-    ten: "Kỹ năng học từ vựng",
-    buoi: 2,
-    moTa: "Một routine tự học mỗi ngày: xây vốn từ, ghi nhớ, đặt câu, tạo phản xạ.",
-  },
-  {
-    ten: "Kỹ năng dịch Việt sang Anh",
-    buoi: 18,
-    moTa: "Phần lõi. Xử lý ba chỗ hai ngôn ngữ lệch nhau, cho tới khi bạn dịch được bất kỳ câu nào.",
-  },
-  {
-    ten: "Giao tiếp thực chiến",
-    buoi: 4,
-    moTa: "Đưa kỹ năng dịch vào nói thật: xử lý nhanh, luyện nói, tự sửa sai.",
-  },
-];
-
-export const TONG_BUOI = LO_TRINH.reduce((sum, phan) => sum + phan.buoi, 0);
 
 // ── ẢNH ─────────────────────────────────────────────────────────────
 // Bỏ file ảnh thật vào web/public/img/ rồi sửa đường dẫn ở đây.

@@ -3,15 +3,12 @@ import { Button, CTA, MessengerIcon } from "./ui";
 import { CONTACT, MESSENGER_URL } from "@/lib/site";
 
 /**
- * Bốn mục thôi. Trang này là một mạch đọc từ trên xuống, thanh điều hướng
+ * Hai mục thôi. Trang này là một mạch đọc từ trên xuống, thanh điều hướng
  * chỉ để khách đã xem rồi quay lại tìm đúng chỗ — không phải mục lục đầy đủ.
- * Liệt kê hết mọi mục là mời khách nhảy thẳng xuống giá trước khi kịp thấy
- * lý do vì sao đáng tiền.
  */
 const DE_MUC = [
-  { nhan: "Lộ trình", href: "#lo-trinh" },
+  { nhan: "Thông tin Khóa Học", href: "#hoc-phi" },
   { nhan: "Feedback", href: "#feedback" },
-  { nhan: "Học phí", href: "#hoc-phi" },
 ];
 
 /**

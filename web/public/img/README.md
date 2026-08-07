@@ -16,7 +16,7 @@ khác không ảnh hưởng. Không phải bật tắt gì thêm.
 
 | | |
 |---|---|
-| Vị trí trên trang | Mục "Người dạy bạn" |
+| Vị trí trên trang | Dải ngắn "Bubby là ai", giữa tiêu đề Bước 2 và video giải pháp |
 | Tỉ lệ | **4:5 (dọc)** — vd. 800×1000, 1200×1500 |
 | Định dạng | `.jpg` hoặc `.webp` |
 | Nên là | Ảnh chân dung rõ mặt, sáng, nhìn thẳng. Ảnh đang dạy hoặc ngồi bàn làm việc đều được. Tránh ảnh selfie tối hoặc ảnh có nhiều người. |
@@ -33,13 +33,13 @@ export const ANH = {
 
 ## 2. Ảnh chụp kênh — `kenh/`
 
-Ba tấm này nằm **ngay dưới hai video đầu trang**, ở dải "Không cần tin lời
-bên mình". Chúng làm một việc mà con số gõ tay không làm được: khách **bấm
-vào là sang thẳng kênh thật** để tự soi.
+Ba tấm này nằm **giữa dải "Bubby là ai" và video Bước 2**, không có tiêu đề
+chữ — chỉ ảnh nhỏ. Chúng làm một việc mà con số gõ tay không làm được: khách
+**nhìn thấy kênh thật** (avatar, follower, playlist, feedback).
 
 | | |
 |---|---|
-| Vị trí trên trang | Dải kênh, ngay sau hai video đầu trang |
+| Vị trí trên trang | Giữa dải "Bubby là ai" và video Bước 2 |
 | Khung hiển thị | **8:5 (ngang)**, ảnh bị cắt cho vừa khung |
 | Định dạng | `.jpg`, `.png` hoặc `.webp` |
 | Số lượng | 3 tấm: TikTok, YouTube, Fanpage |
