@@ -9,8 +9,7 @@ export function Pricing() {
       <div className="shell">
         <Reveal>
           <SectionHead
-            title="Ba mức, tùy bạn muốn xây tới đâu."
-            lead="Học khóa nhỏ trước cũng được. Sau này muốn học tiếp thì mua bù, không mất tiền oan."
+            title="Học phí"
           />
         </Reveal>
 

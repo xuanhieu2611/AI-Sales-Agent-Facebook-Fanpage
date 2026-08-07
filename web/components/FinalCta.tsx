@@ -1,11 +1,15 @@
-import { LeadForm } from "./LeadForm";
+import {
+  ArrowUpRight,
+  ChatCircleDots,
+  FacebookLogo,
+  Phone,
+} from "@phosphor-icons/react/dist/ssr";
+import { Eyebrow } from "./ui";
 import { Reveal } from "./Reveal";
-import { Button, CTA, Eyebrow, MessengerIcon } from "./ui";
 import {
   CONTACT,
   FANPAGE_URL,
-  MESSENGER_URL,
-  SO_DIEN_THOAI,
+  ZALO_SO_DIEN_THOAI,
   ZALO_URL,
 } from "@/lib/site";
 
@@ -16,75 +20,101 @@ import {
  * các mục khác.
  */
 export function FinalCta() {
+  const smsUrl = ZALO_SO_DIEN_THOAI
+    ? `sms:${ZALO_SO_DIEN_THOAI.replace(/[^\d+]/g, "")}`
+    : "";
+
   return (
-    <section id="dang-ky" className="relative overflow-hidden bg-brand py-24 sm:py-32">
+    <section id="dang-ky" className="relative overflow-hidden bg-brand py-20 sm:py-28">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 -right-24 h-[28rem] w-[28rem] rounded-full bg-white/10 blur-[110px]"
+        className="pointer-events-none absolute -top-44 -right-32 h-[31rem] w-[31rem] rounded-full bg-white/10 blur-[120px]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-32 left-[20%] h-64 w-64 rounded-full bg-brand-deep/35 blur-[100px]"
       />
 
       <div className="shell relative">
-        <div className="grid gap-12 lg:grid-cols-[1.05fr_minmax(0,26rem)] lg:gap-16">
-          <div className="flex flex-col gap-7">
+        <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_25rem] lg:gap-20">
+          <div className="flex max-w-xl flex-col items-start gap-6">
             <Eyebrow onBrand>Bắt đầu</Eyebrow>
 
-            <h2 className="max-w-[16ch] text-[2.3rem] leading-[1.2] text-white sm:text-5xl lg:text-[3.4rem]">
-              Nhắn một câu thôi, Bubby tư vấn lộ trình cho bạn.
+            <h2 className="max-w-[14ch] text-[2.3rem] leading-[1.22] text-white sm:text-5xl lg:text-[3.4rem]">
+              Nhắn Bubby theo cách bạn quen.
             </h2>
 
-            <p className="max-w-[46ch] text-[1.05rem] leading-relaxed text-white/80">
-              Bạn kể mình học tới đâu, kẹt chỗ nào. Bubby nói thẳng nên bắt đầu
-              từ khóa nào, kể cả khi câu trả lời là “chưa cần học khóa nào cả”.
+            <p className="max-w-[48ch] text-[1.05rem] leading-relaxed text-white/80">
+              Không cần để lại thông tin. Chọn nơi bạn hay nhắn, rồi nói Bubby
+              biết bạn đang kẹt ở đâu.
             </p>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={MESSENGER_URL} external variant="onBrand">
-                <MessengerIcon className="h-5 w-5" />
-                {CTA.loTrinh}
-              </Button>
-              <Button href={FANPAGE_URL} external variant="outlineOnBrand">
-                {CTA.fanpage}
-              </Button>
-            </div>
-
-            {/* Kênh phụ cho khách ngại Messenger — nhiều người Việt nhắn Zalo
-                quen tay hơn. Cố ý để dạng link chữ, không phải nút: thêm nút
-                thứ ba ở đây là bắt khách phải chọn, mà Messenger mới là chỗ
-                bot trả lời được ngay. Chưa điền số thì cả dòng tự ẩn. */}
-            {(ZALO_URL || SO_DIEN_THOAI) && (
-              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.95rem]">
-                {ZALO_URL && (
-                  <a
-                    href={ZALO_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-white underline-offset-4 hover:underline"
-                  >
-                    Nhắn Zalo
-                  </a>
-                )}
-                {SO_DIEN_THOAI && (
-                  <a
-                    href={`tel:${SO_DIEN_THOAI.replace(/[^\d+]/g, "")}`}
-                    className="font-semibold text-white underline-offset-4 hover:underline"
-                  >
-                    Gọi {SO_DIEN_THOAI}
-                  </a>
-                )}
-              </div>
-            )}
-
-            <p className="font-mono text-xs text-white/60">
+            <p className="font-mono text-xs text-white/65">
               {CONTACT.pageName} · trả lời {CONTACT.gioLamViec}
             </p>
           </div>
 
-          <Reveal>
-            <div className="flex flex-col gap-5 rounded-2xl bg-surface p-7">
-              <p className="font-display text-lg font-bold tracking-tight text-ink">
-                Hoặc để lại số, Bubby gọi lại.
+          <Reveal className="w-full">
+            <div className="rounded-2xl border border-white/20 bg-brand-deep/30 p-3 shadow-[0_24px_60px_-36px_rgba(8,27,76,0.9)] backdrop-blur-sm">
+              <p className="px-3 pt-3 pb-2 text-sm font-semibold text-white">
+                Chọn kênh nhắn tin
               </p>
-              <LeadForm />
+
+              <a
+                href={FANPAGE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-4 rounded-xl bg-white p-4 text-ink transition-[transform,background-color] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.98] [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-0.5 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-mark"
+              >
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
+                  <FacebookLogo aria-hidden weight="fill" className="h-5 w-5" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[0.95rem] font-bold">Nhắn Facebook</span>
+                  <span className="mt-0.5 block text-sm text-muted">
+                    Xem Page và gửi tin nhắn cho Bubby
+                  </span>
+                </span>
+                <ArrowUpRight
+                  aria-hidden
+                  weight="bold"
+                  className="h-5 w-5 shrink-0 text-brand transition-transform duration-[160ms] ease-[var(--ease-out)] [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-0.5 [@media(hover:hover)_and_(pointer:fine)]:group-hover:-translate-y-0.5"
+                />
+              </a>
+
+              {ZALO_URL && (
+                <a
+                  href={ZALO_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group mt-2 flex items-center gap-4 rounded-xl border border-white/20 bg-white/[0.07] p-4 text-white transition-[transform,background-color,border-color] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.98] [@media(hover:hover)_and_(pointer:fine)]:hover:-translate-y-0.5 [@media(hover:hover)_and_(pointer:fine)]:hover:border-white/35 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-white/[0.13]"
+                >
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/12 text-white">
+                    <ChatCircleDots aria-hidden weight="fill" className="h-5 w-5" />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-[0.95rem] font-bold">Nhắn Zalo</span>
+                    <span className="mt-0.5 block font-mono text-sm text-white/70">
+                      {ZALO_SO_DIEN_THOAI}
+                    </span>
+                  </span>
+                  <ArrowUpRight
+                    aria-hidden
+                    weight="bold"
+                    className="h-5 w-5 shrink-0 text-white/80 transition-transform duration-[160ms] ease-[var(--ease-out)] [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-x-0.5 [@media(hover:hover)_and_(pointer:fine)]:group-hover:-translate-y-0.5"
+                  />
+                </a>
+              )}
+
+              {smsUrl && (
+                <a
+                  href={smsUrl}
+                  className="mt-1.5 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-white/80 transition-colors duration-[160ms] ease-[var(--ease-out)] hover:text-white"
+                >
+                  <Phone aria-hidden weight="bold" className="h-4 w-4" />
+                  Hoặc nhắn SMS: {ZALO_SO_DIEN_THOAI}
+                </a>
+              )}
             </div>
           </Reveal>
         </div>

@@ -17,7 +17,7 @@ import { CTA, MessengerIcon } from "./ui";
  */
 export function StickyCta() {
   const [quaDauTrang, setQuaDauTrang] = useState(false);
-  const [toiForm, setToiForm] = useState(false);
+  const [toiCtaCuoi, setToiCtaCuoi] = useState(false);
   const [thayNutHero, setThayNutHero] = useState(false);
 
   useEffect(() => {
@@ -36,15 +36,15 @@ export function StickyCta() {
     };
 
     theoDoi("dau-trang", (hien) => setQuaDauTrang(!hien));
-    theoDoi("dang-ky", setToiForm);
+    theoDoi("dang-ky", setToiCtaCuoi);
     theoDoi("cta-dau-trang", setThayNutHero);
 
     return () => dsQuanSat.forEach((o) => o.disconnect());
   }, []);
 
   // Ẩn khi trên màn hình đã có sẵn một nút y hệt: nút chính ở đầu trang, hoặc
-  // form ở cuối trang. Hai nút giống nhau chồng nhau đọc như trang bị lỗi.
-  const hien = quaDauTrang && !toiForm && !thayNutHero;
+  // CTA ở cuối trang. Hai nút giống nhau chồng nhau đọc như trang bị lỗi.
+  const hien = quaDauTrang && !toiCtaCuoi && !thayNutHero;
 
   return (
     <div

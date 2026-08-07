@@ -26,11 +26,18 @@ export const FANPAGE_URL = "https://facebook.com/englishwithbubby";
 // biên dịch. Điền link thật vào là hết, nhưng cứ để đó cho chắc.
 export const KENH_URL: string = "";
 
-// Zalo và số điện thoại. Để trống cái nào thì cái đó tự ẩn khỏi trang —
-// đừng để link rỗng, khách bấm vào không ra gì là mất tin ngay.
-// TODO(chủ shop): điền số thật. Link Zalo có dạng https://zalo.me/84xxxxxxxxx
-export const ZALO_URL: string = "";
-export const SO_DIEN_THOAI: string = "";
+// Zalo của bên mình. Đây là số để khách NHẮN cho mình qua Zalo, không phải
+// số thu thập từ khách. Nhập theo dạng 09xxxxxxxx hoặc +849xxxxxxxx.
+// TODO(chủ shop): điền số Zalo thật. Để trống thì nút Zalo tự ẩn.
+export const ZALO_SO_DIEN_THOAI: string = "0123123123";
+
+const ZALO_SO_MA_HOA = ZALO_SO_DIEN_THOAI.replace(/\D/g, "").replace(
+  /^0/,
+  "84",
+);
+export const ZALO_URL = ZALO_SO_MA_HOA
+  ? `https://zalo.me/${ZALO_SO_MA_HOA}`
+  : "";
 
 export const CONTACT = {
   gioLamViec: "9h tới 21h mỗi ngày",
@@ -116,6 +123,16 @@ export const KHOA_HOC: Khoa[] = [
     videoId: "MMDzjWAL9ao",
   },
 ];
+
+// ── BÀI HỌC QUÀ TẶNG ───────────────────────────────────────────────
+// Các bài chuyên sâu miễn phí Bubby dành cho cộng đồng. Giữ danh sách ở
+// đây để phần giao diện không phải tự chứa nội dung bán hàng.
+export const BAI_HOC_QUA_TANG = [
+  "Phương Pháp Học Ngữ Pháp Hiệu Quả",
+  "Cách Ghi Nhớ Các Âm Trong IPA",
+  "Ghi Nhớ 12 Thì Trong 1h",
+  "Phương Pháp Học Từ Vựng Hiệu Quả",
+] as const;
 
 // ── VIDEO ────────────────────────────────────────────────────────────
 // HAI VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc

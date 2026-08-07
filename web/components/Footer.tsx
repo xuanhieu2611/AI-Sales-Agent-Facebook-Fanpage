@@ -3,7 +3,7 @@ import {
   CONTACT,
   FANPAGE_URL,
   KENH_URL,
-  SO_DIEN_THOAI,
+  ZALO_SO_DIEN_THOAI,
   ZALO_URL,
 } from "@/lib/site";
 
@@ -11,13 +11,7 @@ import {
 const LIEN_KET = [
   { nhan: "Fanpage English with Bubby", href: FANPAGE_URL },
   { nhan: "Kênh English with Bubby", href: KENH_URL },
-  { nhan: "Zalo", href: ZALO_URL },
-  SO_DIEN_THOAI
-    ? {
-        nhan: SO_DIEN_THOAI,
-        href: `tel:${SO_DIEN_THOAI.replace(/[^\d+]/g, "")}`,
-      }
-    : { nhan: "", href: "" },
+  { nhan: ZALO_URL ? `Zalo: ${ZALO_SO_DIEN_THOAI}` : "Zalo", href: ZALO_URL },
 ].filter((l) => l.href);
 
 export function Footer() {
@@ -34,7 +28,7 @@ export function Footer() {
               <Link
                 key={l.nhan}
                 href={l.href}
-                target={l.href.startsWith("tel:") ? undefined : "_blank"}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-sm font-semibold text-white underline-offset-4 hover:underline"
               >

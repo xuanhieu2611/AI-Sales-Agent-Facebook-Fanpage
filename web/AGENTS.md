@@ -10,8 +10,8 @@ context.
 **Not gift-first.** The old Meta ads path paid for clicks with a free Drive video
 behind an email gate, which selected for freebie hunters. This page sells the
 problem and the method openly (method breakdown, video previews, feedback wall)
-and converts to a Messenger consult (`m.me`) or a phone-number lead form. The
-trial lesson is a secondary CTA, below pricing.
+and converts to a Facebook Page or Zalo conversation. The trial lesson is a
+secondary CTA, below pricing.
 
 Do not rebuild an email/Drive freebie gate here. Ad copy that still promises
 "tặng bài học free" will pull the wrong audience onto this page.
@@ -23,8 +23,6 @@ Customer-facing copy is Vietnamese. Keep it that way unless asked otherwise.
 - Copy, prices, FAQ, links, promo labels → `lib/site.ts`
 - Hero "dịch thử" examples → `lib/translations.ts`
 - Components read from those — don't hardcode business facts in JSX
-- Lead form → `app/api/lead/route.ts` → Apps Script → Google Sheet
-  (`../apps-script/leads/`). Separate from the bot's gift-access Apps Script.
 
 ## Gotchas
 

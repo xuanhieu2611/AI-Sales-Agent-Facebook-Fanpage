@@ -1,6 +1,6 @@
 import { Reveal } from "./Reveal";
 import { SectionHead } from "./ui";
-import { LO_TRINH } from "@/lib/site";
+import { BAI_HOC_QUA_TANG, LO_TRINH } from "@/lib/site";
 
 /**
  * Thanh tỉ lệ 32 buổi. Đây là thông tin thật, không phải trang trí:
@@ -56,6 +56,38 @@ export function Curriculum() {
             </Reveal>
           ))}
         </ol>
+
+        <Reveal>
+          <aside className="mt-14 border-t border-line pt-10 sm:mt-18 sm:grid sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-x-12 sm:pt-12">
+            <div>
+              <p className="eyebrow text-brand">Bài học quà tặng</p>
+              <h3 className="mt-4 max-w-[14ch] text-2xl leading-[1.25] text-ink sm:text-3xl">
+                Học thêm miễn phí cùng Bubby
+              </h3>
+            </div>
+
+            <div className="mt-6 sm:mt-0">
+              <p className="max-w-[60ch] text-[0.97rem] leading-relaxed text-muted">
+                EnglishWithBubby còn có những bài học quà tặng chuyên sâu miễn
+                phí, giúp cộng đồng vượt qua một số khó khăn chính khi học tiếng Anh.
+              </p>
+
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-x-5">
+                {BAI_HOC_QUA_TANG.map((baiHoc, i) => (
+                  <li
+                    key={baiHoc}
+                    className="flex items-start gap-3 border-t border-line py-4 text-[0.97rem] font-medium leading-snug text-ink"
+                  >
+                    <span className="font-mono text-xs text-brand">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span>{baiHoc}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        </Reveal>
       </div>
     </section>
   );

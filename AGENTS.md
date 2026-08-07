@@ -107,7 +107,7 @@ Customer → Messenger → webhook (server.ts) → funnel.ts → brain.ts → Op
 ### `web/` — the ads landing page (separate project)
 
 Next.js 16 + Tailwind v4, deployed separately (Vercel). Ad traffic lands here, then
-converts to Messenger (`m.me`) or a phone-number form. See `web/README.md`.
+converts to Facebook Messenger (`m.me`) or Zalo. See `web/README.md`.
 
 - Deliberately **not** gift-first: the old funnel paid for clicks with a free Drive
   video behind an email gate, which selected for freebie hunters. The page delivers

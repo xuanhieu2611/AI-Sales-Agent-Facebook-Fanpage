@@ -37,7 +37,7 @@ export default function Home() {
         <Curriculum />
         {/* 4 — giá */}
         <Pricing />
-        {/* 5 — chốt: Messenger, Fanpage, hoặc để lại SĐT */}
+        {/* 5 — chốt: nhắn Facebook hoặc Zalo */}
         <FinalCta />
       </main>
 

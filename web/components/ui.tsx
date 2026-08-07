@@ -24,8 +24,6 @@ export const CTA = {
    *  chỗ đó hẹp (điện thoại còn phải chứa cả tên page), và thanh đầu trang
    *  là chrome đứng ngoài mạch đọc, không phải một CTA trong bài. */
   loTrinhNgan: "Nhắn tin tư vấn",
-  deLaiSo: "Để lại số điện thoại",
-  fanpage: "Xem thêm trên Fanpage",
 } as const;
 
 /* ── Buttons ──────────────────────────────────────────────────────
