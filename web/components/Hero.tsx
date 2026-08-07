@@ -197,7 +197,7 @@ function AiLaBubby() {
                 alt={`Ảnh chân dung ${BUBBY.ten}`}
                 fill
                 sizes="64px"
-                className="object-cover object-top"
+                className="object-cover object-[center_18%]"
               />
             ) : (
               <span

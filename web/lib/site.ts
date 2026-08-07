@@ -234,9 +234,9 @@ export const BANG_CHUNG_TIKTOK: AnhTikTok[] = [
 
 // ── ẢNH ─────────────────────────────────────────────────────────────
 // Bỏ file ảnh thật vào web/public/img/ rồi sửa đường dẫn ở đây.
-// Hiện đang dùng ảnh giữ chỗ. Xem web/public/img/README.md.
+// Xem web/public/img/README.md.
 export const ANH = {
-  bubby: "/img/bubby.svg", // ảnh dọc, tỉ lệ 4:5
+  bubby: "/img/bubby.jpeg", // chân dung vuông, crop tròn trong Hero
 };
 
 /**
