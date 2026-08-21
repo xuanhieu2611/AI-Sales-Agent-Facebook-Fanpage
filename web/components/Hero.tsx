@@ -217,7 +217,15 @@ function AiLaBubby() {
         </div>
 
         <p className="max-w-[52ch] text-center text-[0.92rem] leading-relaxed text-ink-soft">
-          {BUBBY.tomTat}
+          {BUBBY.tomTat.split(/(4 danh sách phát)/).map((phan, i) =>
+            phan === "4 danh sách phát" ? (
+              <strong key={i} className="font-semibold text-ink">
+                {phan}
+              </strong>
+            ) : (
+              phan
+            ),
+          )}
         </p>
 
         <ul className="flex w-full max-w-md flex-wrap items-stretch justify-center gap-y-3 border-y border-line py-4">

@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import {
-  Bricolage_Grotesque,
+  Genos,
   Be_Vietnam_Pro,
   JetBrains_Mono,
 } from "next/font/google";
 import "./globals.css";
 
-// Display — characterful grotesque, used big and tight. Has Vietnamese.
-const bricolage = Bricolage_Grotesque({
+// Display — Genos on headings. Has Vietnamese (dấu ế ỗ ữ).
+const genos = Genos({
   subsets: ["latin", "vietnamese"],
   weight: ["700", "800"],
-  variable: "--font-bricolage",
+  variable: "--font-genos",
   display: "swap",
 });
 
@@ -55,7 +55,7 @@ export default function RootLayout({
     <html
       lang="vi"
       data-scroll-behavior="smooth"
-      className={`${bricolage.variable} ${beVietnam.variable} ${jetbrains.variable}`}
+      className={`${genos.variable} ${beVietnam.variable} ${jetbrains.variable}`}
     >
       <body className="overflow-x-hidden">{children}</body>
     </html>

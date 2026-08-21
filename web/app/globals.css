@@ -33,7 +33,7 @@
 
   --color-line: #d9e2f0;
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-genos), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bevietnam), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 
@@ -64,7 +64,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Bricolage carries the personality — always tight, always confident. */
+  /* Genos on h1/h2/h3. Body stays Be Vietnam Pro via --font-sans. */
   /* ⚠ TIẾNG VIỆT: đừng bóp line-height xuống dưới ~1.2 cho chữ tiêu đề.
      Tiếng Việt chồng hai tầng dấu (dấu mũ + dấu thanh: ế ỗ ữ), nên phần
      nhô lên của chữ cao hơn tiếng Anh nhiều. Để 1.1 thì dấu của dòng dưới
