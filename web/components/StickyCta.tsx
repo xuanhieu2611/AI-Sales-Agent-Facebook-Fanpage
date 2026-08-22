@@ -23,7 +23,7 @@ export function StickyCta() {
     const dsQuanSat: IntersectionObserver[] = [];
 
     // Hiện ngay khi câu tiêu đề trôi khỏi màn hình — tức là trong lúc khách
-    // đang xem hai video. Đây là lưới đỡ cho người bỏ ngang giữa video.
+    // đang xem ba video. Đây là lưới đỡ cho người bỏ ngang giữa video.
     const theoDoi = (id: string, dat: (hien: boolean) => void) => {
       const el = document.getElementById(id);
       if (!el) return;

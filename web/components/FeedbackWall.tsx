@@ -166,17 +166,17 @@ function Ghim({ anh }: { anh: AnhFeedback }) {
         {/* KHÔNG dùng text-balance ở đây: câu này dài 5–6 dòng, balance bóp bề
             ngang lại cho đều dòng nên cột chữ hụt hẳn một khoảng so với ảnh
             bên cạnh. Cứ để chữ chảy hết bề rộng cột. */}
-        <p className="font-display text-[1.6rem] leading-[1.3] font-extrabold tracking-tight text-ink sm:text-[1.95rem] lg:text-[2.2rem]">
+        <p className="font-display text-[1.6rem] leading-[1.3] font-heading tracking-tight text-ink sm:text-[1.95rem] lg:text-[2.2rem]">
           “{truoc}
           {giua && <Mark>{giua}</Mark>}
           {sau}”
         </p>
 
         <footer className="flex flex-col gap-1">
-          <cite className="font-display text-[1.05rem] leading-snug font-bold tracking-tight text-ink not-italic">
+          <cite className="font-display text-[1.05rem] leading-snug font-heading tracking-tight text-ink not-italic">
             {t.ten}
           </cite>
-          <span className="font-mono text-xs text-muted">{t.nguon}</span>
+          <span className="font-subtitle text-xs text-muted">{t.nguon}</span>
         </footer>
       </blockquote>
 
@@ -310,7 +310,7 @@ function TheCau({
       }`}
     >
       <blockquote
-        className={`font-display font-bold tracking-tight text-ink ${
+        className={`font-display font-heading tracking-tight text-ink ${
           gon
             ? "text-[1.05rem] leading-[1.4] sm:text-[1.2rem]"
             : "text-[1.15rem] leading-[1.4] sm:text-[1.3rem]"
@@ -334,7 +334,7 @@ function TheChot() {
       rel="noopener noreferrer"
       className="group flex flex-col gap-6 rounded-2xl bg-brand p-7 text-white shadow-[0_22px_54px_-34px_rgba(42,95,217,0.95)] transition-[background-color,transform] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.99] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-deep sm:flex-row sm:items-center sm:justify-between sm:gap-10 sm:p-9"
     >
-      <p className="max-w-[34ch] font-display text-[1.2rem] leading-[1.32] font-extrabold tracking-tight sm:text-[1.45rem]">
+      <p className="max-w-[34ch] font-display text-[1.2rem] leading-[1.32] font-heading tracking-tight sm:text-[1.45rem]">
         Bạn đang kẹt ở đâu? Nhắn Bubby, mình xem rồi nói thật là nên học phần
         nào trước.
       </p>

@@ -15,32 +15,21 @@ import {
 } from "@/lib/site";
 
 /**
- * Hero theo format "lời hứa lớn → hai video → bằng chứng TikTok". Với dịch vụ
+ * Hero theo format "lời hứa lớn → ba video → bằng chứng TikTok". Với dịch vụ
  * coaching cá nhân, video là bằng chứng sớm nhất: khách thấy Bubby nói và dạy
  * thế nào trước khi phải đọc bất cứ thứ gì bên dưới.
  *
  * Hero này CỐ Ý cao hơn một màn hình. Thứ tự lời hứa → video 1 → Bubby + ảnh
- * TikTok → video 2 là mạch bán hàng của chủ shop, đừng nén lại cho vừa màn
- * hình đầu.
+ * TikTok → video 2 → video 3 là mạch bán hàng của chủ shop, đừng nén lại cho
+ * vừa màn hình đầu.
  *
- * Hai video được ĐÁNH SỐ (Bước 1, Bước 2) vì cái số kéo người xem hết video
- * một sang video hai. Nút Messenger không nằm trong hero nữa — StickyCta
+ * Ba video được ĐÁNH SỐ (Bước 1, 2, 3) vì cái số kéo người xem hết video này
+ * sang video kia. Nút Messenger không nằm trong hero nữa — StickyCta
  * (điện thoại) và thanh đầu trang lo phần nhắn tin.
  */
 export function Hero() {
   return (
     <section className="relative overflow-hidden pb-16 sm:pb-20">
-      {/* Hai vệt sáng lệch nhau, không phải một khối đối xứng giữa trang:
-          nền có hướng thì cả khối chữ bên trên đỡ bị phẳng. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-44 left-1/2 h-[36rem] w-[58rem] -translate-x-1/2 rounded-full bg-brand-soft/75 blur-[120px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-20 right-[8%] h-[22rem] w-[26rem] rounded-full bg-mark-soft/70 blur-[110px]"
-      />
-
       <div className="shell relative flex flex-col items-center pt-10 text-center sm:pt-14">
         {/* Mốc cho StickyCta: sau khi khách đã thấy lời hứa, thanh Messenger
             sẽ xuất hiện trên điện thoại trong lúc họ xem video. */}
@@ -85,7 +74,7 @@ export function Hero() {
             dải Bubby phía trên đã nói đủ, ảnh chỉ để nhìn thấy là có thật. */}
         <TikTokProof />
 
-        <h2 className="mt-8 max-w-[22ch] text-center font-display text-[1.2rem] leading-[1.3] font-extrabold tracking-tight text-ink sm:mt-10 sm:max-w-none sm:text-[1.6rem] sm:leading-[1.25]">
+        <h2 className="mt-8 max-w-[22ch] text-center font-subtitle text-[1.2rem] leading-[1.3] font-normal tracking-normal text-ink sm:mt-10 sm:max-w-none sm:text-[1.6rem] sm:leading-[1.25]">
           Chiến Lược Học Toàn Diện Cho Người Mất Gốc
         </h2>
 
@@ -104,6 +93,16 @@ export function Hero() {
               hienTieuDe={false}
             />
           )}
+        </KhungVideo>
+
+        <BuocXem so={3}>Mô hình coaching 1-1 là gì?</BuocXem>
+
+        <KhungVideo>
+          <YouTubeLite
+            id={VIDEO.moHinhCoaching}
+            title="Mô hình coaching 1-1 là gì"
+            hienTieuDe={false}
+          />
         </KhungVideo>
 
         <Link
@@ -202,14 +201,14 @@ function AiLaBubby() {
             ) : (
               <span
                 aria-hidden
-                className="grid h-full w-full place-items-center font-display text-lg font-extrabold text-brand"
+                className="grid h-full w-full place-items-center font-display text-lg font-heading text-brand"
               >
                 B
               </span>
             )}
           </div>
           <div className="min-w-0">
-            <p className="font-display text-[1.15rem] leading-[1.25] font-extrabold tracking-tight text-ink sm:text-[1.25rem]">
+            <p className="font-display text-[1.15rem] leading-[1.25] font-heading tracking-tight text-ink sm:text-[1.25rem]">
               {BUBBY.ten}
             </p>
             <p className="mt-0.5 text-sm text-muted">{BUBBY.vaiTro}</p>
@@ -236,7 +235,7 @@ function AiLaBubby() {
                 i > 0 ? "border-l border-line" : ""
               }`}
             >
-              <span className="font-display text-[1.15rem] leading-[1.2] font-extrabold tracking-tight text-ink sm:text-[1.3rem]">
+              <span className="font-display text-[1.15rem] leading-[1.2] font-heading tracking-tight text-ink sm:text-[1.3rem]">
                 {muc.so}
               </span>
               <span className="mt-1.5 text-center text-[0.72rem] leading-snug text-muted">
@@ -275,11 +274,11 @@ function BuocXem({ so, children }: { so: number; children: ReactNode }) {
           trôi lửng lơ không dính vào dòng nào. Xếp dọc là hết, và nó nối
           thẳng mạch với cái vạch dọc ngay bên trên. */}
       <span className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand font-mono text-[0.8rem] font-bold text-white">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand font-subtitle text-[0.8rem] font-bold text-white">
           {so}
         </span>
-        {/* leading-[1.25] bắt buộc: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
-        <span className="font-display text-[1.2rem] leading-[1.3] font-extrabold tracking-tight text-ink sm:text-[1.6rem] sm:leading-[1.25]">
+        {/* leading ≥ 1.25: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
+        <span className="font-subtitle text-[1.2rem] leading-[1.3] font-normal text-ink sm:text-[1.6rem] sm:leading-[1.25]">
           {children}
         </span>
       </span>

@@ -72,7 +72,7 @@ export function AssetPlaceholder({
           {type === "video" ? "VIDEO CẦN THAY" : type === "chat" ? "FEEDBACK CẦN THAY" : "ẢNH CẦN THAY"}
         </span>
         <div className="flex flex-col gap-2">
-          <p className="font-display text-xl leading-[1.25] font-extrabold tracking-tight text-ink sm:text-2xl">
+          <p className="font-display text-xl leading-[1.25] font-heading tracking-tight text-ink sm:text-2xl">
             {title}
           </p>
           <p className="text-sm leading-relaxed text-muted">{description}</p>

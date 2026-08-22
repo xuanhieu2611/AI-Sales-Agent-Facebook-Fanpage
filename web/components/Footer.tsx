@@ -18,7 +18,7 @@ export function Footer() {
   return (
     <footer className="bg-brand-deep py-10">
       <div className="shell flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <span className="font-display text-base font-extrabold tracking-tight text-white">
+        <span className="font-display text-base font-heading tracking-tight text-white">
           {CONTACT.pageName}
         </span>
 
@@ -36,7 +36,7 @@ export function Footer() {
               </Link>
             ))}
           </div>
-          <p className="font-mono text-xs text-white/60">
+          <p className="font-subtitle text-xs text-white/60">
             Xây gốc tiếng Anh · Coaching 1-1 · {CONTACT.gioLamViec}
           </p>
         </div>

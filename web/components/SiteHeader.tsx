@@ -24,7 +24,7 @@ export function SiteHeader() {
             tên page bị bẻ thành hai dòng ("English with" / "Bubby") và đội
             thanh đầu trang cao lên. Tên thương hiệu xuống dòng giữa chừng
             đọc như trang vỡ layout. */}
-        <span className="font-display text-[0.95rem] font-extrabold tracking-tight whitespace-nowrap text-ink sm:text-lg">
+        <span className="font-display text-[0.95rem] font-heading tracking-tight whitespace-nowrap text-ink sm:text-lg">
           {CONTACT.pageName}
         </span>
 

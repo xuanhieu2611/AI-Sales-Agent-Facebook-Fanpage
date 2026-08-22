@@ -64,14 +64,14 @@ export function Pricing() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-baseline gap-3">
                     <span
-                      className={`font-display text-4xl font-extrabold tracking-tight ${
+                      className={`font-display text-4xl font-heading tracking-tight ${
                         k.noiBat ? "text-white" : "text-ink"
                       }`}
                     >
                       {k.giaSale}
                     </span>
                     <span
-                      className={`font-mono text-sm line-through ${
+                      className={`font-subtitle text-sm line-through ${
                         k.noiBat ? "text-white/60" : "text-muted/60"
                       }`}
                     >
@@ -82,14 +82,14 @@ export function Pricing() {
                       thì so được với một bữa ăn — cùng một số tiền, khác nhau ở
                       chỗ khách có đọc tiếp hay không. */}
                   <span
-                    className={`font-display text-[0.95rem] font-bold tracking-tight ${
+                    className={`font-display text-[0.95rem] font-heading tracking-tight ${
                       k.noiBat ? "text-mark" : "text-brand"
                     }`}
                   >
                     {k.giaMoiBuoi}
                   </span>
                   <span
-                    className={`font-mono text-xs ${
+                    className={`font-subtitle text-xs ${
                       k.noiBat ? "text-white/75" : "text-muted"
                     }`}
                   >

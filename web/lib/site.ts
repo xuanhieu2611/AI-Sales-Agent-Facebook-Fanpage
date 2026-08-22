@@ -146,26 +146,29 @@ export const BAI_HOC_QUA_TANG = {
 } as const;
 
 // ── VIDEO ────────────────────────────────────────────────────────────
-// HAI VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
+// BA VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
 // đoạn văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 //
-//   `gioiThieu`  → Bước 1: "Vì sao bạn học mãi không hiệu quả?"
-//                  Nói trúng chỗ khách đang kẹt. KHÔNG bán gì ở video này.
-//   `giaiPhap`   → Bước 2: "EnglishWithBubby giúp được gì cho bạn?"
-//                  Bên mình là ai, chữa kiểu gì, mô hình bài quay sẵn +
-//                  coaching 1-1 chạy ra sao.
+//   `gioiThieu`      → Bước 1: "Vì sao bạn học mãi không hiệu quả?"
+//                      Nói trúng chỗ khách đang kẹt. KHÔNG bán gì ở video này.
+//   `giaiPhap`       → Bước 2: "EnglishWithBubby giúp được gì cho bạn?"
+//                      Bên mình là ai, chữa kiểu gì, lộ trình ra sao.
+//   `moHinhCoaching` → Bước 3: "Mô hình coaching 1-1 là gì?"
+//                      Lớp chạy thế nào: bài quay sẵn + chữa 1-1.
 //
-// Hai yêu cầu bắt buộc cho cả hai:
+// Hai yêu cầu bắt buộc cho cả ba:
 //   1. DƯỚI 75 GIÂY. Traffic quảng cáo phần lớn rời trang trước giây 30;
 //      video hai phút thì gần như không ai xem tới video sau.
 //   2. PHỤ ĐỀ CHÁY SẴN TRONG VIDEO. Khách xem trên điện thoại và tắt tiếng
-//      — không có phụ đề thì coi như không có video.
+//      - không có phụ đề thì coi như không có video.
 //
-// TODO(chủ shop): cả hai đang mượn tạm video cũ cho khỏi trống chỗ. Quay
-// video riêng cho từng bước rồi thay ID vào đây.
+// TODO(chủ shop): đang mượn tạm video cũ cho khỏi trống chỗ. Quay video
+// riêng cho từng bước rồi thay ID vào đây.
 export const VIDEO = {
   gioiThieu: "3D_fUgUmIAk",
   giaiPhap: "kpnz_RE1bPg",
+  // TODO(chủ shop): dán ID video "Mô hình coaching 1-1 là gì". Đang mượn tạm bước 2.
+  moHinhCoaching: "kpnz_RE1bPg",
 };
 
 // ── BUBBY LÀ AI ─────────────────────────────────────────────────────

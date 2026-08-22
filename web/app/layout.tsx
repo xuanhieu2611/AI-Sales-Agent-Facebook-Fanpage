@@ -1,16 +1,26 @@
 import type { Metadata, Viewport } from "next";
 import {
   Genos,
+  Oswald,
   Be_Vietnam_Pro,
-  JetBrains_Mono,
 } from "next/font/google";
 import "./globals.css";
 
 // Display — Genos on headings. Has Vietnamese (dấu ế ỗ ữ).
 const genos = Genos({
   subsets: ["latin", "vietnamese"],
-  weight: ["700", "800"],
+  // Variable so headings can sit between Bold and ExtraBold (weight 738).
+  weight: "variable",
   variable: "--font-genos",
+  display: "swap",
+});
+
+// Subtitles + labels — Oswald. Variable so Regular (400) subtitles,
+// Medium (500) eyebrows, and Bold (700) step numbers all work.
+const oswald = Oswald({
+  subsets: ["latin", "vietnamese"],
+  weight: "variable",
+  variable: "--font-oswald",
   display: "swap",
 });
 
@@ -19,13 +29,6 @@ const beVietnam = Be_Vietnam_Pro({
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-bevietnam",
-  display: "swap",
-});
-
-// Notation — the machine-literal voice in the translate demo, plus labels.
-const jetbrains = JetBrains_Mono({
-  subsets: ["latin", "vietnamese"],
-  variable: "--font-jetbrains",
   display: "swap",
 });
 
@@ -45,7 +48,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   // Trùng với --color-paper. Trang chỉ có một tông sáng duy nhất nên
   // không khai báo biến thể tối ở đây.
-  themeColor: "#eef2f9",
+  themeColor: "#f4f7fc",
 };
 
 export default function RootLayout({
@@ -55,7 +58,7 @@ export default function RootLayout({
     <html
       lang="vi"
       data-scroll-behavior="smooth"
-      className={`${genos.variable} ${beVietnam.variable} ${jetbrains.variable}`}
+      className={`${genos.variable} ${oswald.variable} ${beVietnam.variable}`}
     >
       <body className="overflow-x-hidden">{children}</body>
     </html>

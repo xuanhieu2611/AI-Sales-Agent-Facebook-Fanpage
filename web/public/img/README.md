@@ -174,22 +174,22 @@ vào đó**, đừng để chung chung kiểu "feedback học viên".
 
 ---
 
-## 4. Hai video đầu trang (quan trọng nhất)
+## 4. Ba video đầu trang (quan trọng nhất)
 
-Hai video này **là cả nửa trên của trang**. Khách từ quảng cáo không đọc đoạn
+Ba video này **là cả nửa trên của trang**. Khách từ quảng cáo không đọc đoạn
 văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 
-| | Bước 1 — `gioiThieu` | Bước 2 — `giaiPhap` |
-|---|---|---|
-| Tiêu đề trên trang | "Vì Sao Bạn Học Mãi Không Hiệu Quả?" | "EnglishWithBubby Giúp Được Gì Cho Bạn?" |
-| Việc nó làm | Nói trúng chỗ khách đang kẹt | Bên mình là ai, chữa kiểu gì |
-| Nội dung | Vì sao học mãi vẫn không nói được | Cách dạy: bài quay sẵn + coaching 1-1, lộ trình ra sao |
-| **Không** làm gì | **Không bán gì ở video này** | Không kể lể dài, để giá cho phần dưới |
+| | Bước 1 — `gioiThieu` | Bước 2 — `giaiPhap` | Bước 3 — `moHinhCoaching` |
+|---|---|---|---|
+| Tiêu đề trên trang | "Vì sao bạn học mãi không hiệu quả?" | "EnglishWithBubby giúp được gì cho bạn?" | "Mô hình coaching 1-1 là gì?" |
+| Việc nó làm | Nói trúng chỗ khách đang kẹt | Bên mình là ai, chữa kiểu gì | Lớp chạy thế nào |
+| Nội dung | Vì sao học mãi vẫn không nói được | Lộ trình / cách dạy | Bài quay sẵn + chữa 1-1 |
+| **Không** làm gì | **Không bán gì ở video này** | Không kể lể dài, để giá cho phần dưới | Không nhồi giá vào đây |
 
-Hai điều bắt buộc cho **cả hai** video:
+Hai điều bắt buộc cho **cả ba** video:
 
 1. **Dưới 75 giây.** Traffic quảng cáo phần lớn rời trang trước giây 30. Video
-   một mà dài hai phút thì gần như không ai xem tới video hai.
+   một mà dài hai phút thì gần như không ai xem tới video sau.
 2. **Phụ đề cháy sẵn trong video.** Khách xem trên điện thoại và **tắt tiếng**.
    Không có phụ đề thì coi như không có video.
 
@@ -197,8 +197,9 @@ Up lên YouTube rồi sửa trong `web/lib/site.ts`:
 
 ```ts
 export const VIDEO = {
-  gioiThieu: "ID_VIDEO_BUOC_1",   // ← thay vào đây
-  giaiPhap:  "ID_VIDEO_BUOC_2",   // ← và đây
+  gioiThieu: "ID_VIDEO_BUOC_1",
+  giaiPhap: "ID_VIDEO_BUOC_2",
+  moHinhCoaching: "ID_VIDEO_BUOC_3",
 };
 ```
 

@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 /* ────────────────────────────────────────────────────────────────
-   Design tokens — "giấy xanh & bút dạ quang"
-   Nền giấy xanh pastel, chữ mực navy, xanh đậm = hành động,
-   vàng dạ quang = chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
+   Design tokens — giấy trắng, mực xanh Bubby, vệt dạ quang vàng.
+   Nền tờ giấy trắng hơi xanh. Chữ mực navy. Xanh đậm = hành động.
+   Vàng chỉ để tô đúng chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
 
    BẢNG MÀU — mỗi màu một nhiệm vụ, không dùng lẫn:
      brand (xanh đậm)  → nút bấm, link, chỗ đúng
@@ -11,9 +11,9 @@
      flag  (đỏ)        → CHỈ dùng cho nét gạch chân chỗ sai
    ──────────────────────────────────────────────────────────────── */
 @theme {
-  /* nền & mực */
-  --color-paper: #eef2f9;
-  --color-paper-2: #e3ebf7;
+  /* nền & mực — giấy trắng hơi xanh, không phải xám */
+  --color-paper: #f4f7fc;
+  --color-paper-2: #e7eef8;
   --color-surface: #ffffff;
   --color-ink: #16233f;
   --color-ink-soft: #33415e;
@@ -34,8 +34,11 @@
   --color-line: #d9e2f0;
 
   --font-display: var(--font-genos), ui-sans-serif, system-ui, sans-serif;
+  --font-subtitle: var(--font-oswald), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bevietnam), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Genos heading weight — between Bold (700) and ExtraBold (800). */
+  --font-weight-heading: 738;
 
   /* chuyển động — đường cong mạnh hơn ease mặc định của CSS */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -50,6 +53,12 @@
      ô nhập liệu, ảnh nhỏ   → rounded-xl   (12px)
    ──────────────────────────────────────────────────────────────── */
 
+/* z-index của trang:
+     -1  bầu không khí (vệt màu, cuộn theo nội dung)
+     40  thanh đầu trang dính
+     50  thanh Messenger dính (điện thoại)
+     60  hạt giấy (fixed, pointer-events: none) */
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -58,10 +67,94 @@
   }
 
   body {
+    position: relative;
+    isolation: isolate;
     background: var(--color-paper);
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Tờ giấy dưới cả trang: trắng ở giữa để đọc, xanh Bubby lệch trái,
+     vệt dạ quang vàng ở góc. Absolute nên vệt trôi theo nội dung.
+     Không lưới ô — lưới trang trí làm trang trông như template. */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--color-paper);
+    background-image:
+      radial-gradient(
+        ellipse 38% 28% at 96% 2%,
+        color-mix(in srgb, var(--color-mark) 48%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 28% 22% at 88% 48%,
+        color-mix(in srgb, var(--color-mark) 22%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 80% 48% at 48% 6%,
+        #fff 0%,
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 58% 42% at 0% 0%,
+        color-mix(in srgb, var(--color-brand) 18%, transparent),
+        transparent 68%
+      ),
+      radial-gradient(
+        ellipse 44% 34% at 4% 42%,
+        color-mix(in srgb, var(--color-brand) 11%, transparent),
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 50% 30% at 12% 78%,
+        color-mix(in srgb, var(--color-brand) 9%, transparent),
+        transparent 70%
+      );
+    background-repeat: no-repeat;
+
+    @media (width < 768px) {
+      background-image:
+        radial-gradient(
+          ellipse 70% 24% at 100% 0%,
+          color-mix(in srgb, var(--color-mark) 36%, transparent),
+          transparent 66%
+        ),
+        radial-gradient(
+          ellipse 95% 38% at 50% 4%,
+          #fff 0%,
+          transparent 76%
+        ),
+        radial-gradient(
+          ellipse 80% 40% at 0% 0%,
+          color-mix(in srgb, var(--color-brand) 14%, transparent),
+          transparent 66%
+        ),
+        radial-gradient(
+          ellipse 55% 26% at 100% 58%,
+          color-mix(in srgb, var(--color-mark) 18%, transparent),
+          transparent 70%
+        );
+    }
+  }
+
+  /* Hạt giấy. Fixed + pointer-events: none — không repaint theo cuộn.
+     Grayscale để không nhuộm vàng/xanh. Opacity thấp: đủ gãy mặt phẳng,
+     không làm đục chữ. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
   }
 
   /* Genos on h1/h2/h3. Body stays Be Vietnam Pro via --font-sans. */
@@ -74,7 +167,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: var(--font-weight-heading);
     letter-spacing: -0.03em;
     line-height: 1.25;
     text-wrap: balance;
@@ -179,7 +272,7 @@
 }
 
 @utility eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-subtitle);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.18em;

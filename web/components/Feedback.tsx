@@ -31,7 +31,7 @@ export function Feedback() {
     FEEDBACK_NOI_BAT.length > 0 || FEEDBACK_VIDEO.length > 0 || anhThat.length > 0;
 
   return (
-    <section id="feedback" className="bg-paper-2/45 py-24 sm:py-32">
+    <section id="feedback" className="py-24 sm:py-32">
       <div className="shell">
         <Reveal>
           <SectionHead
@@ -84,7 +84,7 @@ export function Feedback() {
               <Reveal>
                 <article className="flex h-full flex-col justify-between rounded-2xl bg-surface p-7 shadow-[0_18px_45px_-36px_rgba(22,35,63,0.65)]">
                   <span className="eyebrow text-brand">CÂU FEEDBACK THẬT 01</span>
-                  <p className="mt-8 font-display text-xl leading-[1.35] font-bold tracking-tight text-ink">
+                  <p className="mt-8 font-display text-xl leading-[1.35] font-heading tracking-tight text-ink">
                     “Trích nguyên văn một câu ngắn nói rõ thay đổi học viên đã đạt được.”
                   </p>
                   <p className="mt-7 text-sm text-muted">Tên viết tắt · học khóa nào · sau bao lâu</p>
@@ -93,7 +93,7 @@ export function Feedback() {
               <Reveal>
                 <article className="flex h-full flex-col justify-between rounded-2xl border border-brand/20 bg-brand p-7 text-white shadow-[0_18px_45px_-36px_rgba(22,35,63,0.65)]">
                   <span className="eyebrow text-white/65">VIDEO FEEDBACK (NẾU CÓ)</span>
-                  <p className="mt-8 font-display text-xl leading-[1.35] font-bold tracking-tight">
+                  <p className="mt-8 font-display text-xl leading-[1.35] font-heading tracking-tight">
                     Học viên tự nói 30 tới 60 giây: trước đây kẹt gì, sau đó dùng được vào đâu.
                   </p>
                   <p className="mt-7 text-sm text-white/70">Đặt thumbnail thật ở đây, phụ đề cháy sẵn.</p>
