@@ -8,58 +8,52 @@ import {
   ANH,
   BANG_CHUNG_TIKTOK,
   BUBBY,
-  CONTACT,
   MESSENGER_URL,
   SHOW_REVIEW_PLACEHOLDERS,
   VIDEO,
 } from "@/lib/site";
 
 /**
- * Hero theo format "lời hứa lớn → hai video → bằng chứng TikTok". Với dịch vụ
- * coaching cá nhân, video là bằng chứng sớm nhất: khách thấy Bubby nói và dạy
- * thế nào trước khi phải đọc bất cứ thứ gì bên dưới.
+ * Hero theo format "lời hứa lớn → video vấn đề → một tấm kính câu trả lời".
+ * Với dịch vụ coaching cá nhân, video là bằng chứng sớm nhất: khách thấy
+ * Bubby nói và dạy thế nào trước khi phải đọc bất cứ thứ gì bên dưới.
  *
- * Hero này CỐ Ý cao hơn một màn hình. Thứ tự lời hứa → video 1 → Bubby + ảnh
- * TikTok → video 2 là mạch bán hàng của chủ shop, đừng nén lại cho vừa màn
- * hình đầu.
+ * Hero này CỐ Ý cao hơn một màn hình. Thứ tự lời hứa → video 1 → tấm kính
+ * (Bubby + TikTok + hai video giải pháp cạnh nhau) là mạch bán hàng của
+ * chủ shop, đừng nén lại cho vừa màn hình đầu.
  *
- * Hai video được ĐÁNH SỐ (Bước 1, Bước 2) vì cái số kéo người xem hết video
- * một sang video hai. Nút Messenger không nằm trong hero nữa — StickyCta
- * (điện thoại) và thanh đầu trang lo phần nhắn tin.
+ * Video vấn đề đứng một mình trên trời. Hai video còn lại nằm chung một
+ * tấm kính để đọc bio và xem cặp giải pháp / mô hình cùng lúc —
+ * không xếp dọc thành Bước 2 rồi Bước 3. Nút Messenger không nằm trong
+ * hero nữa — StickyCta (điện thoại) và thanh đầu trang lo phần nhắn tin.
  */
 export function Hero() {
   return (
     <section className="relative overflow-hidden pb-16 sm:pb-20">
-      {/* Hai vệt sáng lệch nhau, không phải một khối đối xứng giữa trang:
-          nền có hướng thì cả khối chữ bên trên đỡ bị phẳng. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-44 left-1/2 h-[36rem] w-[58rem] -translate-x-1/2 rounded-full bg-brand-soft/75 blur-[120px]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-20 right-[8%] h-[22rem] w-[26rem] rounded-full bg-mark-soft/70 blur-[110px]"
-      />
-
-      <div className="shell relative flex flex-col items-center pt-10 text-center sm:pt-14">
+      <div className="header-clear shell relative flex flex-col items-center text-center">
         {/* Mốc cho StickyCta: sau khi khách đã thấy lời hứa, thanh Messenger
             sẽ xuất hiện trên điện thoại trong lúc họ xem video. */}
         <div id="dau-trang" className="flex max-w-[76rem] flex-col items-center gap-6">
-          {/* Ngắt dòng bằng tay để cụm "mất gốc tiếng Anh" luôn nằm trọn một
-              dòng. 2.1rem trên điện thoại là cỡ lớn nhất còn vừa một dòng ở
-              màn 390px. */}
-          <h1 className="max-w-[20ch] text-[2.1rem] leading-[1.22] text-ink sm:text-[3.3rem] lg:text-[3.9rem]">
-            Nơi dành riêng cho các bạn <br />
-            mất gốc tiếng Anh
+          {/* Hai dòng là hai <span> khối, không phải <br>: cụm "mất gốc tiếng
+              Anh" phải đứng riêng một dòng để nét cọ vàng ôm trọn đúng cụm đó
+              (nét vẽ theo bề ngang của span — cụm bị ngắt đôi thì nét cũng gãy
+              làm đôi). `whitespace-nowrap` giữ nó không xuống dòng ở màn hẹp;
+              dòng trên thì cho tự xuống dòng, nhờ vậy cỡ chữ điện thoại mới
+              lên được 2.5rem thay vì bị 2.1rem trói. */}
+          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-ink sm:text-[4rem] lg:text-[4.75rem]">
+            <span className="block">Nơi dành riêng cho các bạn</span>
+            <span className="brush-underline whitespace-nowrap">
+              mất gốc tiếng Anh
+            </span>
           </h1>
         </div>
 
-        <BuocXem so={1}>Vì sao bạn học mãi không hiệu quả?</BuocXem>
+        <BuocXem so={1}>Vì Sao Học Mãi Vẫn Không Áp Dụng Được?</BuocXem>
 
         <KhungVideo>
           <YouTubeLite
             id={VIDEO.gioiThieu}
-            title="Vì sao bạn học mãi không hiệu quả"
+            title="Vì sao học mãi vẫn không áp dụng được"
             priority
             hienTieuDe={false}
           />
@@ -67,7 +61,7 @@ export function Hero() {
 
         {/* Lối tắt cho người đã bị thuyết phục ngay từ video một. Cố ý để
             dạng link chữ nhỏ chứ không phải nút: nút thứ hai ở đây sẽ tranh
-            chỗ với video hai, mà video hai mới là thứ chốt phần lớn khách. */}
+            chỗ với hai video trong tấm kính, mà đó mới là thứ chốt phần lớn khách. */}
         <Link
           href={MESSENGER_URL}
           target="_blank"
@@ -77,34 +71,7 @@ export function Hero() {
           Thấy đúng chỗ mình đang kẹt rồi? Nhắn Bubby luôn
         </Link>
 
-        <BuocXem so={2}>{CONTACT.pageName} giúp được gì cho bạn?</BuocXem>
-
-        <AiLaBubby />
-
-        {/* Ba ảnh TikTok trước video: kênh → playlist → feedback. Không chữ —
-            dải Bubby phía trên đã nói đủ, ảnh chỉ để nhìn thấy là có thật. */}
-        <TikTokProof />
-
-        <h2 className="mt-8 max-w-[22ch] text-center font-display text-[1.2rem] leading-[1.3] font-extrabold tracking-tight text-ink sm:mt-10 sm:max-w-none sm:text-[1.6rem] sm:leading-[1.25]">
-          Chiến Lược Học Toàn Diện Cho Người Mất Gốc
-        </h2>
-
-        <KhungVideo>
-          {SHOW_REVIEW_PLACEHOLDERS ? (
-            <AssetPlaceholder
-              type="video"
-              className="aspect-video rounded-2xl"
-              title="Video: Chiến Lược Học Toàn Diện Cho Người Mất Gốc"
-              description="Bubby giải thích khóa học, cách dạy, và lộ trình sẽ giúp học viên như thế nào. Video có phụ đề cháy sẵn."
-            />
-          ) : (
-            <YouTubeLite
-              id={VIDEO.giaiPhap}
-              title="Chiến Lược Học Toàn Diện Cho Người Mất Gốc"
-              hienTieuDe={false}
-            />
-          )}
-        </KhungVideo>
+        <TamKinhTraLoi />
 
         <Link
           href="#feedback"
@@ -119,25 +86,114 @@ export function Hero() {
 }
 
 /**
- * Ba ảnh TikTok nhỏ + link kênh — nằm giữa dải Bubby và video Bước 2.
+ * Tấm kính cho cả chương trả lời: Bubby là ai, kênh có thật, rồi hai video
+ * giải pháp nằm cạnh nhau. Trước đây là một tấm giấy trắng đục — nó che mất
+ * đúng thứ làm trang này khác người ta, là bầu trời thật phía sau. Giờ nó là
+ * kính: đậm ở nửa trên (chỗ có bio để đọc), loãng dần xuống dưới (chỗ chỉ
+ * còn video, vốn đã đục sẵn). Đừng loãng hơn nữa — xem .glass-panel. Điện thoại xếp dọc (giải pháp rồi mô hình); máy tính
+ * xếp ngang để khỏi phải xem hết video này mới thấy video kia.
+ */
+function TamKinhTraLoi() {
+  return (
+    <div className="mt-8 flex w-full max-w-6xl flex-col items-center sm:mt-10">
+      <span
+        aria-hidden
+        className="h-20 w-px bg-linear-to-b from-transparent to-brand/45 sm:h-24"
+      />
+
+      <article
+        aria-label="English with Bubby giúp được gì cho bạn"
+        className="glass-panel mt-4 w-full rounded-2xl border border-white/60 bg-linear-to-b from-white/78 to-white/55 px-5 py-8 backdrop-blur-xl backdrop-saturate-150 sm:px-8 sm:py-10 lg:px-10 lg:py-12"
+      >
+        <AiLaBubby />
+        <TikTokProof />
+
+        <div className="mt-8 grid w-full gap-10 lg:mt-10 lg:grid-cols-2 lg:gap-8">
+          <VideoCot so={2} tieuDe="English With Bubby Có Thể Giúp Gì Cho Bạn?">
+            {SHOW_REVIEW_PLACEHOLDERS ? (
+              <AssetPlaceholder
+                type="video"
+                className="aspect-video rounded-2xl"
+                title="Video: English With Bubby có thể giúp gì cho bạn?"
+                description="Bubby giải thích khóa học, cách dạy, và lộ trình sẽ giúp học viên như thế nào. Video có phụ đề cháy sẵn."
+              />
+            ) : (
+              <YouTubeLite
+                id={VIDEO.giaiPhap}
+                title="English With Bubby có thể giúp gì cho bạn"
+                hienTieuDe={false}
+                sizes="(max-width: 1023px) 92vw, 36rem"
+              />
+            )}
+          </VideoCot>
+
+          <VideoCot so={3} tieuDe="Mô Hình Coaching 1-1">
+            <YouTubeLite
+              id={VIDEO.moHinhCoaching}
+              title="Mô hình coaching 1-1"
+              hienTieuDe={false}
+              sizes="(max-width: 1023px) 92vw, 36rem"
+            />
+          </VideoCot>
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function VideoCot({
+  so,
+  tieuDe,
+  children,
+}: {
+  so: number;
+  tieuDe: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-5">
+      <div className="flex flex-col items-center gap-3">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand font-subtitle text-[0.8rem] font-bold text-white">
+          {so}
+        </span>
+        {/* leading ≥ 1.25: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
+        <h2 className="font-subtitle text-[1.15rem] leading-[1.3] font-bold tracking-normal text-ink sm:text-[1.35rem] sm:leading-[1.25]">
+          {tieuDe}
+        </h2>
+      </div>
+      <div className="w-full">{children}</div>
+    </div>
+  );
+}
+
+/** Ba góc nghiêng rất nhỏ, không đều nhau — đủ để đọc ra "ảnh chụp màn hình
+ *  dán lên", chưa tới mức thành hiệu ứng. Quá 2.5° là bắt đầu điệu. */
+const NGHIENG = ["-rotate-[1.6deg]", "rotate-[0.9deg]", "-rotate-[0.7deg]"];
+
+/**
+ * Ba ảnh TikTok nhỏ + link kênh — nằm giữa dải Bubby và cặp video.
  * Chỉ cần nhìn thấy kênh / playlist / feedback là có thật. Cắt lấy phần đầu
  * (object-top): follower, playlist, bình luận đều nằm ở đó; giữ nguyên tấm
  * dọc thì dải này cao hơn cả video và tranh mất chỗ. Link TikTok đứng dưới
  * ảnh, sau khi khách đã thấy bằng chứng.
+ *
+ * Không đóng khung từng tấm nữa: trên mặt kính, một cái thẻ viền trong một
+ * cái thẻ viền đọc ra là thẻ lồng thẻ. Để trần + bóng đổ + nghiêng nhẹ thì
+ * nó đọc ra đúng thứ nó là: ảnh chụp màn hình.
  */
 function TikTokProof() {
   return (
     <div
       aria-label="Ảnh chụp kênh TikTok của Bubby"
-      className="mt-6 flex w-full max-w-2xl flex-col items-center sm:mt-7"
+      className="mx-auto mt-6 flex w-full max-w-2xl flex-col items-center sm:mt-7"
     >
       <ul className="grid w-full grid-cols-3 gap-3 sm:gap-4">
-        {BANG_CHUNG_TIKTOK.map((anh) => (
+        {BANG_CHUNG_TIKTOK.map((anh, i) => (
           <li
             key={anh.src}
-            className="overflow-hidden rounded-xl border border-line bg-surface p-1.5 shadow-[0_14px_32px_-26px_rgba(22,35,63,0.75)]"
+            className={`relative aspect-3/4 overflow-hidden rounded-xl shadow-[0_10px_28px_-16px_rgba(22,35,63,0.55)] ${NGHIENG[i % NGHIENG.length]}`}
           >
-            <div className="relative aspect-3/4 overflow-hidden rounded-lg">
+            <div className="relative h-full w-full">
               <Image
                 src={anh.src}
                 alt={anh.alt}
@@ -162,13 +218,9 @@ function TikTokProof() {
 }
 
 /**
- * Dải ngắn "Bubby là ai" giữa tiêu đề Bước 2 và video. Khách vừa đọc xong
- * câu hỏi "giúp được gì" thì cần biết người trong video sắp nói là ai — rồi
- * mới xem. Cố ý nhỏ: bằng chứng kênh nằm ở dải TikTok phía dưới, đừng tranh
- * chỗ với video. Ba ảnh TikTok nhỏ đứng ngay dưới dải này, trước video.
- *
- * Vạch dọc mờ phía trên cùng kiểu với BuocXem: nối tiêu đề xuống dải này,
- * rồi xuống ảnh và video, để cả khối Bước 2 đọc thành một mạch.
+ * Dải ngắn "Bubby là ai" trên tấm kính trả lời. Khách cần biết người trong
+ * hai video sắp nói là ai — rồi mới xem. Cố ý nhỏ: bằng chứng kênh nằm ở
+ * dải TikTok phía dưới, đừng tranh chỗ với video.
  */
 function AiLaBubby() {
   const daCoAnhThat = !ANH.bubby.endsWith(".svg");
@@ -181,14 +233,9 @@ function AiLaBubby() {
   return (
     <aside
       aria-label="Bubby là ai"
-      className="mt-6 flex w-full max-w-lg flex-col items-center sm:mt-7"
+      className="mx-auto flex w-full max-w-lg flex-col items-center"
     >
-      <span
-        aria-hidden
-        className="h-10 w-px bg-linear-to-b from-transparent to-brand/35 sm:h-12"
-      />
-
-      <div className="mt-4 flex w-full flex-col items-center gap-4">
+      <div className="flex w-full flex-col items-center gap-4">
         <div className="flex items-center gap-3.5 text-left">
           <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-line bg-brand-soft sm:h-16 sm:w-16">
             {daCoAnhThat ? (
@@ -202,14 +249,14 @@ function AiLaBubby() {
             ) : (
               <span
                 aria-hidden
-                className="grid h-full w-full place-items-center font-display text-lg font-extrabold text-brand"
+                className="grid h-full w-full place-items-center font-display text-lg font-heading text-brand"
               >
                 B
               </span>
             )}
           </div>
           <div className="min-w-0">
-            <p className="font-display text-[1.15rem] leading-[1.25] font-extrabold tracking-tight text-ink sm:text-[1.25rem]">
+            <p className="font-display text-[1.15rem] leading-[1.25] font-heading tracking-tight text-ink sm:text-[1.25rem]">
               {BUBBY.ten}
             </p>
             <p className="mt-0.5 text-sm text-muted">{BUBBY.vaiTro}</p>
@@ -217,18 +264,26 @@ function AiLaBubby() {
         </div>
 
         <p className="max-w-[52ch] text-center text-[0.92rem] leading-relaxed text-ink-soft">
-          {BUBBY.tomTat}
+          {BUBBY.tomTat.split(/(4 danh sách phát)/).map((phan, i) =>
+            phan === "4 danh sách phát" ? (
+              <strong key={i} className="font-semibold text-ink">
+                {phan}
+              </strong>
+            ) : (
+              phan
+            ),
+          )}
         </p>
 
-        <ul className="flex w-full max-w-md flex-wrap items-stretch justify-center gap-y-3 border-y border-line py-4">
+        <ul className="flex w-full max-w-md flex-wrap items-stretch justify-center gap-y-3 border-y border-ink/10 py-4">
           {chiSo.map((muc, i) => (
             <li
               key={muc.nhan}
               className={`flex min-w-[6.5rem] flex-1 flex-col items-center px-3 ${
-                i > 0 ? "border-l border-line" : ""
+                i > 0 ? "border-l border-ink/10" : ""
               }`}
             >
-              <span className="font-display text-[1.15rem] leading-[1.2] font-extrabold tracking-tight text-ink sm:text-[1.3rem]">
+              <span className="font-display text-[1.5rem] leading-[1.2] font-heading tracking-tight text-ink sm:text-[1.75rem]">
                 {muc.so}
               </span>
               <span className="mt-1.5 text-center text-[0.72rem] leading-snug text-muted">
@@ -243,7 +298,7 @@ function AiLaBubby() {
 }
 
 /**
- * Mốc "Bước N" trước mỗi video.
+ * Mốc "Bước N" trước video vấn đề.
  *
  * Trước đây chỗ này là một dòng chữ xanh đậm in đậm Viết Hoa Từng Chữ. Nó
  * hét to ngang câu tiêu đề chính nên cả nửa trên có hai giọng cùng gào, mà
@@ -267,11 +322,11 @@ function BuocXem({ so, children }: { so: number; children: ReactNode }) {
           trôi lửng lơ không dính vào dòng nào. Xếp dọc là hết, và nó nối
           thẳng mạch với cái vạch dọc ngay bên trên. */}
       <span className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5">
-        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand font-mono text-[0.8rem] font-bold text-white">
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand font-subtitle text-[0.8rem] font-bold text-white">
           {so}
         </span>
-        {/* leading-[1.25] bắt buộc: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
-        <span className="font-display text-[1.2rem] leading-[1.3] font-extrabold tracking-tight text-ink sm:text-[1.6rem] sm:leading-[1.25]">
+        {/* leading ≥ 1.25: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
+        <span className="font-subtitle text-[1.2rem] leading-[1.3] font-bold text-ink sm:text-[1.6rem] sm:leading-[1.25]">
           {children}
         </span>
       </span>
@@ -280,8 +335,8 @@ function BuocXem({ so, children }: { so: number; children: ReactNode }) {
 }
 
 /**
- * Khung cho video. Bóng đổ ám màu mực (không phải đen thuần) để tấm video
- * nổi khỏi nền giấy xanh — nếu không nó chỉ là một ô chữ nhật dán phẳng.
+ * Khung cho video đứng trên trời. Bóng đổ ám màu mực (không phải đen thuần)
+ * để tấm video nổi khỏi nền trời — nếu không nó chỉ là một ô chữ nhật dán phẳng.
  */
 function KhungVideo({ children }: { children: ReactNode }) {
   return (

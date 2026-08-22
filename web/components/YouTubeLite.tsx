@@ -15,6 +15,7 @@ export function YouTubeLite({
   className = "",
   priority = false,
   hienTieuDe = true,
+  sizes = "(max-width: 768px) 100vw, 640px",
 }: {
   id: string;
   title: string;
@@ -23,11 +24,14 @@ export function YouTubeLite({
   priority?: boolean;
   /**
    * Tắt khi ngay phía trên video đã có sẵn một dòng tiêu đề nói y hệt (mốc
-   * "Bước 1/Bước 2" ở đầu trang). In cùng một câu hai lần cách nhau 60px
-   * đọc như trang bị lặp. Tắt cái NHÌN THẤY thôi — `aria-label` của nút phát
-   * vẫn giữ nguyên `title`, người dùng trình đọc màn hình không mất gì.
+   * Bước 1, hoặc tiêu đề cột trên tấm giấy). In cùng một câu hai lần cách
+   * nhau 60px đọc như trang bị lặp. Tắt cái NHÌN THẤY thôi — `aria-label`
+   * của nút phát vẫn giữ nguyên `title`, người dùng trình đọc màn hình
+   * không mất gì.
    */
   hienTieuDe?: boolean;
+  /** `sizes` cho ảnh thumbnail — hẹp hơn khi video nằm cột đôi. */
+  sizes?: string;
 }) {
   const [choi, setChoi] = useState(false);
 
@@ -55,7 +59,7 @@ export function YouTubeLite({
             alt=""
             fill
             priority={priority}
-            sizes="(max-width: 768px) 100vw, 640px"
+            sizes={sizes}
             className="object-cover"
           />
           {/* thumbnail có thể sáng màu (vd. ảnh chụp tài liệu) — cần lớp
@@ -70,7 +74,7 @@ export function YouTubeLite({
 
           {hienTieuDe && (
             <span className="absolute inset-x-0 bottom-0 p-5 text-left">
-              <span className="font-display text-base font-bold tracking-tight text-white drop-shadow sm:text-lg">
+              <span className="font-display text-base font-heading tracking-tight text-white drop-shadow sm:text-lg">
                 {title}
               </span>
             </span>

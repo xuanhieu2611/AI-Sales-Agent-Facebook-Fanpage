@@ -3,15 +3,14 @@
 import { useEffect, useRef, type ReactNode } from "react";
 
 /**
- * Viewport cho tường bình luận cuộn.
+ * Viewport cho hàng điện thoại trôi ngang.
  *
  * Chỉ chạy animation khi thật sự nhìn thấy (IntersectionObserver) và tab
- * đang hiện (visibilitychange). Không pause khi hover — flood tồn tại để
- * bán volume, dừng giữa chừng thì mất đúng việc đó.
+ * đang hiện. Hover thì pause - ảnh là chữ thật, khách phải đọc được nếu
+ * muốn dừng lại.
  *
- * Reduced-motion: khối này bị ẩn trong globals.css (`prefers-reduced-motion`),
- * không phải bằng utility `motion-reduce:hidden` — xem lời giải thích ở đó.
- * Không cần JS tắt thêm.
+ * Reduced-motion: khối này bị ẩn trong globals.css, không phải bằng
+ * utility `motion-reduce:hidden`.
  */
 export function FeedbackFlood({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -21,7 +20,6 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
     if (!el) return;
 
     const sync = (inView: boolean) => {
-      // Chỉ “đang xem” khi vừa trong viewport vừa tab đang hiện.
       el.classList.toggle("is-in-view", inView && !document.hidden);
     };
 
@@ -49,7 +47,7 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
       ref={ref}
       className="feedback-flood"
       role="region"
-      aria-label="Bình luận người xem đang cuộn"
+      aria-label="Tin nhắn học viên đang trôi ngang"
     >
       {children}
     </div>

@@ -23,7 +23,7 @@ export function StickyCta() {
     const dsQuanSat: IntersectionObserver[] = [];
 
     // Hiện ngay khi câu tiêu đề trôi khỏi màn hình — tức là trong lúc khách
-    // đang xem hai video. Đây là lưới đỡ cho người bỏ ngang giữa video.
+    // đang xem ba video. Đây là lưới đỡ cho người bỏ ngang giữa video.
     const theoDoi = (id: string, dat: (hien: boolean) => void) => {
       const el = document.getElementById(id);
       if (!el) return;
@@ -46,7 +46,7 @@ export function StickyCta() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-50 border-t border-line bg-paper/95 p-3 backdrop-blur-md transition-transform duration-[280ms] ease-[var(--ease-drawer)] lg:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-50 border-t border-white/55 bg-white/75 p-3 backdrop-blur-md transition-transform duration-[280ms] ease-[var(--ease-drawer)] lg:hidden ${
         hien ? "translate-y-0" : "translate-y-full"
       }`}
     >

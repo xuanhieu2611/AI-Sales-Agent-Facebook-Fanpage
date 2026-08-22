@@ -57,9 +57,19 @@ export const UU_DAI = {
 };
 
 // ── KHÓA HỌC ─────────────────────────────────────────────────────────
+/** Nhóm con trong danh sách "gồm có" — khóa Full dùng để tách phần thêm
+ *  (từ vựng, giao tiếp) khỏi hai khóa thành phần. */
+export type NhomNoiDung = {
+  tieuDe: string;
+  muc: string[];
+};
+
 export type Khoa = {
   id: string;
   ten: string;
+  /** Tên rút gọn, chỉ để đặt trong nút CTA của thẻ giá. Nút không xuống dòng
+   *  và thẻ thì hẹp — tên đầy đủ làm tràn nút, logo Messenger bị bóp mất. */
+  tenNgan: string;
   tomTat: string;
   giaSale: string;
   giaGoc: string;
@@ -69,6 +79,9 @@ export type Khoa = {
   buoi: string;
   coaching: string;
   gomCo: string[];
+  /** Dòng dẫn vào `gomCoNhom`, vd. "và thêm:". Chỉ khóa Full dùng. */
+  gomCoDan?: string;
+  gomCoNhom?: NhomNoiDung[];
   noiBat?: boolean;
   videoId?: string;
 };
@@ -77,6 +90,7 @@ export const KHOA_HOC: Khoa[] = [
   {
     id: "phat-am",
     ten: "Khóa Phát Âm",
+    tenNgan: "Phát Âm",
     tomTat: "Sửa gốc phát âm để người ta nghe ra bạn đang nói gì.",
     giaSale: "500.000đ",
     giaGoc: "800.000đ",
@@ -84,16 +98,19 @@ export const KHOA_HOC: Khoa[] = [
     buoi: "8 buổi",
     coaching: "1 tháng coaching 1-1",
     gomCo: [
-      "Hệ thống ký hiệu mặt chữ và số do Bubby tự nghiên cứu",
-      "Cách kết hợp âm, nối âm trong tiếng Anh",
-      "Luyện ngữ điệu và luyện giọng",
-      "Cách nhớ phát âm của từ nhiều âm tiết",
+      "Hệ thống các âm phổ biến trong tiếng Anh, áp dụng IPA để học và ghi nhớ phát âm",
+      "Nhìn ra sự liên quan giữa mặt chữ và phát âm của từ",
+      "Hiểu cách tạo ra ngữ điệu tự nhiên và tự luyện giọng mỗi ngày",
+      "Nắm những điểm mấu chốt để có giọng tiếng Anh tự nhiên, thoải mái",
+      "Hiểu sự khác biệt quan trọng trong cách phát âm của người bản xứ",
+      "Biết cách biến giọng nói thành phản xạ",
     ],
     videoId: "KR5BFR5SUwA",
   },
   {
     id: "dich",
-    ten: "Khóa Kỹ Năng Dịch & Xây Vốn Từ",
+    ten: "Khóa Kĩ Năng Dịch + Xây Vốn Từ",
+    tenNgan: "Kĩ Năng Dịch",
     tomTat: "Phần lõi: xử lý chỗ tiếng Việt và tiếng Anh lệch nhau.",
     giaSale: "1.700.000đ",
     giaGoc: "2.100.000đ",
@@ -101,16 +118,19 @@ export const KHOA_HOC: Khoa[] = [
     buoi: "21 buổi",
     coaching: "5 tháng coaching 1-1",
     gomCo: [
-      "Xây dựng vốn từ và phản xạ từ vựng",
-      "Quy trình dịch Việt sang Anh đầy đủ các bước",
-      "Ngữ pháp theo 3 phân khúc: Từ, Câu, Thì",
-      "Tận dụng vốn từ sẵn có thay vì tra từ điển",
+      "Xây dựng thói quen học từ vựng mỗi ngày",
+      "Biết cách ghi nhớ & tạo phản xạ từ vựng",
+      "Đơn giản & hệ thống hóa ngữ pháp nền tảng (Từ - Câu - Thì)",
+      "Chiến lược học thông minh để hình thành kĩ năng dịch",
+      "Biết cách sắp xếp từ vựng trong câu",
+      "Kĩ năng dịch linh hoạt bằng vốn từ sẵn có",
     ],
     videoId: "MMDzjWAL9ao",
   },
   {
     id: "full",
     ten: "Khóa Full: Xây Gốc + Giao Tiếp",
+    tenNgan: "Khóa Full",
     tomTat:
       "Trọn bộ nền tảng: phát âm, từ vựng, kỹ năng dịch, giao tiếp thực chiến.",
     giaSale: "2.500.000đ",
@@ -118,11 +138,22 @@ export const KHOA_HOC: Khoa[] = [
     giaMoiBuoi: "78k/buổi",
     buoi: "32 buổi",
     coaching: "9 tháng coaching 1-1",
+    // Không lặp 12 mục của 2 khóa kia — khách đã thấy trên 2 thẻ bên cạnh.
+    // Full = cả 2 khóa + phần thêm, chia 2 nhóm đúng như Bubby viết.
     gomCo: [
-      "Cả 4 phần của lộ trình, không thiếu mảng nào",
-      "Bubby sửa bài 1-1 chi tiết suốt khóa",
-      "Hỗ trợ cọc 300k giữ giá ưu đãi",
-      "Học linh hoạt theo giờ rảnh của bạn",
+      "Cả khóa Phát Âm",
+      "Cả khóa Kĩ Năng Dịch + Xây Vốn Từ",
+    ],
+    gomCoDan: "và thêm:",
+    gomCoNhom: [
+      {
+        tieuDe: "Giao tiếp thực chiến",
+        muc: [
+          "Các bước luyện giao tiếp",
+          "Khai thác nguồn luyện nói",
+          "Tự luyện speaking với AI & tự học mỗi ngày",
+        ],
+      },
     ],
     noiBat: true,
     videoId: "kpnz_RE1bPg",
@@ -146,30 +177,33 @@ export const BAI_HOC_QUA_TANG = {
 } as const;
 
 // ── VIDEO ────────────────────────────────────────────────────────────
-// HAI VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
+// BA VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
 // đoạn văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 //
-//   `gioiThieu`  → Bước 1: "Vì sao bạn học mãi không hiệu quả?"
-//                  Nói trúng chỗ khách đang kẹt. KHÔNG bán gì ở video này.
-//   `giaiPhap`   → Bước 2: "EnglishWithBubby giúp được gì cho bạn?"
-//                  Bên mình là ai, chữa kiểu gì, mô hình bài quay sẵn +
-//                  coaching 1-1 chạy ra sao.
+//   `gioiThieu`      → Bước 1, đứng một mình trên trời:
+//                      "Vì sao học mãi vẫn không áp dụng được?"
+//                      Nói trúng chỗ khách đang kẹt. KHÔNG bán gì ở video này.
+//   `giaiPhap`       → Tấm giấy trả lời, cột trái (Bước 2):
+//                      "English With Bubby có thể giúp gì cho bạn?"
+//                      Bên mình là ai, chữa kiểu gì, lộ trình ra sao.
+//   `moHinhCoaching` → Cùng tấm giấy, cột phải (Bước 3):
+//                      "Mô hình coaching 1-1"
+//                      Lớp chạy thế nào: bài quay sẵn + chữa 1-1.
+//                      Hai video này nằm cạnh nhau, không xếp dọc.
 //
-// Hai yêu cầu bắt buộc cho cả hai:
+// Hai yêu cầu bắt buộc cho cả ba:
 //   1. DƯỚI 75 GIÂY. Traffic quảng cáo phần lớn rời trang trước giây 30;
 //      video hai phút thì gần như không ai xem tới video sau.
 //   2. PHỤ ĐỀ CHÁY SẴN TRONG VIDEO. Khách xem trên điện thoại và tắt tiếng
-//      — không có phụ đề thì coi như không có video.
-//
-// TODO(chủ shop): cả hai đang mượn tạm video cũ cho khỏi trống chỗ. Quay
-// video riêng cho từng bước rồi thay ID vào đây.
+//      - không có phụ đề thì coi như không có video.
 export const VIDEO = {
-  gioiThieu: "3D_fUgUmIAk",
-  giaiPhap: "kpnz_RE1bPg",
+  gioiThieu: "ut6mV8ZPE0U", // Vì Sao Học Mãi Vẫn Không Áp Dụng Được?
+  giaiPhap: "9yM4oimQqcM", // English With Bubby Có Thể Giúp Gì Cho Bạn?
+  moHinhCoaching: "OGqAs5ifPFc", // Mô Hình Coaching 1-1
 };
 
 // ── BUBBY LÀ AI ─────────────────────────────────────────────────────
-// Dải ngắn nằm giữa tiêu đề Bước 2 và video giải pháp. Chỉ cần khách biết
+// Dải ngắn trên tấm giấy trả lời, trước cặp video. Chỉ cần khách biết
 // người sắp xuất hiện trong video là ai, có thật, và đã dạy bao lâu — đừng
 // viết dài ở đây, bằng chứng kênh nằm ở dải TikTok phía dưới.
 //
@@ -192,8 +226,8 @@ export const BUBBY = {
 };
 
 // ── BẰNG CHỨNG TIKTOK ──────────────────────────────────────────────
-// Ba ảnh nhỏ nằm giữa dải "Bubby là ai" và video Bước 2 — không tiêu đề,
-// chỉ ảnh. Thứ tự: kênh thật → nội dung học thật → phản hồi thật.
+// Ba ảnh nhỏ nằm giữa dải "Bubby là ai" và cặp video trên tấm giấy —
+// không tiêu đề, chỉ ảnh. Thứ tự: kênh thật → nội dung học thật → phản hồi thật.
 // Trên trang bị cắt lấy phần đầu (object-top) vì dải này phải nhỏ; `rong` /
 // `cao` vẫn ghi kích thước file gốc để Next biết tỉ lệ.
 export type AnhTikTok = {
@@ -289,21 +323,14 @@ export type FeedbackVideo = {
 export const FEEDBACK_VIDEO: FeedbackVideo[] = [];
 
 /**
- * Ảnh chụp bình luận thật dưới video TikTok/YouTube. Đặt trong
+ * Ảnh chụp tin nhắn học viên (Messenger / Zalo). Đặt trong
  * web/public/img/feedback/ — xem web/public/img/README.md.
  *
  * `rong` / `cao` là kích thước pixel THẬT của tấm ảnh. Bắt buộc phải đúng:
  * trang dùng nó để chừa sẵn chỗ nên ảnh tải xong không làm giật cả trang.
- * Lấy số bằng cách bấm chuột phải > Get Info trên máy Mac, hoặc chạy:
  *
- *     sips -g pixelWidth -g pixelHeight web/public/img/feedback/fb-01.jpeg
- *
- * Ảnh hiện NGUYÊN TẤM theo chiều ngang, không bị cắt — nên cứ crop sát vào
- * đúng một bình luận là đẹp nhất. Crop rộng lấy cả màn hình thì chữ bé lại
- * và không ai đọc.
- *
- * Dải ảnh cuộn rộng gần trọn bề ngang màn hình, mỗi cột tối đa ~760px, nên
- * ảnh crop rộng khoảng 700–1300px là vừa đẹp, không bị nở mờ.
+ * Ảnh hiện NGUYÊN TẤM, không bị cắt. File gốc là ảnh chụp điện thoại dọc —
+ * giữ tỉ lệ đó, đừng crop ngang. Trang cho chúng trôi ngang thành hai dải.
  */
 export type AnhFeedback = {
   src: string;
@@ -339,34 +366,136 @@ export type TrichDan = {
 
 export const FEEDBACK: AnhFeedback[] = [
   {
-    src: "/img/feedback/fb-01.jpeg",
-    alt: "Bình luận: “hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn, đến đứa tiếp thu chậm như t còn hiểu”",
-    rong: 1290,
-    cao: 391,
-    trichDan: {
-      cau: "hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn, đến đứa tiếp thu chậm như t còn hiểu :) từ ghét môn anh g thấy nó cũng dễ",
-      toSang: "từ ghét môn anh g thấy nó cũng dễ",
-      ten: "Bá chủ bò",
-      nguon: "Bình luận TikTok · 28.9.2025",
-    },
+    src: "/img/feedback/hv-01.webp",
+    alt: "Tin nhắn học viên Phú: sau 3 tháng tự tin giao tiếp với người nước ngoài hơn, phát âm hết kẹt",
+    rong: 720,
+    cao: 1384,
   },
   {
-    src: "/img/feedback/fb-02.png",
-    alt: "Bình luận: “vid của a dạy hay, dễ hiểu lắm ạ”",
-    rong: 774,
-    cao: 172,
+    src: "/img/feedback/hv-02.webp",
+    alt: "Tin nhắn nhóm Khu vườn ngoại ngữ: Hồng Minn và Ngọc Trâm cảm ơn thầy sau khóa học",
+    rong: 720,
+    cao: 1561,
   },
   {
-    src: "/img/feedback/fb-03.png",
-    alt: "Bình luận: “video anh dạy siu dễ hiểu và thực tế lắm luôn ạ”",
-    rong: 782,
-    cao: 180,
+    src: "/img/feedback/hv-03.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1561,
   },
   {
-    src: "/img/feedback/fb-04.png",
-    alt: "Bình luận: “úi anh này giảng hay lắm luôn á cực dễ hiểu”",
-    rong: 770,
-    cao: 166,
+    src: "/img/feedback/hv-04.webp",
+    alt: "Tin nhắn học viên Larue: hết sợ nói tiếng Anh, tự tin giao tiếp, muốn học lớp nâng cao",
+    rong: 720,
+    cao: 1561,
+  },
+  {
+    src: "/img/feedback/hv-05.webp",
+    alt: "Tin nhắn học viên: lần đầu kiên trì học hết khóa, mở được phát âm và cách học từ với ChatGPT",
+    rong: 720,
+    cao: 1223,
+  },
+  {
+    src: "/img/feedback/hv-06.webp",
+    alt: "Tin nhắn học viên: kiến thức thông suốt, đơn giản dễ hiểu, một cột mốc mới khi học tiếng Anh",
+    rong: 720,
+    cao: 1240,
+  },
+  {
+    src: "/img/feedback/hv-07.webp",
+    alt: "Tin nhắn học viên Xuân Vàng: phương pháp đặc biệt, tự tin nói trên lớp dù gốc yếu",
+    rong: 720,
+    cao: 1257,
+  },
+  {
+    src: "/img/feedback/hv-08.webp",
+    alt: "Tin nhắn học viên: khóa 3 tháng 10/10, hết sợ tiếng Anh, lớp vui và thoải mái",
+    rong: 720,
+    cao: 1292,
+  },
+  {
+    src: "/img/feedback/hv-09.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1238,
+  },
+  {
+    src: "/img/feedback/hv-10.webp",
+    alt: "Tin nhắn học viên biết Bubby từ TikTok: sửa gốc, giao tiếp đơn giản, đồng hành 3 tháng",
+    rong: 720,
+    cao: 1231,
+  },
+  {
+    src: "/img/feedback/hv-11.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1257,
+  },
+  {
+    src: "/img/feedback/hv-12.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1254,
+  },
+  {
+    src: "/img/feedback/hv-13.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1254,
+  },
+  {
+    src: "/img/feedback/hv-14.webp",
+    alt: "Tin nhắn học viên: 12 năm học gói gọn trong 3 tháng, thực hành nói nhiều, tự học được sau khóa",
+    rong: 720,
+    cao: 1246,
+  },
+  {
+    src: "/img/feedback/hv-15.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1254,
+  },
+  {
+    src: "/img/feedback/hv-16.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1250,
+  },
+  {
+    src: "/img/feedback/hv-17.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1227,
+  },
+  {
+    src: "/img/feedback/hv-18.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1244,
+  },
+  {
+    src: "/img/feedback/hv-19.webp",
+    alt: "Tin nhắn học viên: cải thiện từ vựng, dịch, hết ngại nói sau khóa 3 tháng",
+    rong: 720,
+    cao: 1561,
+  },
+  {
+    src: "/img/feedback/hv-20.webp",
+    alt: "Tin nhắn học viên: đổi cách nghĩ về tiếng Anh, viết được nhật ký, nhận feedback từ khách nước ngoài",
+    rong: 720,
+    cao: 735,
+  },
+  {
+    src: "/img/feedback/hv-21.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1265,
+  },
+  {
+    src: "/img/feedback/hv-22.webp",
+    alt: "Ảnh chụp tin nhắn học viên cảm ơn Bubby sau khóa học",
+    rong: 720,
+    cao: 1274,
   },
 ];
 

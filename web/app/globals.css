@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 /* ────────────────────────────────────────────────────────────────
-   Design tokens — "giấy xanh & bút dạ quang"
-   Nền giấy xanh pastel, chữ mực navy, xanh đậm = hành động,
-   vàng dạ quang = chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
+   Design tokens — trời thật phía sau, mực xanh Bubby, vệt dạ quang vàng.
+   Nền là ảnh bầu trời (`/img/sky.webp`), fallback --color-paper khi ảnh
+   chưa tải. Chữ mực navy. Xanh đậm = hành động. Vàng chỉ để tô đúng
+   chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
 
    BẢNG MÀU — mỗi màu một nhiệm vụ, không dùng lẫn:
      brand (xanh đậm)  → nút bấm, link, chỗ đúng
@@ -11,9 +12,9 @@
      flag  (đỏ)        → CHỈ dùng cho nét gạch chân chỗ sai
    ──────────────────────────────────────────────────────────────── */
 @theme {
-  /* nền & mực */
-  --color-paper: #eef2f9;
-  --color-paper-2: #e3ebf7;
+  /* nền & mực — trời thật phía sau, thẻ vẫn giấy trắng */
+  --color-paper: #d5f0fb;
+  --color-paper-2: #e7eef8;
   --color-surface: #ffffff;
   --color-ink: #16233f;
   --color-ink-soft: #33415e;
@@ -33,9 +34,12 @@
 
   --color-line: #d9e2f0;
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-genos), ui-sans-serif, system-ui, sans-serif;
+  --font-subtitle: var(--font-oswald), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-bevietnam), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  /* Genos heading weight — between Bold (700) and ExtraBold (800). */
+  --font-weight-heading: 738;
 
   /* chuyển động — đường cong mạnh hơn ease mặc định của CSS */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -50,7 +54,26 @@
      ô nhập liệu, ảnh nhỏ   → rounded-xl   (12px)
    ──────────────────────────────────────────────────────────────── */
 
+/* z-index của trang:
+     -1  bầu trời (fixed theo viewport)
+     40  thanh đầu trang kính nổi
+     50  thanh Messenger dính (điện thoại)
+     60  hạt giấy (fixed, pointer-events: none) */
+
 @layer base {
+  :root {
+    /* Chiều cao stack của thanh kính nổi: mép an toàn + khe trên + thân viên.
+       Hero và scroll-margin dùng chung biến này để tiêu đề không chui
+       xuống dưới viên kính. */
+    --header-pad-top: max(0.75rem, env(safe-area-inset-top, 0px));
+    --header-bar: 3.5rem;
+    --header-offset: calc(var(--header-pad-top) + var(--header-bar));
+
+    @media (width >= 768px) {
+      --header-pad-top: max(1rem, env(safe-area-inset-top, 0px));
+    }
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -58,13 +81,58 @@
   }
 
   body {
-    background: var(--color-paper);
+    position: relative;
+    z-index: 0;
+    background: transparent;
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Bricolage carries the personality — always tight, always confident. */
+  /* Cắt tràn ngang ở main, không phải html/body: overflow trên ancestor
+     làm backdrop-filter của header fixed không lấy được nội dung phía sau. */
+  main {
+    overflow-x: clip;
+  }
+
+  /* Bầu trời thật — cố định theo viewport, nội dung trượt lên trên.
+     Fixed chứ không cover theo chiều cao trang: cover trên trang dài sẽ
+     phóng tấm 2:1 thành một vệt xanh, mất hết mây.
+     Neo đáy (50% 100%): mây dồn ở nửa dưới tấm ảnh, còn nửa trên là
+     trời trong — kéo mây lên khung nhìn cho nền đỡ trống. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-color: var(--color-paper);
+    background-image: url("/img/sky.webp");
+    background-repeat: no-repeat;
+    background-position: 50% 100%;
+    background-size: cover;
+
+    @media (width < 768px) {
+      /* Điện thoại crop hai bên rất nhiều: lệch trái để lấy mảng mây
+         thưa, tránh cụm mây dày bên phải làm chữ khó đọc. */
+      background-position: 30% 100%;
+    }
+  }
+
+  /* Hạt rất nhẹ. Ảnh trời đã có texture — grain chỉ để gãy mặt phẳng
+     số, không được làm đục mây. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.018;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+  }
+
+  /* Genos on h1/h2/h3. Body stays Be Vietnam Pro via --font-sans. */
   /* ⚠ TIẾNG VIỆT: đừng bóp line-height xuống dưới ~1.2 cho chữ tiêu đề.
      Tiếng Việt chồng hai tầng dấu (dấu mũ + dấu thanh: ế ỗ ữ), nên phần
      nhô lên của chữ cao hơn tiếng Anh nhiều. Để 1.1 thì dấu của dòng dưới
@@ -74,7 +142,7 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: var(--font-weight-heading);
     letter-spacing: -0.03em;
     line-height: 1.25;
     text-wrap: balance;
@@ -84,11 +152,11 @@
     text-wrap: pretty;
   }
 
-  /* Thanh đầu trang dính cao 4rem. Không có dòng này thì bấm link trong
-     thanh điều hướng sẽ cuộn tới đúng chỗ nhưng tiêu đề mục nằm KHUẤT
-     dưới thanh — khách tưởng bấm hụt. */
+  /* Thanh kính nổi overlay lên nội dung. Không có dòng này thì bấm link
+     trong thanh điều hướng sẽ cuộn tới đúng chỗ nhưng tiêu đề mục nằm
+     KHUẤT dưới viên kính — khách tưởng bấm hụt. */
   section[id] {
-    scroll-margin-top: 5rem;
+    scroll-margin-top: calc(var(--header-offset) + 0.85rem);
   }
 
   :focus-visible {
@@ -179,7 +247,7 @@
 }
 
 @utility eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-subtitle);
   font-size: 0.6875rem;
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -194,6 +262,15 @@
 
   @media (width >= 768px) {
     padding-inline: 2rem;
+  }
+}
+
+/* Chừa chỗ dưới viên kính nổi — header là overlay, không chiếm luồng. */
+@utility header-clear {
+  padding-top: calc(var(--header-offset) + 1.15rem);
+
+  @media (width >= 640px) {
+    padding-top: calc(var(--header-offset) + 1.5rem);
   }
 }
 
@@ -236,76 +313,69 @@
   mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
 
-/* ── Feedback flood — hai cột cuộn dọc vô hạn (“cuộn bình luận”) ──
-   Track chứa 2 set giống hệt; translateY(-50%) = đúng một set.
-   Linear vì đây là chuyển động liên tục (marquee), không phải UI tương tác.
-   Không pause khi hover — volume phải chạy suốt. Chỉ chạy khi `.is-in-view`
-   (trong viewport + tab đang hiện). Reduced-motion: ẩn khối này
-   (motion-reduce:hidden), hiện masonry tĩnh.
+/* ── Feedback flood — một hàng điện thoại trôi trên trời ──
+   Track chứa 2 set giống hệt; translateX(-50%) = đúng một set.
+   Linear vì đây là chuyển động liên tục (marquee). Pause khi hover.
+   Chỉ chạy khi `.is-in-view`. Reduced-motion: ẩn, hiện dải tĩnh vuốt ngang.
 
-   KHỐI NÀY CỐ Ý TRÀN RA NGOÀI `shell`. Ảnh chụp bình luận là chữ 15px của
-   TikTok: nhốt trong 74rem rồi chia hai cột thì mỗi cột còn ~360px, chữ co
-   lại còn nửa cỡ thật và không ai đọc nổi. Tràn hết bề ngang thì mỗi cột
-   ~700px, gần đúng cỡ ảnh gốc. Chốt trần 96rem để trên màn siêu rộng ảnh
-   không bị nở to hơn cỡ thật rồi mờ. */
-@keyframes feedback-marquee-y {
+   Mỗi tấm bị cắt thành cùng một khung màn hình (object-position: top)
+   rồi bọc viền máy - screenshot gốc dài ngắn khác nhau, để nguyên tấm
+   thì hàng nhìn như đổ file. */
+@keyframes feedback-marquee-x {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(0, -50%, 0);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 .feedback-flood {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  --fb-card: 13.25rem;
+  --fb-gap: 1.35rem;
+  --fb-overlap: 1.7rem;
+  display: flex;
   width: 100%;
-  max-width: 96rem;
-  margin-inline: auto;
-  padding-inline: 1.25rem;
-  height: min(68vh, 30rem);
   overflow: hidden;
-  /* Mờ dần cả bốn mép: trên/dưới để đọc ra “nhìn lén vào một thread dài”,
-     hai bên để dải chảy ra khỏi trang thay vì bị chặt cụt ở mép màn hình.
-     `intersect` = giao của hai lớp mặt nạ; thiếu nó thì chỉ lớp cuối có tác
-     dụng. `-webkit-mask-composite: source-in` là cùng phép đó cho Safari cũ. */
-  -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
-  mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  /* Chừa chỗ cho máy nghiêng / nhô lên khi hover, không bị crop đỉnh đáy. */
+  padding-block: 2.25rem;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
 
   @media (width >= 640px) {
-    gap: 1rem;
-    padding-inline: 2rem;
-    height: min(76vh, 40rem);
+    --fb-card: 16rem;
+    --fb-gap: 1.85rem;
+    --fb-overlap: 2.1rem;
+    padding-block: 2.75rem;
   }
 
-  /* Chia hai cột từ 1024px, KHÔNG phải từ 640px: ở khoảng giữa (điện thoại
-     ngang, tablet dọc) hai cột làm mỗi cột còn ~300px, chữ trong ảnh chụp
-     nhỏ hơn cả bản gốc trên điện thoại. Một cột rộng luôn thắng hai cột hẹp
-     ở đây, vì thứ phải đọc được là chữ nằm TRONG ảnh. */
   @media (width >= 1024px) {
-    grid-template-columns: 1fr 1fr;
+    --fb-card: 17.5rem;
+    --fb-gap: 2.15rem;
+    --fb-overlap: 2.4rem;
   }
 }
 
 .feedback-flood-lane {
-  height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .feedback-marquee-track {
   display: flex;
-  flex-direction: column;
-  /* Mặc định paused — chỉ chạy khi viewport vào tầm nhìn (tiết kiệm GPU
-     trên 4G / tab nền). Linear = cảm giác “đang chảy”, không ease. */
-  animation: feedback-marquee-y linear infinite;
+  width: max-content;
+  animation: feedback-marquee-x linear infinite;
   animation-play-state: paused;
 }
 
@@ -314,35 +384,152 @@
   will-change: transform;
 }
 
-.feedback-marquee-reverse {
-  animation-direction: reverse;
-  /* Lệch pha với lane kia — hai cột không “khớp nhịp” như screensaver. */
-  animation-delay: -37s;
+@media (hover: hover) and (pointer: fine) {
+  .feedback-flood.is-in-view:hover .feedback-marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 .feedback-marquee-set {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  /* Khớp gap — nửa vòng lặp gồm cả khoảng trống cuối set. */
-  padding-bottom: 0.75rem;
+  flex-direction: row;
+  align-items: center;
+  isolation: isolate;
+  gap: var(--fb-gap);
+  /* Giữ mối nối giữa hai set rộng đúng bằng khoảng cách bên trong set:
+     gap không áp dụng giữa hai set (chúng là con của track). */
+  padding-right: var(--fb-gap);
+}
 
-  @media (width >= 640px) {
-    gap: 1rem;
-    padding-bottom: 1rem;
+.feedback-phone {
+  width: var(--fb-card, 15rem);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+}
+
+/* Xếp chồng: mỗi tấm đè lên tấm bên trái một chút. Âm margin (gap không
+   nhận số âm) và đặt cho MỌI con, kể cả con đầu - hai set trong track
+   phải rộng bằng nhau, nếu không mối nối lúc translate -50% sẽ giật.
+   Thứ tự DOM lo phần chồng lớp: tấm sau nằm trên tấm trước. */
+.feedback-marquee-set > .feedback-phone {
+  margin-left: calc(var(--fb-overlap) * -1);
+}
+
+.feedback-phone-tilt {
+  position: relative;
+  border-radius: 1.25rem;
+  background: var(--color-surface);
+  /* Ảnh là chat nền trắng, đặt trên nền trời xanh nhạt - chênh sáng ở mép
+     gần bằng 0. Cái tách hai tấm trắng cạnh nhau là đường chỉ 1px này chứ
+     không phải bóng đổ, nên nó phải đủ đậm (đo trên nền trời, đừng chỉnh
+     khi xem trên nền trắng). Vẫn là đường chỉ, không phải khung viền. */
+  box-shadow:
+    0 0 0 1px rgb(22 35 63 / 0.14),
+    0 20px 36px -20px rgb(22 35 63 / 0.5),
+    0 5px 12px -6px rgb(22 35 63 / 0.24);
+}
+
+.feedback-phone-screen {
+  position: relative;
+  aspect-ratio: 9 / 17;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--color-surface);
+}
+
+/* Hàng máy hơi nghiêng, cao thấp khác nhau - như đang nổi trên trời,
+   không phải một băng chuyền tem. */
+.feedback-marquee-set > :nth-child(5n + 1) .feedback-phone-tilt {
+  transform: rotate(-3.4deg) translateY(0.55rem);
+}
+.feedback-marquee-set > :nth-child(5n + 2) .feedback-phone-tilt {
+  transform: rotate(2.6deg) translateY(-0.9rem);
+}
+.feedback-marquee-set > :nth-child(5n + 3) .feedback-phone-tilt {
+  transform: rotate(-1.5deg) translateY(0.1rem);
+}
+.feedback-marquee-set > :nth-child(5n + 4) .feedback-phone-tilt {
+  transform: rotate(3.8deg) translateY(-0.35rem);
+}
+.feedback-marquee-set > :nth-child(5n + 5) .feedback-phone-tilt {
+  transform: rotate(-2.4deg) translateY(0.85rem);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feedback-phone {
+    transition: transform 220ms var(--ease-out);
+  }
+
+  .feedback-phone-tilt {
+    transition:
+      transform 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out);
+  }
+
+  .feedback-phone:hover {
+    z-index: 2;
+    transform: translateY(-0.55rem) scale(1.045);
+  }
+
+  .feedback-phone:hover .feedback-phone-tilt {
+    transform: rotate(0deg) translateY(0);
+    box-shadow:
+      0 0 0 1px rgb(22 35 63 / 0.16),
+      0 28px 48px -22px rgb(22 35 63 / 0.55),
+      0 7px 16px -8px rgb(22 35 63 / 0.26);
   }
 }
 
-/* Thụt lề so le cho từng tấm: dải trông như chồng ảnh chụp dán lên tường,
-   không phải bảng ô đều tăm tắp. Chỉ từ 640px trở lên — trên điện thoại mỗi
-   pixel bề ngang là chữ trong ảnh to thêm được một chút. */
-@media (width >= 640px) {
-  .feedback-marquee-set > *:nth-child(3n + 2) {
-    margin-inline-start: 1.5rem;
-  }
+/* ── Viên kính đầu trang ──────────────────────────────────────────
+   Opacity + blur phải nằm CÙNG một phần tử. Blur trên lớp con bên
+   trong isolation/overflow thì chỉ làm mờ khoảng trống, nên tiêu đề
+   đâm xuyên chữ menu. z-index: 0 trên body (không isolation) vẫn giữ
+   bầu trời ::before ở sau nội dung.
 
-  .feedback-marquee-set > *:nth-child(3n) {
-    margin-inline-end: 2rem;
+   NỀN + BLUR nằm ở SiteHeader.tsx dưới dạng class Tailwind
+   (`data-[scrolled=true]:bg-white/45 backdrop-blur-lg ...`), KHÔNG viết ở đây.
+   Lý do, đã đo bằng getComputedStyle chứ không phải đoán: Lightning CSS
+   (bộ nén CSS của Tailwind v4 / Next) đọc được giá trị literal như
+   `blur(28px)`, kết luận `-webkit-backdrop-filter` là đủ cho browserslist
+   mặc định, rồi XÓA HẲN dòng `backdrop-filter` chuẩn. Chrome hiện tại
+   KHÔNG nhận bản -webkit- (getComputedStyle trả chuỗi rỗng) nên viên kính
+   mất sạch độ mờ — chữ phía dưới đâm xuyên qua sắc nét.
+   Utility của Tailwind thoát được vì giá trị của nó là `var(--tw-backdrop-*)`:
+   bộ nén không phân tích tĩnh được var() nên đành giữ cả hai dòng.
+   => Cần đổi độ mờ thì sửa class bên .tsx. Đừng viết backdrop-filter thẳng
+   vào file này, nó sẽ im lặng biến mất khi build.
+
+   KHÔNG khai báo `background: transparent` ở đây: CSS không-layer thắng
+   @layer utilities, nên nó sẽ đè chết class `bg-white/45` của Tailwind.
+   Mặc định vốn đã trong suốt rồi. */
+.header-capsule {
+  border-radius: 999px;
+  transition:
+    background-color 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+.header-capsule[data-scrolled="true"] {
+  box-shadow:
+    0 1px 1px rgb(22 35 63 / 0.05),
+    0 12px 34px rgb(22 35 63 / 0.12);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .header-capsule[data-scrolled="true"] {
+    background: rgb(255 255 255 / 0.94);
+    /* Làm rỗng biến của Tailwind thay vì `backdrop-filter: none` — dòng chuẩn
+       đó bị Lightning CSS xóa, override sẽ không có tác dụng. */
+    --tw-backdrop-blur: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-brightness: ;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .header-capsule[data-scrolled="true"] {
+    background: rgb(255 255 255 / 0.92);
   }
 }
 
@@ -359,7 +546,7 @@
 
   /* Ẩn dải cuộn PHẢI nằm ở đây, không phải bằng `motion-reduce:hidden` trên
      component: `.feedback-flood` là rule CSS thường (ngoài @layer), mà style
-     ngoài layer luôn thắng utility của Tailwind — nên `display: grid` bên trên
+     ngoài layer luôn thắng utility của Tailwind - nên `display: flex` bên trên
      đè mất `display: none` của utility, và người tắt chuyển động nhìn thấy CẢ
      dải cuộn LẪN bản tĩnh bên dưới. */
   .feedback-flood {
@@ -379,5 +566,71 @@
     /* Không animate transform/box-shadow — màu & opacity vẫn chuyển được. */
     transition-property: color, background-color, border-color, opacity,
       text-decoration-color, fill, stroke !important;
+  }
+}
+
+/* ── Tấm kính lớn (tấm giấy trả lời trong hero) ────────────────────
+   Cùng luật với viên kính đầu trang: NỀN + BLUR viết bằng class Tailwind
+   bên Hero.tsx (`bg-linear-to-b from-white/78 to-white/55 backdrop-blur-xl`),
+   KHÔNG viết backdrop-filter ở đây — Lightning CSS sẽ xóa mất dòng chuẩn.
+   Chỗ này chỉ lo phần CSS không diễn đạt được bằng utility: vệt sáng 1px
+   ở mép trên (thứ làm nó đọc ra "một tấm kính" chứ không phải "ô trắng mờ")
+   và bóng ám mực để tấm kính tách khỏi nền trời.
+
+   Vì nền trời là `position: fixed`, phần trời sau tấm kính gần như một
+   mảng màu đều — độ mờ hầu như không nhìn thấy. Thứ thật sự tạo cảm giác
+   kính là sắc độ + bão hòa + mép sáng, nên đừng hạ opacity xuống cho
+   "mờ hơn": chỉ làm chữ khó đọc. */
+.glass-panel {
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.72),
+    0 1px 2px rgb(22 35 63 / 0.06),
+    0 30px 70px -40px rgb(22 35 63 / 0.5);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-panel {
+    background: var(--color-surface);
+    --tw-backdrop-blur: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-brightness: ;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-panel {
+    background: rgb(255 255 255 / 0.95);
+  }
+}
+
+/* Nét cọ vẽ dưới một cụm chữ trong tiêu đề.
+   Khác `highlight` (vệt dạ quang NẰM SAU chữ, dùng cho chữ chạy trong đoạn):
+   cái này là một nét cọ DƯỚI chân chữ, dành cho tiêu đề lớn — vệt dạ quang ở
+   cỡ 4rem sẽ thành một mảng vàng to đùng nuốt mất chữ.
+
+   Vẽ bằng ::after tuyệt đối nên KHÔNG chiếm chỗ trong dòng: đổi cỡ chữ h1
+   không cần chỉnh lại gì, mọi số đo đều theo `em`.
+
+   ⚠ TIẾNG VIỆT: nét phải nằm DƯỚI phần đuôi chữ (g trong "gốc", "tiếng"),
+   nên `bottom` âm khá sâu. Kéo lên gần 0 là nét cắt ngang đuôi chữ g.
+   Màu nằm thẳng trong SVG (%23ffd75e = --color-mark) — giống `squiggle` và
+   `highlight`: ĐỔI --color-mark thì phải sửa cả ba chuỗi này. */
+@utility brush-underline {
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: -0.05em;
+    right: -0.05em;
+    bottom: -0.09em;
+    height: 0.44em;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='28' viewBox='0 0 200 28' preserveAspectRatio='none'%3E%3Cpath d='M2.5 10C30 5.6 68 3.4 100 4c40 .8 75 2 96 4.2 2.6.5 2.6 3.4.2 3.9-24.2 4.9-61.2 7.9-96.2 8.4-34 .5-70-.1-95.4-2.1C1.4 18.15-.4 10.6 2.5 10Z' fill='%23ffd75e'/%3E%3Cpath d='M118 22.6c30-.8 54-3 70-6.2' fill='none' stroke='%23ffd75e' stroke-width='2.6' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
   }
 }
