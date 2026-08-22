@@ -47,10 +47,9 @@ export function SiteHeader() {
             data-scrolled={daCuon ? "true" : "false"}
             /* Nền mờ PHẢI là utility Tailwind, không được viết backdrop-filter
                trong globals.css — Lightning CSS xóa mất thuộc tính chuẩn ở đó.
-               Xem ghi chú dài trong globals.css chỗ .liquid-glass. */
-            className="liquid-glass pointer-events-auto flex h-14 items-center justify-between gap-3 pl-4 pr-1 sm:pl-5 data-[scrolled=true]:bg-white/85 data-[scrolled=true]:backdrop-blur-2xl data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-brightness-105"
+               Xem ghi chú dài trong globals.css chỗ .header-capsule. */
+            className="header-capsule pointer-events-auto flex h-14 items-center justify-between gap-3 pl-4 pr-1 sm:pl-5 data-[scrolled=true]:bg-white/45 data-[scrolled=true]:backdrop-blur-lg data-[scrolled=true]:backdrop-saturate-150 data-[scrolled=true]:backdrop-brightness-105"
           >
-            <div className="liquid-glass-fill" aria-hidden />
             {/* whitespace-nowrap: trên màn 390px, nút nhắn tin ăn hết ~175px nên
                 tên page bị bẻ thành hai dòng ("English with" / "Bubby") và đội
                 viên kính cao lên. Tên thương hiệu xuống dòng giữa chừng
@@ -66,7 +65,7 @@ export function SiteHeader() {
                 <Link
                   key={m.href}
                   href={m.href}
-                  className="text-sm font-medium text-muted transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:text-brand"
+                  className="text-sm font-medium text-ink-soft transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:text-brand"
                 >
                   {m.nhan}
                 </Link>

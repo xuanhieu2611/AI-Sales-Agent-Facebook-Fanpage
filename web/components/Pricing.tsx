@@ -46,7 +46,7 @@ export function Pricing() {
                       chốt chiều cao thì giá của ba thẻ lệch nhau theo bậc
                       thang khi xếp ngang — nhìn như trang bị vỡ. */}
                   <h3
-                    className={`text-xl leading-[1.3] lg:min-h-[3.25rem] ${
+                    className={`font-subtitle text-[2rem] font-semibold leading-[1.2] tracking-[-0.01em] lg:min-h-[4.8rem] ${
                       k.noiBat ? "text-white" : "text-ink"
                     }`}
                   >
@@ -64,7 +64,7 @@ export function Pricing() {
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-baseline gap-3">
                     <span
-                      className={`font-display text-4xl font-heading tracking-tight ${
+                      className={`font-subtitle text-4xl font-bold tracking-tight ${
                         k.noiBat ? "text-white" : "text-ink"
                       }`}
                     >
@@ -82,7 +82,7 @@ export function Pricing() {
                       thì so được với một bữa ăn — cùng một số tiền, khác nhau ở
                       chỗ khách có đọc tiếp hay không. */}
                   <span
-                    className={`font-display text-[0.95rem] font-heading tracking-tight ${
+                    className={`font-subtitle text-[0.95rem] font-bold tracking-tight ${
                       k.noiBat ? "text-mark" : "text-brand"
                     }`}
                   >
@@ -172,8 +172,8 @@ export function Pricing() {
                 >
                   <MessengerIcon className="h-4 w-4" />
                   {k.id === "full"
-                    ? "Hỏi xem khóa Full có hợp không"
-                    : `Hỏi về ${k.ten.replace("Khóa ", "")}`}
+                    ? "Hỏi xem có hợp không"
+                    : `Hỏi về ${k.tenNgan}`}
                 </Button>
               </article>
             </Reveal>

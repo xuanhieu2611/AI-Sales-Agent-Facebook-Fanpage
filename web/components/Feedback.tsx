@@ -7,8 +7,8 @@ import { FEEDBACK, FEEDBACK_VIDEO } from "@/lib/site";
 
 /**
  * Bằng chứng xã hội, đứng sau bảng giá. Ảnh là tin nhắn học viên thật
- * (Messenger / Zalo), mỗi tấm nằm trong một khung điện thoại rồi trôi
- * chậm trên nền trời. Video học viên (nếu có) đứng trước ảnh vì đó là
+ * (Messenger / Zalo), các tấm đè lên nhau một chút rồi trôi chậm trên
+ * nền trời. Video học viên (nếu có) đứng trước ảnh vì đó là
  * thứ khó dựng giả nhất.
  */
 export function Feedback() {

@@ -6,7 +6,12 @@ import type { ReactNode } from "react";
    nên vẽ tay là đúng. Mọi icon còn lại trên trang lấy từ Phosphor. */
 export function MessengerIcon({ className = "" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden className={className} fill="currentColor">
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      className={`shrink-0 ${className}`}
+      fill="currentColor"
+    >
       <path d="M12 2C6.24 2 2 6.22 2 11.78c0 2.9 1.19 5.42 3.13 7.17.16.15.26.35.27.57l.05 1.77a.8.8 0 0 0 1.12.71l1.98-.87c.17-.08.36-.09.54-.04 1.13.31 2.34.48 3.61.48 5.76 0 10-4.22 10-9.79C22.7 6.22 17.76 2 12 2Zm6 7.46-2.94 4.66a1.5 1.5 0 0 1-2.17.4l-2.34-1.75a.6.6 0 0 0-.72 0l-3.16 2.4c-.42.32-.97-.18-.69-.63l2.94-4.66a1.5 1.5 0 0 1 2.17-.4l2.34 1.75c.21.16.51.16.72 0l3.16-2.39c.42-.32.97.18.69.62Z" />
     </svg>
   );

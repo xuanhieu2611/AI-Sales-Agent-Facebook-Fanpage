@@ -67,6 +67,9 @@ export type NhomNoiDung = {
 export type Khoa = {
   id: string;
   ten: string;
+  /** Tên rút gọn, chỉ để đặt trong nút CTA của thẻ giá. Nút không xuống dòng
+   *  và thẻ thì hẹp — tên đầy đủ làm tràn nút, logo Messenger bị bóp mất. */
+  tenNgan: string;
   tomTat: string;
   giaSale: string;
   giaGoc: string;
@@ -87,6 +90,7 @@ export const KHOA_HOC: Khoa[] = [
   {
     id: "phat-am",
     ten: "Khóa Phát Âm",
+    tenNgan: "Phát Âm",
     tomTat: "Sửa gốc phát âm để người ta nghe ra bạn đang nói gì.",
     giaSale: "500.000đ",
     giaGoc: "800.000đ",
@@ -106,6 +110,7 @@ export const KHOA_HOC: Khoa[] = [
   {
     id: "dich",
     ten: "Khóa Kĩ Năng Dịch + Xây Vốn Từ",
+    tenNgan: "Kĩ Năng Dịch",
     tomTat: "Phần lõi: xử lý chỗ tiếng Việt và tiếng Anh lệch nhau.",
     giaSale: "1.700.000đ",
     giaGoc: "2.100.000đ",
@@ -125,6 +130,7 @@ export const KHOA_HOC: Khoa[] = [
   {
     id: "full",
     ten: "Khóa Full: Xây Gốc + Giao Tiếp",
+    tenNgan: "Khóa Full",
     tomTat:
       "Trọn bộ nền tảng: phát âm, từ vựng, kỹ năng dịch, giao tiếp thực chiến.",
     giaSale: "2.500.000đ",
@@ -140,14 +146,6 @@ export const KHOA_HOC: Khoa[] = [
     ],
     gomCoDan: "và thêm:",
     gomCoNhom: [
-      {
-        tieuDe: "Kĩ năng học từ vựng",
-        muc: [
-          "Xây dựng thói quen học từ vựng mỗi ngày",
-          "Cách ghi nhớ & tạo phản xạ",
-          "Cách ứng dụng đặt câu & xây vốn từ",
-        ],
-      },
       {
         tieuDe: "Giao tiếp thực chiến",
         muc: [
@@ -182,12 +180,16 @@ export const BAI_HOC_QUA_TANG = {
 // BA VIDEO NÀY LÀ CẢ NỬA TRÊN CỦA TRANG. Khách từ quảng cáo không đọc
 // đoạn văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 //
-//   `gioiThieu`      → Bước 1: "Vì sao học mãi vẫn không áp dụng được?"
+//   `gioiThieu`      → Bước 1, đứng một mình trên trời:
+//                      "Vì sao học mãi vẫn không áp dụng được?"
 //                      Nói trúng chỗ khách đang kẹt. KHÔNG bán gì ở video này.
-//   `giaiPhap`       → Bước 2: "English With Bubby có thể giúp gì cho bạn?"
+//   `giaiPhap`       → Tấm giấy trả lời, cột trái (Bước 2):
+//                      "English With Bubby có thể giúp gì cho bạn?"
 //                      Bên mình là ai, chữa kiểu gì, lộ trình ra sao.
-//   `moHinhCoaching` → Bước 3: "Mô hình coaching 1-1"
+//   `moHinhCoaching` → Cùng tấm giấy, cột phải (Bước 3):
+//                      "Mô hình coaching 1-1"
 //                      Lớp chạy thế nào: bài quay sẵn + chữa 1-1.
+//                      Hai video này nằm cạnh nhau, không xếp dọc.
 //
 // Hai yêu cầu bắt buộc cho cả ba:
 //   1. DƯỚI 75 GIÂY. Traffic quảng cáo phần lớn rời trang trước giây 30;
@@ -201,7 +203,7 @@ export const VIDEO = {
 };
 
 // ── BUBBY LÀ AI ─────────────────────────────────────────────────────
-// Dải ngắn nằm giữa tiêu đề Bước 2 và video giải pháp. Chỉ cần khách biết
+// Dải ngắn trên tấm giấy trả lời, trước cặp video. Chỉ cần khách biết
 // người sắp xuất hiện trong video là ai, có thật, và đã dạy bao lâu — đừng
 // viết dài ở đây, bằng chứng kênh nằm ở dải TikTok phía dưới.
 //
@@ -224,8 +226,8 @@ export const BUBBY = {
 };
 
 // ── BẰNG CHỨNG TIKTOK ──────────────────────────────────────────────
-// Ba ảnh nhỏ nằm giữa dải "Bubby là ai" và video Bước 2 — không tiêu đề,
-// chỉ ảnh. Thứ tự: kênh thật → nội dung học thật → phản hồi thật.
+// Ba ảnh nhỏ nằm giữa dải "Bubby là ai" và cặp video trên tấm giấy —
+// không tiêu đề, chỉ ảnh. Thứ tự: kênh thật → nội dung học thật → phản hồi thật.
 // Trên trang bị cắt lấy phần đầu (object-top) vì dải này phải nhỏ; `rong` /
 // `cao` vẫn ghi kích thước file gốc để Next biết tỉ lệ.
 export type AnhTikTok = {

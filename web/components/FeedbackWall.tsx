@@ -7,13 +7,14 @@ import { MESSENGER_URL } from "@/lib/site";
 import type { AnhFeedback } from "@/lib/site";
 
 /**
- * Một hàng điện thoại trôi trên nền trời.
+ * Một chồng ảnh tin nhắn trôi trên nền trời.
  *
  * Ảnh gốc là screenshot đủ kiểu (dài, ngắn, có thanh gõ, có status bar).
  * Nhét nguyên tấm vào hai dải thẻ trắng thì nhìn như đổ file, không phải
- * một mục trên trang. Cắt mỗi tấm thành một màn hình điện thoại cùng cỡ,
- * hơi nghiêng, rồi cho trôi chậm - khách thấy đây là tin nhắn thật, và
- * thấy là có nhiều.
+ * một mục trên trang. Cắt mỗi tấm về cùng một khổ dọc, hơi nghiêng, đè
+ * lên nhau một chút rồi cho trôi chậm - khách thấy đây là tin nhắn thật,
+ * và thấy là có nhiều. Không đóng khung điện thoại: viền lặp lại 20 lần
+ * ăn mất bề ngang và làm phần xếp chồng trông rối. Bóng đổ lo chiều sâu.
  */
 export function FeedbackWall({ anh }: { anh: AnhFeedback[] }) {
   if (anh.length === 0) return null;
