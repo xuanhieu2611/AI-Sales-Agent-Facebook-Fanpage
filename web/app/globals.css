@@ -1,9 +1,10 @@
 @import "tailwindcss";
 
 /* ────────────────────────────────────────────────────────────────
-   Design tokens — giấy trắng, mực xanh Bubby, vệt dạ quang vàng.
-   Nền tờ giấy trắng hơi xanh. Chữ mực navy. Xanh đậm = hành động.
-   Vàng chỉ để tô đúng chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
+   Design tokens — trời thật phía sau, mực xanh Bubby, vệt dạ quang vàng.
+   Nền là ảnh bầu trời (`/img/sky.webp`), fallback --color-paper khi ảnh
+   chưa tải. Chữ mực navy. Xanh đậm = hành động. Vàng chỉ để tô đúng
+   chỗ cần nhớ. Đỏ chỉ dùng cho nét sửa lỗi.
 
    BẢNG MÀU — mỗi màu một nhiệm vụ, không dùng lẫn:
      brand (xanh đậm)  → nút bấm, link, chỗ đúng
@@ -11,8 +12,8 @@
      flag  (đỏ)        → CHỈ dùng cho nét gạch chân chỗ sai
    ──────────────────────────────────────────────────────────────── */
 @theme {
-  /* nền & mực — giấy trắng hơi xanh, không phải xám */
-  --color-paper: #f4f7fc;
+  /* nền & mực — trời thật phía sau, thẻ vẫn giấy trắng */
+  --color-paper: #d2e7f8;
   --color-paper-2: #e7eef8;
   --color-surface: #ffffff;
   --color-ink: #16233f;
@@ -54,12 +55,25 @@
    ──────────────────────────────────────────────────────────────── */
 
 /* z-index của trang:
-     -1  bầu không khí (vệt màu, cuộn theo nội dung)
-     40  thanh đầu trang dính
+     -1  bầu trời (fixed theo viewport)
+     40  thanh đầu trang kính nổi
      50  thanh Messenger dính (điện thoại)
      60  hạt giấy (fixed, pointer-events: none) */
 
 @layer base {
+  :root {
+    /* Chiều cao stack của thanh kính nổi: mép an toàn + khe trên + thân viên.
+       Hero và scroll-margin dùng chung biến này để tiêu đề không chui
+       xuống dưới viên kính. */
+    --header-pad-top: max(0.75rem, env(safe-area-inset-top, 0px));
+    --header-bar: 3.5rem;
+    --header-offset: calc(var(--header-pad-top) + var(--header-bar));
+
+    @media (width >= 768px) {
+      --header-pad-top: max(1rem, env(safe-area-inset-top, 0px));
+    }
+  }
+
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -68,91 +82,51 @@
 
   body {
     position: relative;
-    isolation: isolate;
-    background: var(--color-paper);
+    z-index: 0;
+    background: transparent;
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Tờ giấy dưới cả trang: trắng ở giữa để đọc, xanh Bubby lệch trái,
-     vệt dạ quang vàng ở góc. Absolute nên vệt trôi theo nội dung.
-     Không lưới ô — lưới trang trí làm trang trông như template. */
+  /* Cắt tràn ngang ở main, không phải html/body: overflow trên ancestor
+     làm backdrop-filter của header fixed không lấy được nội dung phía sau. */
+  main {
+    overflow-x: clip;
+  }
+
+  /* Bầu trời thật — cố định theo viewport, nội dung trượt lên trên.
+     Fixed chứ không cover theo chiều cao trang: cover trên trang dài sẽ
+     phóng tấm 2:1 thành một vệt xanh, mất mây và mặt trời.
+     Chừa 30% từ mép trái: mặt trời nằm góc trên-trái, tiêu đề ở giữa
+     thì rơi vào khoảng trời trong hơn. */
   body::before {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
     z-index: -1;
     pointer-events: none;
     background-color: var(--color-paper);
-    background-image:
-      radial-gradient(
-        ellipse 38% 28% at 96% 2%,
-        color-mix(in srgb, var(--color-mark) 48%, transparent),
-        transparent 68%
-      ),
-      radial-gradient(
-        ellipse 28% 22% at 88% 48%,
-        color-mix(in srgb, var(--color-mark) 22%, transparent),
-        transparent 70%
-      ),
-      radial-gradient(
-        ellipse 80% 48% at 48% 6%,
-        #fff 0%,
-        transparent 72%
-      ),
-      radial-gradient(
-        ellipse 58% 42% at 0% 0%,
-        color-mix(in srgb, var(--color-brand) 18%, transparent),
-        transparent 68%
-      ),
-      radial-gradient(
-        ellipse 44% 34% at 4% 42%,
-        color-mix(in srgb, var(--color-brand) 11%, transparent),
-        transparent 72%
-      ),
-      radial-gradient(
-        ellipse 50% 30% at 12% 78%,
-        color-mix(in srgb, var(--color-brand) 9%, transparent),
-        transparent 70%
-      );
+    background-image: url("/img/sky.webp");
     background-repeat: no-repeat;
+    background-position: 30% 0;
+    background-size: cover;
 
     @media (width < 768px) {
-      background-image:
-        radial-gradient(
-          ellipse 70% 24% at 100% 0%,
-          color-mix(in srgb, var(--color-mark) 36%, transparent),
-          transparent 66%
-        ),
-        radial-gradient(
-          ellipse 95% 38% at 50% 4%,
-          #fff 0%,
-          transparent 76%
-        ),
-        radial-gradient(
-          ellipse 80% 40% at 0% 0%,
-          color-mix(in srgb, var(--color-brand) 14%, transparent),
-          transparent 66%
-        ),
-        radial-gradient(
-          ellipse 55% 26% at 100% 58%,
-          color-mix(in srgb, var(--color-mark) 18%, transparent),
-          transparent 70%
-        );
+      /* Điện thoại crop hai bên nhiều: kéo về trái để còn thấy mặt trời. */
+      background-position: 18% 0;
     }
   }
 
-  /* Hạt giấy. Fixed + pointer-events: none — không repaint theo cuộn.
-     Grayscale để không nhuộm vàng/xanh. Opacity thấp: đủ gãy mặt phẳng,
-     không làm đục chữ. */
+  /* Hạt rất nhẹ. Ảnh trời đã có texture — grain chỉ để gãy mặt phẳng
+     số, không được làm đục mây. */
   body::after {
     content: "";
     position: fixed;
     inset: 0;
     z-index: 60;
     pointer-events: none;
-    opacity: 0.035;
+    opacity: 0.018;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-repeat: repeat;
   }
@@ -177,11 +151,11 @@
     text-wrap: pretty;
   }
 
-  /* Thanh đầu trang dính cao 4rem. Không có dòng này thì bấm link trong
-     thanh điều hướng sẽ cuộn tới đúng chỗ nhưng tiêu đề mục nằm KHUẤT
-     dưới thanh — khách tưởng bấm hụt. */
+  /* Thanh kính nổi overlay lên nội dung. Không có dòng này thì bấm link
+     trong thanh điều hướng sẽ cuộn tới đúng chỗ nhưng tiêu đề mục nằm
+     KHUẤT dưới viên kính — khách tưởng bấm hụt. */
   section[id] {
-    scroll-margin-top: 5rem;
+    scroll-margin-top: calc(var(--header-offset) + 0.85rem);
   }
 
   :focus-visible {
@@ -290,6 +264,15 @@
   }
 }
 
+/* Chừa chỗ dưới viên kính nổi — header là overlay, không chiếm luồng. */
+@utility header-clear {
+  padding-top: calc(var(--header-offset) + 1.15rem);
+
+  @media (width >= 640px) {
+    padding-top: calc(var(--header-offset) + 1.5rem);
+  }
+}
+
 /* Nét gạch chân bút đỏ dưới chỗ dịch sai. Đây là chỗ DUY NHẤT
    trên trang dùng màu đỏ — nó có nghĩa "chỗ này sai". */
 @utility squiggle {
@@ -329,76 +312,66 @@
   mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
 
-/* ── Feedback flood — hai cột cuộn dọc vô hạn (“cuộn bình luận”) ──
-   Track chứa 2 set giống hệt; translateY(-50%) = đúng một set.
-   Linear vì đây là chuyển động liên tục (marquee), không phải UI tương tác.
-   Không pause khi hover — volume phải chạy suốt. Chỉ chạy khi `.is-in-view`
-   (trong viewport + tab đang hiện). Reduced-motion: ẩn khối này
-   (motion-reduce:hidden), hiện masonry tĩnh.
+/* ── Feedback flood — một hàng điện thoại trôi trên trời ──
+   Track chứa 2 set giống hệt; translateX(-50%) = đúng một set.
+   Linear vì đây là chuyển động liên tục (marquee). Pause khi hover.
+   Chỉ chạy khi `.is-in-view`. Reduced-motion: ẩn, hiện dải tĩnh vuốt ngang.
 
-   KHỐI NÀY CỐ Ý TRÀN RA NGOÀI `shell`. Ảnh chụp bình luận là chữ 15px của
-   TikTok: nhốt trong 74rem rồi chia hai cột thì mỗi cột còn ~360px, chữ co
-   lại còn nửa cỡ thật và không ai đọc nổi. Tràn hết bề ngang thì mỗi cột
-   ~700px, gần đúng cỡ ảnh gốc. Chốt trần 96rem để trên màn siêu rộng ảnh
-   không bị nở to hơn cỡ thật rồi mờ. */
-@keyframes feedback-marquee-y {
+   Mỗi tấm bị cắt thành cùng một khung màn hình (object-position: top)
+   rồi bọc viền máy - screenshot gốc dài ngắn khác nhau, để nguyên tấm
+   thì hàng nhìn như đổ file. */
+@keyframes feedback-marquee-x {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(0, -50%, 0);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 .feedback-flood {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.75rem;
+  --fb-card: 13.25rem;
+  --fb-gap: 1.35rem;
+  display: flex;
   width: 100%;
-  max-width: 96rem;
-  margin-inline: auto;
-  padding-inline: 1.25rem;
-  height: min(68vh, 30rem);
   overflow: hidden;
-  /* Mờ dần cả bốn mép: trên/dưới để đọc ra “nhìn lén vào một thread dài”,
-     hai bên để dải chảy ra khỏi trang thay vì bị chặt cụt ở mép màn hình.
-     `intersect` = giao của hai lớp mặt nạ; thiếu nó thì chỉ lớp cuối có tác
-     dụng. `-webkit-mask-composite: source-in` là cùng phép đó cho Safari cũ. */
-  -webkit-mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
-  mask-image:
-    linear-gradient(to bottom, transparent 0%, #000 10%, #000 90%, transparent 100%),
-    linear-gradient(to right, transparent 0%, #000 5%, #000 95%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-composite: intersect;
+  /* Chừa chỗ cho máy nghiêng / nhô lên khi hover, không bị crop đỉnh đáy. */
+  padding-block: 2.25rem;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 8%,
+    #000 92%,
+    transparent 100%
+  );
 
   @media (width >= 640px) {
-    gap: 1rem;
-    padding-inline: 2rem;
-    height: min(76vh, 40rem);
+    --fb-card: 16rem;
+    --fb-gap: 1.85rem;
+    padding-block: 2.75rem;
   }
 
-  /* Chia hai cột từ 1024px, KHÔNG phải từ 640px: ở khoảng giữa (điện thoại
-     ngang, tablet dọc) hai cột làm mỗi cột còn ~300px, chữ trong ảnh chụp
-     nhỏ hơn cả bản gốc trên điện thoại. Một cột rộng luôn thắng hai cột hẹp
-     ở đây, vì thứ phải đọc được là chữ nằm TRONG ảnh. */
   @media (width >= 1024px) {
-    grid-template-columns: 1fr 1fr;
+    --fb-card: 17.5rem;
+    --fb-gap: 2.15rem;
   }
 }
 
 .feedback-flood-lane {
-  height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .feedback-marquee-track {
   display: flex;
-  flex-direction: column;
-  /* Mặc định paused — chỉ chạy khi viewport vào tầm nhìn (tiết kiệm GPU
-     trên 4G / tab nền). Linear = cảm giác “đang chảy”, không ease. */
-  animation: feedback-marquee-y linear infinite;
+  width: max-content;
+  animation: feedback-marquee-x linear infinite;
   animation-play-state: paused;
 }
 
@@ -407,35 +380,212 @@
   will-change: transform;
 }
 
-.feedback-marquee-reverse {
-  animation-direction: reverse;
-  /* Lệch pha với lane kia — hai cột không “khớp nhịp” như screensaver. */
-  animation-delay: -37s;
+@media (hover: hover) and (pointer: fine) {
+  .feedback-flood.is-in-view:hover .feedback-marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 .feedback-marquee-set {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  /* Khớp gap — nửa vòng lặp gồm cả khoảng trống cuối set. */
-  padding-bottom: 0.75rem;
+  flex-direction: row;
+  align-items: center;
+  isolation: isolate;
+  gap: var(--fb-gap);
+  padding-right: var(--fb-gap);
+}
 
-  @media (width >= 640px) {
-    gap: 1rem;
-    padding-bottom: 1rem;
+.feedback-phone {
+  width: var(--fb-card, 15rem);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.feedback-phone-tilt {
+  position: relative;
+  padding: 0.7rem 0.42rem 0.48rem;
+  border-radius: 1.85rem;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.96) 0%, rgb(236 242 250) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 0 0 1px rgb(22 35 63 / 0.06),
+    0 10px 18px -10px rgb(22 35 63 / 0.16);
+}
+
+.feedback-phone-tilt::before {
+  content: "";
+  position: absolute;
+  top: 0.28rem;
+  left: 50%;
+  z-index: 1;
+  width: 3.1rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: rgb(22 35 63 / 0.14);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.feedback-phone-screen {
+  position: relative;
+  aspect-ratio: 9 / 17;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  background: var(--color-surface);
+}
+
+/* Hàng máy hơi nghiêng, cao thấp khác nhau - như đang nổi trên trời,
+   không phải một băng chuyền tem. */
+.feedback-marquee-set > :nth-child(5n + 1) .feedback-phone-tilt {
+  transform: rotate(-3.4deg) translateY(0.55rem);
+}
+.feedback-marquee-set > :nth-child(5n + 2) .feedback-phone-tilt {
+  transform: rotate(2.6deg) translateY(-0.9rem);
+}
+.feedback-marquee-set > :nth-child(5n + 3) .feedback-phone-tilt {
+  transform: rotate(-1.5deg) translateY(0.1rem);
+}
+.feedback-marquee-set > :nth-child(5n + 4) .feedback-phone-tilt {
+  transform: rotate(3.8deg) translateY(-0.35rem);
+}
+.feedback-marquee-set > :nth-child(5n + 5) .feedback-phone-tilt {
+  transform: rotate(-2.4deg) translateY(0.85rem);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feedback-phone {
+    transition: transform 220ms var(--ease-out);
+  }
+
+  .feedback-phone-tilt {
+    transition:
+      transform 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out);
+  }
+
+  .feedback-phone:hover {
+    z-index: 2;
+    transform: translateY(-0.55rem) scale(1.045);
+  }
+
+  .feedback-phone:hover .feedback-phone-tilt {
+    transform: rotate(0deg) translateY(0);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.95),
+      0 0 0 1px rgb(22 35 63 / 0.08),
+      0 14px 24px -12px rgb(22 35 63 / 0.2);
   }
 }
 
-/* Thụt lề so le cho từng tấm: dải trông như chồng ảnh chụp dán lên tường,
-   không phải bảng ô đều tăm tắp. Chỉ từ 640px trở lên — trên điện thoại mỗi
-   pixel bề ngang là chữ trong ảnh to thêm được một chút. */
-@media (width >= 640px) {
-  .feedback-marquee-set > *:nth-child(3n + 2) {
-    margin-inline-start: 1.5rem;
+/* ── Liquid glass (web approximation) ─────────────────────────────
+   Không phải CSS chính thức của Apple.
+
+   Opacity + blur phải nằm CÙNG một phần tử. Blur trên lớp con bên
+   trong isolation/overflow thì chỉ làm mờ khoảng trống, nên tiêu đề
+   đâm xuyên chữ menu. z-index: 0 trên body (không isolation) vẫn giữ
+   bầu trời ::before ở sau nội dung. */
+.liquid-glass {
+  position: relative;
+  border-radius: 999px;
+  /* KHÔNG khai báo `background: transparent` ở đây: CSS không-layer thắng
+     @layer utilities, nên nó sẽ đè chết class `bg-white/80` của Tailwind và
+     viên kính trong suốt hoàn toàn. Mặc định vốn đã trong suốt rồi. */
+  border: 1px solid transparent;
+  transition:
+    background-color 220ms var(--ease-out),
+    border-color 220ms var(--ease-out),
+    box-shadow 220ms var(--ease-out);
+}
+
+/* NỀN + BLUR nằm ở SiteHeader.tsx dưới dạng class Tailwind
+   (`data-[scrolled=true]:bg-white/80 backdrop-blur-2xl ...`), KHÔNG viết ở đây.
+   Lý do, đã đo bằng getComputedStyle chứ không phải đoán: Lightning CSS
+   (bộ nén CSS của Tailwind v4 / Next) đọc được giá trị literal như
+   `blur(28px)`, kết luận `-webkit-backdrop-filter` là đủ cho browserslist
+   mặc định, rồi XÓA HẲN dòng `backdrop-filter` chuẩn. Chrome hiện tại
+   KHÔNG nhận bản -webkit- (getComputedStyle trả chuỗi rỗng) nên viên kính
+   mất sạch độ mờ — chữ phía dưới đâm xuyên qua sắc nét.
+   Utility của Tailwind thoát được vì giá trị của nó là `var(--tw-backdrop-*)`:
+   bộ nén không phân tích tĩnh được var() nên đành giữ cả hai dòng.
+   => Cần đổi độ mờ thì sửa class bên .tsx. Đừng viết backdrop-filter thẳng
+   vào file này, nó sẽ im lặng biến mất khi build. */
+.liquid-glass[data-scrolled="true"] {
+  border-color: rgb(255 255 255 / 0.7);
+  box-shadow:
+    /* mép trên bắt sáng, mép dưới hắt lại — hai vạch này là thứ
+       làm viên kính có độ dày thay vì dán phẳng lên trang. */
+    inset 0 1px 0 rgb(255 255 255 / 0.75),
+    inset 0 -1px 0 rgb(255 255 255 / 0.3),
+    0 1px 1px rgb(22 35 63 / 0.05),
+    0 12px 34px rgb(22 35 63 / 0.12);
+}
+
+.liquid-glass-fill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 160ms var(--ease-out),
+    visibility 160ms var(--ease-out);
+}
+
+.liquid-glass[data-scrolled="true"] .liquid-glass-fill {
+  opacity: 1;
+  visibility: visible;
+  transition-duration: 220ms;
+}
+
+.liquid-glass-fill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 80% at 18% -30%, rgb(255 255 255 / 0.35), transparent 55%),
+    linear-gradient(180deg, rgb(255 255 255 / 0.16), transparent 48%),
+    linear-gradient(0deg, rgb(255 255 255 / 0.12), transparent 32%);
+}
+
+.liquid-glass-fill::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  border: 1px solid rgb(255 255 255 / 0.34);
+}
+
+.liquid-glass > :not(.liquid-glass-fill) {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass[data-scrolled="true"] {
+    background: rgb(255 255 255 / 0.94);
+    /* Làm rỗng biến của Tailwind thay vì `backdrop-filter: none` — dòng chuẩn
+       đó bị Lightning CSS xóa, override sẽ không có tác dụng. */
+    --tw-backdrop-blur: ;
+    --tw-backdrop-saturate: ;
+    --tw-backdrop-brightness: ;
   }
 
-  .feedback-marquee-set > *:nth-child(3n) {
-    margin-inline-end: 2rem;
+  .liquid-glass-fill::before,
+  .liquid-glass-fill::after {
+    content: none;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .liquid-glass[data-scrolled="true"] {
+    background: rgb(255 255 255 / 0.92);
   }
 }
 
@@ -452,7 +602,7 @@
 
   /* Ẩn dải cuộn PHẢI nằm ở đây, không phải bằng `motion-reduce:hidden` trên
      component: `.feedback-flood` là rule CSS thường (ngoài @layer), mà style
-     ngoài layer luôn thắng utility của Tailwind — nên `display: grid` bên trên
+     ngoài layer luôn thắng utility của Tailwind - nên `display: flex` bên trên
      đè mất `display: none` của utility, và người tắt chuyển động nhìn thấy CẢ
      dải cuộn LẪN bản tĩnh bên dưới. */
   .feedback-flood {

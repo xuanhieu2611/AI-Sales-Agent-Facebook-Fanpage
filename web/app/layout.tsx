@@ -46,9 +46,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  // Trùng với --color-paper. Trang chỉ có một tông sáng duy nhất nên
-  // không khai báo biến thể tối ở đây.
-  themeColor: "#f4f7fc",
+  // Trùng với --color-paper (màu trời fallback). Trang chỉ có một tông
+  // sáng duy nhất nên không khai báo biến thể tối ở đây.
+  themeColor: "#d2e7f8",
 };
 
 export default function RootLayout({
@@ -60,7 +60,7 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${genos.variable} ${oswald.variable} ${beVietnam.variable}`}
     >
-      <body className="overflow-x-hidden">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

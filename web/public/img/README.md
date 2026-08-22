@@ -135,42 +135,39 @@ Và **nhớ xin phép học viên** trước khi đăng tên thật.
 
 Để trống mảng này thì khối đó tự ẩn, trang vẫn chạy bình thường.
 
-### 3c. Ảnh chụp bình luận — chứng minh mấy cái trên là có thật
+### 3c. Ảnh chụp tin nhắn học viên — trôi ngang trên trang
 
 | | |
 |---|---|
-| Vị trí trên trang | Mục "Học viên nói gì", phần cuối |
-| Tỉ lệ | **Ngang, dẹt** — crop sát vào đúng một bình luận |
-| Định dạng | `.jpg`, `.png` hoặc `.webp` |
-| Số lượng | Đang có 4. Thêm bớt bao nhiêu cũng được. |
+| Vị trí trên trang | Mục "Cảm nhận của học viên" |
+| Tỉ lệ | **Dọc** — screenshot Messenger/Zalo nguyên tấm, đừng crop ngang |
+| Định dạng | `.webp` (nén sẵn), hoặc `.jpg` / `.png` |
+| Số lượng | Đang có 22 (`hv-01.webp` … `hv-22.webp`). Thêm bớt bao nhiêu cũng được. |
 
-Ảnh hiện **nguyên tấm, rộng hết cột, không bị cắt tí nào** — nên cứ crop sát
-vào đúng một bình luận là đẹp và dễ đọc nhất. Crop rộng lấy cả màn hình thì
-chữ co lại và không ai đọc.
+Ảnh hiện **nguyên tấm, không bị cắt**. Trang cho chúng trôi ngang thành hai
+dải ngược chiều. File rộng khoảng 720px là đủ nét trên điện thoại 3x.
 
-**Nhớ che tên/ảnh đại diện** nếu chưa xin phép đăng.
+**Nhớ xin phép** trước khi đăng tin nhắn có tên / mặt học viên.
 
-Mỗi tấm cần thêm **kích thước pixel thật** (`rong` × `cao`). Trang dùng nó để
-chừa sẵn chỗ, ảnh tải xong không làm giật cả trang. Lấy số bằng cách bấm chuột
-phải > Get Info trên máy Mac, hoặc chạy:
+Mỗi tấm cần **kích thước pixel thật** (`rong` × `cao`):
 
 ```bash
-sips -g pixelWidth -g pixelHeight web/public/img/feedback/fb-01.jpeg
+sips -g pixelWidth -g pixelHeight web/public/img/feedback/hv-01.webp
 ```
 
 ```ts
 export const FEEDBACK: AnhFeedback[] = [
   {
-    src: "/img/feedback/fb-01.jpeg",
-    alt: "Bình luận: “hay lắm luôn, dễ hiểu, tui xem xog là áp dụng đc luôn”",
-    rong: 1290,
-    cao: 391,
+    src: "/img/feedback/hv-01.webp",
+    alt: "Tin nhắn học viên: sau 3 tháng tự tin giao tiếp hơn",
+    rong: 720,
+    cao: 1384,
   },
 ];
 ```
 
-`alt` là mô tả cho người khiếm thị và cho Google — **chép luôn câu bình luận
-vào đó**, đừng để chung chung kiểu "feedback học viên".
+`alt` là mô tả cho người khiếm thị và cho Google — **chép ý chính của tin
+nhắn vào đó**, đừng để chung chung kiểu "feedback học viên".
 
 ---
 
@@ -181,7 +178,7 @@ văn, nên toàn bộ việc thuyết phục ban đầu nằm ở đây.
 
 | | Bước 1 — `gioiThieu` | Bước 2 — `giaiPhap` | Bước 3 — `moHinhCoaching` |
 |---|---|---|---|
-| Tiêu đề trên trang | "Vì sao bạn học mãi không hiệu quả?" | "EnglishWithBubby giúp được gì cho bạn?" | "Mô hình coaching 1-1 là gì?" |
+| Tiêu đề trên trang | "Vì sao học mãi vẫn không áp dụng được?" | "English With Bubby có thể giúp gì cho bạn?" | "Mô hình coaching 1-1" |
 | Việc nó làm | Nói trúng chỗ khách đang kẹt | Bên mình là ai, chữa kiểu gì | Lớp chạy thế nào |
 | Nội dung | Vì sao học mãi vẫn không nói được | Lộ trình / cách dạy | Bài quay sẵn + chữa 1-1 |
 | **Không** làm gì | **Không bán gì ở video này** | Không kể lể dài, để giá cho phần dưới | Không nhồi giá vào đây |

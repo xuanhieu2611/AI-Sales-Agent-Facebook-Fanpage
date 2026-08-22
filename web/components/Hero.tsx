@@ -30,7 +30,7 @@ import {
 export function Hero() {
   return (
     <section className="relative overflow-hidden pb-16 sm:pb-20">
-      <div className="shell relative flex flex-col items-center pt-10 text-center sm:pt-14">
+      <div className="header-clear shell relative flex flex-col items-center text-center">
         {/* Mốc cho StickyCta: sau khi khách đã thấy lời hứa, thanh Messenger
             sẽ xuất hiện trên điện thoại trong lúc họ xem video. */}
         <div id="dau-trang" className="flex max-w-[76rem] flex-col items-center gap-6">
@@ -43,12 +43,12 @@ export function Hero() {
           </h1>
         </div>
 
-        <BuocXem so={1}>Vì sao bạn học mãi không hiệu quả?</BuocXem>
+        <BuocXem so={1}>Vì sao học mãi vẫn không áp dụng được?</BuocXem>
 
         <KhungVideo>
           <YouTubeLite
             id={VIDEO.gioiThieu}
-            title="Vì sao bạn học mãi không hiệu quả"
+            title="Vì sao học mãi vẫn không áp dụng được"
             priority
             hienTieuDe={false}
           />
@@ -75,7 +75,7 @@ export function Hero() {
         <TikTokProof />
 
         <h2 className="mt-8 max-w-[22ch] text-center font-subtitle text-[1.2rem] leading-[1.3] font-normal tracking-normal text-ink sm:mt-10 sm:max-w-none sm:text-[1.6rem] sm:leading-[1.25]">
-          Chiến Lược Học Toàn Diện Cho Người Mất Gốc
+          English With Bubby có thể giúp gì cho bạn?
         </h2>
 
         <KhungVideo>
@@ -83,24 +83,24 @@ export function Hero() {
             <AssetPlaceholder
               type="video"
               className="aspect-video rounded-2xl"
-              title="Video: Chiến Lược Học Toàn Diện Cho Người Mất Gốc"
+              title="Video: English With Bubby có thể giúp gì cho bạn?"
               description="Bubby giải thích khóa học, cách dạy, và lộ trình sẽ giúp học viên như thế nào. Video có phụ đề cháy sẵn."
             />
           ) : (
             <YouTubeLite
               id={VIDEO.giaiPhap}
-              title="Chiến Lược Học Toàn Diện Cho Người Mất Gốc"
+              title="English With Bubby có thể giúp gì cho bạn"
               hienTieuDe={false}
             />
           )}
         </KhungVideo>
 
-        <BuocXem so={3}>Mô hình coaching 1-1 là gì?</BuocXem>
+        <BuocXem so={3}>Mô hình coaching 1-1</BuocXem>
 
         <KhungVideo>
           <YouTubeLite
             id={VIDEO.moHinhCoaching}
-            title="Mô hình coaching 1-1 là gì"
+            title="Mô hình coaching 1-1"
             hienTieuDe={false}
           />
         </KhungVideo>
@@ -288,7 +288,7 @@ function BuocXem({ so, children }: { so: number; children: ReactNode }) {
 
 /**
  * Khung cho video. Bóng đổ ám màu mực (không phải đen thuần) để tấm video
- * nổi khỏi nền giấy xanh — nếu không nó chỉ là một ô chữ nhật dán phẳng.
+ * nổi khỏi nền trời — nếu không nó chỉ là một ô chữ nhật dán phẳng.
  */
 function KhungVideo({ children }: { children: ReactNode }) {
   return (

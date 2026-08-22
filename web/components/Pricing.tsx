@@ -120,6 +120,48 @@ export function Pricing() {
                       </span>
                     </li>
                   ))}
+                  {k.gomCoDan ? (
+                    <li
+                      className={`pt-1 text-[0.78rem] font-medium leading-snug ${
+                        k.noiBat ? "text-mark" : "text-brand"
+                      }`}
+                    >
+                      {k.gomCoDan}
+                    </li>
+                  ) : null}
+                  {k.gomCoNhom?.map((nhom) => (
+                    <li key={nhom.tieuDe} className="flex flex-col gap-2">
+                      <span
+                        className={`text-[0.92rem] font-medium leading-snug ${
+                          k.noiBat ? "text-white" : "text-ink"
+                        }`}
+                      >
+                        {nhom.tieuDe}
+                      </span>
+                      <ul className="flex flex-col gap-1.5 pl-0.5">
+                        {nhom.muc.map((muc) => (
+                          <li
+                            key={muc}
+                            className="flex items-start gap-2.5"
+                          >
+                            <span
+                              aria-hidden
+                              className={`mt-[0.55em] h-px w-2.5 shrink-0 ${
+                                k.noiBat ? "bg-white/45" : "bg-ink/25"
+                              }`}
+                            />
+                            <span
+                              className={`text-[0.85rem] leading-snug ${
+                                k.noiBat ? "text-white/75" : "text-muted"
+                              }`}
+                            >
+                              {muc}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
                 </ul>
 
                 <Button
