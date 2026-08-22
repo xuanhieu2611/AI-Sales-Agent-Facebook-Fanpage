@@ -336,9 +336,13 @@
   --fb-overlap: 1.7rem;
   display: flex;
   width: 100%;
-  overflow: hidden;
-  /* Chừa chỗ cho máy nghiêng / nhô lên khi hover, không bị crop đỉnh đáy. */
-  padding-block: 2.25rem;
+  /* Clip ngang thôi — `overflow: hidden` cắt cả trục dọc, nên bóng đổ của
+     tấm bị nghiêng/đẩy xuống bị xén thành một vạch ngang cứng dưới thẻ.
+     `clip` (không `hidden`) giữ overflow-y: visible, không bị compute thành auto. */
+  overflow-x: clip;
+  overflow-y: visible;
+  /* Chừa chỗ cho máy nghiêng, bóng đổ (~36px), tấm dịch xuống, hover nhô lên. */
+  padding-block: 4rem;
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -358,7 +362,7 @@
     --fb-card: 16rem;
     --fb-gap: 1.85rem;
     --fb-overlap: 2.1rem;
-    padding-block: 2.75rem;
+    padding-block: 4.5rem;
   }
 
   @media (width >= 1024px) {

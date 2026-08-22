@@ -164,8 +164,7 @@ export const KHOA_HOC: Khoa[] = [
 // Các bài trải nghiệm khi khách đang tìm hiểu khóa. Mỗi mục mở Messenger
 // với tin nhắn sẵn — không phải cổng xin email.
 export const BAI_HOC_QUA_TANG = {
-  tieuDe:
-    "Khi tìm hiểu khóa học, bạn có thể chọn 1 trong những bài học thử sau đây để trải nghiệm trước:",
+  tieuDe: "Chương trình học thử",
   /** Mẫu tin nhắn gắn vào m.me khi khách bấm một bài. `{ten}` = tên bài. */
   mauTinNhan: "Mình muốn học thử: {ten}",
   danhSach: [

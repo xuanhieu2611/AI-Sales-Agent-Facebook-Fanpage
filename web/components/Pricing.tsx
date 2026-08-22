@@ -193,10 +193,7 @@ export function Pricing() {
             Vòng radio = tín hiệu "chọn một", không phải danh sách đọc suông. */}
         <Reveal>
           <aside className="mt-16 border-t border-line pt-12 sm:mt-20 sm:pt-14">
-            <p className="eyebrow text-brand">Bài học thử</p>
-            <h3 className="mt-4 max-w-[42ch] text-2xl leading-[1.25] text-ink sm:text-3xl">
-              {BAI_HOC_QUA_TANG.tieuDe}
-            </h3>
+            <SectionHead title={BAI_HOC_QUA_TANG.tieuDe} />
 
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               {BAI_HOC_QUA_TANG.danhSach.map((baiHoc) => {

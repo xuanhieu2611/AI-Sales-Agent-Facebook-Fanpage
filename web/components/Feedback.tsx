@@ -20,7 +20,7 @@ export function Feedback() {
       <div className="shell">
         <Reveal>
           <SectionHead
-            title="Học viên nhắn lại"
+            title="Cảm Nhận Của Học Viên"
             lead="Tin nhắn thật trên Messenger và Zalo, sau khi học xong."
           />
         </Reveal>
