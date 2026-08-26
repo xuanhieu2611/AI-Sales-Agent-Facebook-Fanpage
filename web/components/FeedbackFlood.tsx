@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, type ReactNode } from "react";
 
 /**
  * Viewport cho hàng điện thoại trôi ngang.
@@ -14,6 +14,18 @@ import { useEffect, useRef, type ReactNode } from "react";
  */
 export function FeedbackFlood({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const tamDungKhiCuon = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    el.classList.add("is-user-scrolling");
+    if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+    scrollTimerRef.current = setTimeout(() => {
+      el.classList.remove("is-user-scrolling");
+    }, 1200);
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -39,6 +51,7 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
     return () => {
       io.disconnect();
       document.removeEventListener("visibilitychange", onVis);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
   }, []);
 
@@ -47,7 +60,12 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
       ref={ref}
       className="feedback-flood"
       role="region"
-      aria-label="Tin nhắn học viên đang trôi ngang"
+      aria-label="Tin nhắn học viên. Vuốt ngang để xem thêm"
+      onScroll={tamDungKhiCuon}
+      onPointerDown={() => ref.current?.classList.add("is-interacting")}
+      onPointerUp={() => ref.current?.classList.remove("is-interacting")}
+      onPointerCancel={() => ref.current?.classList.remove("is-interacting")}
+      onPointerLeave={() => ref.current?.classList.remove("is-interacting")}
     >
       {children}
     </div>

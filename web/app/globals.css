@@ -336,11 +336,14 @@
   --fb-overlap: 1.7rem;
   display: flex;
   width: 100%;
-  /* Clip ngang thôi — `overflow: hidden` cắt cả trục dọc, nên bóng đổ của
-     tấm bị nghiêng/đẩy xuống bị xén thành một vạch ngang cứng dưới thẻ.
-     `clip` (không `hidden`) giữ overflow-y: visible, không bị compute thành auto. */
-  overflow-x: clip;
-  overflow-y: visible;
+  /* Native horizontal scrolling lets touch and trackpad users inspect the
+     moving wall directly. Padding keeps tilted cards and shadows away from
+     the scrollport's vertical clipping edge. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
   /* Chừa chỗ cho máy nghiêng, bóng đổ (~36px), tấm dịch xuống, hover nhô lên. */
   padding-block: 4rem;
   -webkit-mask-image: linear-gradient(
@@ -372,6 +375,10 @@
   }
 }
 
+.feedback-flood::-webkit-scrollbar {
+  display: none;
+}
+
 .feedback-flood-lane {
   overflow: visible;
 }
@@ -386,6 +393,11 @@
 .feedback-flood.is-in-view .feedback-marquee-track {
   animation-play-state: running;
   will-change: transform;
+}
+
+.feedback-flood.is-interacting .feedback-marquee-track,
+.feedback-flood.is-user-scrolling .feedback-marquee-track {
+  animation-play-state: paused;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -410,6 +422,24 @@
   flex-shrink: 0;
   position: relative;
   z-index: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  cursor: zoom-in;
+}
+
+.feedback-phone:focus-visible {
+  z-index: 3;
+  outline: 3px solid var(--color-brand);
+  outline-offset: 5px;
+  border-radius: 1.25rem;
+}
+
+.feedback-gallery[data-open="true"] .feedback-marquee-track {
+  animation-play-state: paused;
 }
 
 /* Xếp chồng: mỗi tấm đè lên tấm bên trái một chút. Âm margin (gap không
@@ -422,6 +452,7 @@
 
 .feedback-phone-tilt {
   position: relative;
+  display: block;
   border-radius: 1.25rem;
   background: var(--color-surface);
   /* Ảnh là chat nền trắng, đặt trên nền trời xanh nhạt - chênh sáng ở mép
@@ -436,6 +467,7 @@
 
 .feedback-phone-screen {
   position: relative;
+  display: block;
   aspect-ratio: 9 / 17;
   overflow: hidden;
   border-radius: inherit;
@@ -482,6 +514,216 @@
       0 0 0 1px rgb(22 35 63 / 0.16),
       0 28px 48px -22px rgb(22 35 63 / 0.55),
       0 7px 16px -8px rgb(22 35 63 / 0.26);
+  }
+}
+
+/* Ảnh feedback đầy đủ. Native dialog lo focus trap, Escape và top layer;
+   CSS chỉ lo bề mặt, vị trí và chuyển trạng thái. */
+.feedback-lightbox {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  color: white;
+  opacity: 0;
+}
+
+.feedback-lightbox[open] {
+  display: grid;
+  place-items: center;
+  opacity: 1;
+  transition: opacity 200ms var(--ease-out);
+}
+
+.feedback-lightbox::backdrop {
+  background: rgb(8 15 30 / 0.88);
+  opacity: 1;
+  transition: opacity 200ms var(--ease-out);
+}
+
+.feedback-lightbox-panel {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: fit-content;
+  max-width: 100%;
+  height: fit-content;
+  max-height: 100%;
+  transform: scale(1);
+  transition: transform 200ms var(--ease-out);
+}
+
+.feedback-lightbox-image {
+  display: block;
+  width: min(46rem, calc(100vw - 1.5rem));
+  height: auto;
+  max-height: calc(100dvh - 5.5rem);
+  border-radius: 0.9rem;
+  object-fit: contain;
+  box-shadow: 0 30px 80px -24px rgb(0 0 0 / 0.8);
+}
+
+.feedback-lightbox[data-closing="true"] {
+  opacity: 0;
+}
+
+.feedback-lightbox[data-closing="true"]::backdrop {
+  opacity: 0;
+}
+
+.feedback-lightbox[data-closing="true"] .feedback-lightbox-panel {
+  transform: scale(0.96);
+}
+
+@starting-style {
+  .feedback-lightbox[open] {
+    opacity: 0;
+  }
+
+  .feedback-lightbox[open]::backdrop {
+    opacity: 0;
+  }
+
+  .feedback-lightbox[open] .feedback-lightbox-panel {
+    transform: scale(0.96);
+  }
+}
+
+.feedback-lightbox-close,
+.feedback-lightbox-nav {
+  position: absolute;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  border-radius: 999px;
+  background: rgb(10 20 40 / 0.78);
+  color: white;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-out),
+    transform 160ms var(--ease-out);
+}
+
+.feedback-lightbox-close svg,
+.feedback-lightbox-nav svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.feedback-lightbox-close {
+  top: 0.75rem;
+  right: 0.75rem;
+}
+
+.feedback-lightbox-nav {
+  bottom: -3.4rem;
+}
+
+.feedback-lightbox-prev {
+  left: calc(50% - 6.25rem);
+}
+
+.feedback-lightbox-next {
+  right: calc(50% - 6.25rem);
+}
+
+.feedback-lightbox-next svg {
+  transform: rotate(180deg);
+}
+
+.feedback-lightbox-count {
+  position: absolute;
+  bottom: -3.2rem;
+  left: 50%;
+  min-width: 4rem;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgb(10 20 40 / 0.78);
+  padding: 0.45rem 0.8rem;
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.feedback-lightbox-close:focus-visible,
+.feedback-lightbox-nav:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 3px;
+}
+
+.feedback-lightbox-close:active {
+  transform: scale(0.96);
+}
+
+.feedback-lightbox-nav:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feedback-lightbox-close:hover {
+    background: rgb(42 95 217 / 0.96);
+    transform: scale(1.04);
+  }
+
+  .feedback-lightbox-nav:hover {
+    background: rgb(42 95 217 / 0.96);
+    transform: scale(1.04);
+  }
+}
+
+@media (width >= 640px) {
+  .feedback-lightbox-image {
+    width: min(46rem, calc(100vw - 10rem));
+    max-height: calc(100dvh - 2rem);
+  }
+
+  .feedback-lightbox-close {
+    top: 0;
+    right: -3.75rem;
+  }
+
+  .feedback-lightbox-nav {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+  }
+
+  .feedback-lightbox-prev {
+    left: -4rem;
+  }
+
+  .feedback-lightbox-next {
+    right: -4rem;
+  }
+
+  .feedback-lightbox-count {
+    bottom: 0.75rem;
+  }
+
+  .feedback-lightbox-nav:active {
+    transform: translateY(-50%) scale(0.96);
+  }
+}
+
+@media (width >= 640px) and (hover: hover) and (pointer: fine) {
+  .feedback-lightbox-nav:hover {
+    transform: translateY(-50%) scale(1.04);
   }
 }
 
@@ -619,6 +861,18 @@
    nên `bottom` âm khá sâu. Kéo lên gần 0 là nét cắt ngang đuôi chữ g.
    Màu nằm thẳng trong SVG (%23ffd75e = --color-mark) — giống `squiggle` và
    `highlight`: ĐỔI --color-mark thì phải sửa cả ba chuỗi này. */
+/* Nền xanh đậm ôm sát chữ tiêu đề. `box-decoration-break: clone` keeps
+   the background behind every wrapped line instead of stretching it across
+   the full heading width. */
+@utility title-band {
+  color: white;
+  background-color: var(--color-brand-deep);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding-inline: 0.16em;
+  padding-block: 0.04em;
+}
+
 @utility brush-underline {
   position: relative;
   display: inline-block;

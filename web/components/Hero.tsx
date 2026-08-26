@@ -8,7 +8,6 @@ import {
   ANH,
   BANG_CHUNG_TIKTOK,
   BUBBY,
-  MESSENGER_URL,
   SHOW_REVIEW_PLACEHOLDERS,
   VIDEO,
 } from "@/lib/site";
@@ -40,7 +39,7 @@ export function Hero() {
               làm đôi). `whitespace-nowrap` giữ nó không xuống dòng ở màn hẹp;
               dòng trên thì cho tự xuống dòng, nhờ vậy cỡ chữ điện thoại mới
               lên được 2.5rem thay vì bị 2.1rem trói. */}
-          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-ink sm:text-[4rem] lg:text-[4.75rem]">
+          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-brand-deep drop-shadow-[0_1px_1px_rgb(255_255_255_/_0.45)] sm:text-[4rem] lg:text-[4.75rem]">
             <span className="block">Nơi dành riêng cho các bạn</span>
             <span className="brush-underline whitespace-nowrap">
               mất gốc tiếng Anh
@@ -58,18 +57,6 @@ export function Hero() {
             hienTieuDe={false}
           />
         </KhungVideo>
-
-        {/* Lối tắt cho người đã bị thuyết phục ngay từ video một. Cố ý để
-            dạng link chữ nhỏ chứ không phải nút: nút thứ hai ở đây sẽ tranh
-            chỗ với hai video trong tấm kính, mà đó mới là thứ chốt phần lớn khách. */}
-        <Link
-          href={MESSENGER_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mt-5 text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-brand"
-        >
-          Thấy đúng chỗ mình đang kẹt rồi? Nhắn Bubby luôn
-        </Link>
 
         <TamKinhTraLoi />
 
@@ -158,7 +145,7 @@ function VideoCot({
         </span>
         {/* leading ≥ 1.25: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
         <h2 className="font-subtitle text-[1.15rem] leading-[1.3] font-bold tracking-normal text-ink sm:text-[1.35rem] sm:leading-[1.25]">
-          {tieuDe}
+          <span className="title-band">{tieuDe}</span>
         </h2>
       </div>
       <div className="w-full">{children}</div>
@@ -166,16 +153,13 @@ function VideoCot({
   );
 }
 
-/** Ba góc nghiêng rất nhỏ, không đều nhau — đủ để đọc ra "ảnh chụp màn hình
- *  dán lên", chưa tới mức thành hiệu ứng. Quá 2.5° là bắt đầu điệu. */
-const NGHIENG = ["-rotate-[1.6deg]", "rotate-[0.9deg]", "-rotate-[0.7deg]"];
-
+/** Góc nghiêng rất nhỏ — đủ để đọc ra "ảnh chụp màn hình dán lên",
+ * chưa tới mức thành hiệu ứng. Quá 2.5° là bắt đầu điệu. */
 /**
- * Ba ảnh TikTok nhỏ + link kênh — nằm giữa dải Bubby và cặp video.
- * Chỉ cần nhìn thấy kênh / playlist / feedback là có thật. Cắt lấy phần đầu
- * (object-top): follower, playlist, bình luận đều nằm ở đó; giữ nguyên tấm
- * dọc thì dải này cao hơn cả video và tranh mất chỗ. Link TikTok đứng dưới
- * ảnh, sau khi khách đã thấy bằng chứng.
+ * Ảnh TikTok + link kênh — nằm giữa dải Bubby và cặp video.
+ * Cắt lấy phần đầu (object-top) để khách thấy ngay follower và tên kênh;
+ * giữ nguyên tấm dọc thì dải này cao hơn cả video và tranh mất chỗ. Link
+ * TikTok đứng dưới ảnh, sau khi khách đã thấy bằng chứng.
  *
  * Không đóng khung từng tấm nữa: trên mặt kính, một cái thẻ viền trong một
  * cái thẻ viền đọc ra là thẻ lồng thẻ. Để trần + bóng đổ + nghiêng nhẹ thì
@@ -187,18 +171,18 @@ function TikTokProof() {
       aria-label="Ảnh chụp kênh TikTok của Bubby"
       className="mx-auto mt-6 flex w-full max-w-2xl flex-col items-center sm:mt-7"
     >
-      <ul className="grid w-full grid-cols-3 gap-3 sm:gap-4">
-        {BANG_CHUNG_TIKTOK.map((anh, i) => (
+      <ul className="flex w-full justify-center">
+        {BANG_CHUNG_TIKTOK.map((anh) => (
           <li
             key={anh.src}
-            className={`relative aspect-3/4 overflow-hidden rounded-xl shadow-[0_10px_28px_-16px_rgba(22,35,63,0.55)] ${NGHIENG[i % NGHIENG.length]}`}
+            className="relative aspect-3/4 w-full max-w-[15rem] -rotate-[1.6deg] overflow-hidden rounded-xl shadow-[0_10px_28px_-16px_rgba(22,35,63,0.55)] sm:max-w-[17rem]"
           >
             <div className="relative h-full w-full">
               <Image
                 src={anh.src}
                 alt={anh.alt}
                 fill
-                sizes="(max-width: 639px) 30vw, 220px"
+                sizes="(max-width: 639px) 15rem, 17rem"
                 className="object-cover object-top"
               />
             </div>
@@ -326,7 +310,7 @@ function BuocXem({ so, children }: { so: number; children: ReactNode }) {
           {so}
         </span>
         {/* leading ≥ 1.25: cụm này hay có dấu chồng hai tầng (hiệu quả). */}
-        <span className="font-subtitle text-[1.2rem] leading-[1.3] font-bold text-ink sm:text-[1.6rem] sm:leading-[1.25]">
+        <span className="title-band font-subtitle text-[1.2rem] leading-[1.3] font-bold sm:text-[1.6rem] sm:leading-[1.25]">
           {children}
         </span>
       </span>

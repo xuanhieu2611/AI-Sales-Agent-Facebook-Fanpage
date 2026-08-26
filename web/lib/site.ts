@@ -33,8 +33,8 @@ export const KENH_URL: string = "";
 
 // Zalo của bên mình. Đây là số để khách NHẮN cho mình qua Zalo, không phải
 // số thu thập từ khách. Nhập theo dạng 09xxxxxxxx hoặc +849xxxxxxxx.
-// TODO(chủ shop): điền số Zalo thật. Để trống thì nút Zalo tự ẩn.
-export const ZALO_SO_DIEN_THOAI: string = "0123123123";
+// Để trống thì nút Zalo tự ẩn.
+export const ZALO_SO_DIEN_THOAI: string = "0395021521";
 
 const ZALO_SO_MA_HOA = ZALO_SO_DIEN_THOAI.replace(/\D/g, "").replace(
   /^0/,
@@ -225,10 +225,9 @@ export const BUBBY = {
 };
 
 // ── BẰNG CHỨNG TIKTOK ──────────────────────────────────────────────
-// Ba ảnh nhỏ nằm giữa dải "Bubby là ai" và cặp video trên tấm giấy —
-// không tiêu đề, chỉ ảnh. Thứ tự: kênh thật → nội dung học thật → phản hồi thật.
-// Trên trang bị cắt lấy phần đầu (object-top) vì dải này phải nhỏ; `rong` /
-// `cao` vẫn ghi kích thước file gốc để Next biết tỉ lệ.
+// Ảnh nhỏ nằm giữa dải "Bubby là ai" và cặp video trên tấm giấy —
+// không tiêu đề, chỉ ảnh. Trên trang bị cắt lấy phần đầu (object-top);
+// `rong` / `cao` vẫn ghi kích thước file gốc để Next biết tỉ lệ.
 export type AnhTikTok = {
   nhan: string;
   tieuDe: string;
@@ -246,22 +245,6 @@ export const BANG_CHUNG_TIKTOK: AnhTikTok[] = [
     alt: "Trang TikTok Xây Gốc TA Cùng Bubby với hơn 70k người theo dõi",
     rong: 1170,
     cao: 2397,
-  },
-  {
-    nhan: "02 · Playlist học",
-    tieuDe: "Ngữ pháp? Dễ hoy",
-    src: "/img/kenh/tiktok-playlist.PNG",
-    alt: "Playlist TikTok Ngữ Pháp? Dễ hoy với 29 bài học",
-    rong: 1170,
-    cao: 2532,
-  },
-  {
-    nhan: "03 · Feedback trên TikTok",
-    tieuDe: "Người xem nói gì",
-    src: "/img/kenh/tiktok-feedback.jpeg",
-    alt: "Các bình luận TikTok khen video của Bubby dễ hiểu và thực tế",
-    rong: 1289,
-    cao: 1656,
   },
 ];
 

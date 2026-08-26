@@ -21,7 +21,7 @@ export function FinalCta() {
 
       <div className="shell relative flex flex-col items-center gap-10">
         <Reveal>
-          <SectionHead onBrand align="center" title="Thông tin liên lạc" />
+          <SectionHead onBrand align="center" title="Thông Tin Liên Hệ" />
         </Reveal>
 
         <Reveal className="reveal-d1">
