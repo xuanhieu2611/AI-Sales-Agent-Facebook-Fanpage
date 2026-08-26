@@ -16,7 +16,7 @@ export function Feedback() {
   const coFeedbackThat = FEEDBACK_VIDEO.length > 0 || anhThat.length > 0;
 
   return (
-    <section id="feedback" className="py-24 sm:py-32">
+    <section id="feedback" className="py-16 sm:py-24">
       <div className="shell">
         <Reveal>
           <SectionHead

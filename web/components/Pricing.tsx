@@ -11,7 +11,7 @@ import {
 
 export function Pricing() {
   return (
-    <section id="hoc-phi" className="py-24 sm:py-32">
+    <section id="hoc-phi" className="py-16 sm:py-24">
       <div className="shell">
         <Reveal>
           <SectionHead

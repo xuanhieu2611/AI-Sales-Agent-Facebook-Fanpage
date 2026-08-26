@@ -135,7 +135,7 @@ export function SectionHead({
           onBrand ? "text-white" : "text-ink"
         }`}
       >
-        {title}
+        {onBrand ? title : <span className="title-band">{title}</span>}
       </h2>
       {lead && (
         <p

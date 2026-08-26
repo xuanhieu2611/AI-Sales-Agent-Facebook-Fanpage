@@ -33,16 +33,16 @@ export function Hero() {
         {/* Mốc cho StickyCta: sau khi khách đã thấy lời hứa, thanh Messenger
             sẽ xuất hiện trên điện thoại trong lúc họ xem video. */}
         <div id="dau-trang" className="flex max-w-[76rem] flex-col items-center gap-6">
-          {/* Hai dòng là hai <span> khối, không phải <br>: cụm "mất gốc tiếng
-              Anh" phải đứng riêng một dòng để nét cọ vàng ôm trọn đúng cụm đó
-              (nét vẽ theo bề ngang của span — cụm bị ngắt đôi thì nét cũng gãy
-              làm đôi). `whitespace-nowrap` giữ nó không xuống dòng ở màn hẹp;
-              dòng trên thì cho tự xuống dòng, nhờ vậy cỡ chữ điện thoại mới
-              lên được 2.5rem thay vì bị 2.1rem trói. */}
+          {/* Hai dòng là hai <span> khối, không phải <br>: cụm "Mất Gốc Tiếng
+              Anh" phải đứng riêng một dòng để hai cụm sao ôm đúng hai đầu.
+              `whitespace-nowrap` giữ cụm từ không xuống dòng ở màn hẹp; dòng
+              trên vẫn được tự xuống dòng để cỡ chữ điện thoại không bị bóp. */}
           <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-brand-deep drop-shadow-[0_1px_1px_rgb(255_255_255_/_0.45)] sm:text-[4rem] lg:text-[4.75rem]">
-            <span className="block">Nơi dành riêng cho các bạn</span>
-            <span className="brush-underline whitespace-nowrap">
-              mất gốc tiếng Anh
+            <span className="block">Nơi Dành Riêng Cho Các Bạn</span>
+            <span className="relative inline-block whitespace-nowrap">
+              <CumSaoVang className="right-[calc(100%+0.04em)]" />
+              Mất Gốc Tiếng Anh
+              <CumSaoVang className="left-[calc(100%+0.04em)] -scale-x-100" />
             </span>
           </h1>
         </div>
@@ -69,6 +69,25 @@ export function Hero() {
         </Link>
       </div>
     </section>
+  );
+}
+
+/** Ba ngôi sao vàng nằm ngang. Cụm bên phải được lật ngang để hai phía
+ * hướng vào tiêu đề thay vì trông như hai bản sao dán lại. */
+function CumSaoVang({ className }: { className: string }) {
+  const ngoiSao =
+    "M0-10 2.35-3.24 9.51-3.09 3.8 1.24 5.88 8.09 0 4-5.88 8.09-3.8 1.24-9.51-3.09-2.35-3.24Z";
+
+  return (
+    <svg
+      viewBox="0 0 59 28"
+      aria-hidden="true"
+      className={`pointer-events-none absolute top-1/2 h-[0.45em] w-[0.9em] -translate-y-1/2 overflow-visible text-mark drop-shadow-[0_1px_0_rgb(255_255_255_/_0.7)] ${className}`}
+    >
+      <path fill="currentColor" d={ngoiSao} transform="translate(9 14) scale(.65) rotate(-10)" />
+      <path fill="currentColor" d={ngoiSao} transform="translate(29 14) rotate(5)" />
+      <path fill="currentColor" d={ngoiSao} transform="translate(50 14) scale(.75) rotate(-7)" />
+    </svg>
   );
 }
 
