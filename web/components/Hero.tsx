@@ -37,7 +37,7 @@ export function Hero() {
               Anh" phải đứng riêng một dòng để hai cụm sao ôm đúng hai đầu.
               `whitespace-nowrap` giữ cụm từ không xuống dòng ở màn hẹp; dòng
               trên vẫn được tự xuống dòng để cỡ chữ điện thoại không bị bóp. */}
-          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-brand-deep drop-shadow-[0_1px_1px_rgb(255_255_255_/_0.45)] sm:text-[4rem] lg:text-[4.75rem]">
+          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-brand drop-shadow-[0_1px_1px_rgb(255_255_255_/_0.45)] sm:text-[4rem] lg:text-[4.75rem]">
             <span className="block">Nơi Dành Riêng Cho Các Bạn</span>
             <span className="relative inline-block whitespace-nowrap">
               <CumSaoVang className="right-[calc(100%+0.04em)]" />
