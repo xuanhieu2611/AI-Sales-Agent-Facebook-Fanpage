@@ -12,6 +12,8 @@ const LIEN_KET = [
   { nhan: "Fanpage English with Bubby", href: FANPAGE_URL },
   { nhan: "Kênh English with Bubby", href: KENH_URL },
   { nhan: ZALO_URL ? `Zalo: ${ZALO_SO_DIEN_THOAI}` : "Zalo", href: ZALO_URL },
+  // Meta duyệt quảng cáo có tìm link này trên trang đích. Đừng bỏ.
+  { nhan: "Chính sách bảo mật", href: "/chinh-sach" },
 ].filter((l) => l.href);
 
 export function Footer() {
@@ -28,8 +30,10 @@ export function Footer() {
               <Link
                 key={l.nhan}
                 href={l.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                /* Link nội bộ mở tab mới đọc như trang bị lỗi. */
+                {...(l.href.startsWith("/")
+                  ? {}
+                  : { target: "_blank", rel: "noopener noreferrer" })}
                 className="text-sm font-semibold text-white underline-offset-4 hover:underline"
               >
                 {l.nhan}

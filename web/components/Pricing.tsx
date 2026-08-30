@@ -4,10 +4,10 @@ import { Button, MessengerIcon, SectionHead } from "./ui";
 import {
   BAI_HOC_QUA_TANG,
   KHOA_HOC,
-  MESSENGER_URL,
   UU_DAI,
-  messengerVoiTinNhan,
+  messengerCta,
 } from "@/lib/site";
+import { VI_TRI } from "@/lib/tracking";
 
 export function Pricing() {
   return (
@@ -165,8 +165,9 @@ export function Pricing() {
                 </ul>
 
                 <Button
-                  href={MESSENGER_URL}
+                  href={messengerCta(VI_TRI.theGia)}
                   external
+                  cta={VI_TRI.theGia}
                   variant={k.noiBat ? "onBrand" : "outline"}
                   className="w-full"
                 >
@@ -204,7 +205,8 @@ export function Pricing() {
                 return (
                   <li key={baiHoc}>
                     <a
-                      href={messengerVoiTinNhan(tinNhan)}
+                      href={messengerCta(VI_TRI.baiHocThu, tinNhan)}
+                      data-cta={VI_TRI.baiHocThu}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="group flex items-start gap-3.5 rounded-2xl border border-line bg-surface px-4 py-4 transition-[border-color,background-color,transform] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.99] [@media(hover:hover)_and_(pointer:fine)]:hover:border-brand/45 [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-soft/55"

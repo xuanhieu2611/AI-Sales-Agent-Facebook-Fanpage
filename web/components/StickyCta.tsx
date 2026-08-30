@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MESSENGER_URL } from "@/lib/site";
+import { messengerCta } from "@/lib/site";
+import { VI_TRI } from "@/lib/tracking";
 import { CTA, MessengerIcon } from "./ui";
 
 /**
@@ -51,7 +52,8 @@ export function StickyCta() {
       }`}
     >
       <a
-        href={MESSENGER_URL}
+        href={messengerCta(VI_TRI.thanhDinhDay)}
+        data-cta={VI_TRI.thanhDinhDay}
         target="_blank"
         rel="noopener noreferrer"
         className="flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 py-3.5 text-sm font-semibold whitespace-nowrap text-white transition-[transform,background-color] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.97] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-deep"

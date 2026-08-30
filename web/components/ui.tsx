@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import type { ViTri } from "@/lib/tracking";
 
 /* ── Messenger glyph ───────────────────────────────────────────────
    Đây là logo thương hiệu của Messenger, không phải icon giao diện,
@@ -41,6 +42,9 @@ type ButtonProps = {
   variant?: "primary" | "outline" | "onBrand" | "outlineOnBrand";
   className?: string;
   external?: boolean;
+  /** Tên vị trí của nút, dùng cho đo lường quảng cáo. MỌI nút dẫn sang
+   *  Messenger hoặc Zalo đều phải có. Xem `VI_TRI` trong lib/tracking.ts. */
+  cta?: ViTri;
 };
 
 const VARIANTS = {
@@ -60,6 +64,7 @@ export function Button({
   variant = "primary",
   className = "",
   external,
+  cta,
 }: ButtonProps) {
   const base =
     "inline-flex items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-[0.95rem] font-semibold whitespace-nowrap transition-[transform,background-color,border-color,color] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.97]";
@@ -68,7 +73,12 @@ export function Button({
     : {};
 
   return (
-    <Link href={href} className={`${base} ${VARIANTS[variant]} ${className}`} {...props}>
+    <Link
+      href={href}
+      data-cta={cta}
+      className={`${base} ${VARIANTS[variant]} ${className}`}
+      {...props}
+    >
       {children}
     </Link>
   );

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 import { FeedbackGallery } from "./FeedbackGallery";
 import { CTA, MessengerIcon } from "./ui";
-import { MESSENGER_URL } from "@/lib/site";
+import { messengerCta } from "@/lib/site";
+import { VI_TRI } from "@/lib/tracking";
 import type { AnhFeedback } from "@/lib/site";
 
 /**
@@ -32,7 +33,8 @@ export function FeedbackWall({ anh }: { anh: AnhFeedback[] }) {
 function TheChot() {
   return (
     <Link
-      href={MESSENGER_URL}
+      href={messengerCta(VI_TRI.duoiFeedback)}
+      data-cta={VI_TRI.duoiFeedback}
       target="_blank"
       rel="noopener noreferrer"
       className="group flex flex-col gap-6 rounded-2xl bg-brand p-7 text-white shadow-[0_22px_54px_-34px_rgba(42,95,217,0.95)] transition-[background-color,transform] duration-[160ms] ease-[var(--ease-out)] active:scale-[0.99] [@media(hover:hover)_and_(pointer:fine)]:hover:bg-brand-deep sm:flex-row sm:items-center sm:justify-between sm:gap-10 sm:p-9"

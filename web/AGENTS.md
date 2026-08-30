@@ -22,6 +22,7 @@ Customer-facing copy is Vietnamese. Keep it that way unless asked otherwise.
 
 - Copy, prices, FAQ, links, promo labels → `lib/site.ts`
 - Hero "dịch thử" examples → `lib/translations.ts`
+- Ad tracking (Pixel events, CTA positions, m.me `ref` handoff) → `lib/tracking.ts`
 - Components read from those — don't hardcode business facts in JSX
 
 ## Gotchas
@@ -32,6 +33,12 @@ Customer-facing copy is Vietnamese. Keep it that way unless asked otherwise.
 - Prefer CSS scroll-driven reveal (`components/Reveal.tsx`) over JS hide-then-show
   — ad traffic on 4G; blank-until-JS hurts bounce.
 - `YouTubeLite` loads thumbnails only; don't swap for eager YouTube iframes.
+- **Every Messenger/Zalo CTA needs two things**: `href={messengerCta(VI_TRI.x)}`
+  and `data-cta={VI_TRI.x}` on the `<a>` itself. Conversions happen off-site in
+  Messenger, so the `ref` param is the only thread back to the paid ad. A raw
+  `MESSENGER_URL` in an `href` is a bug - see `README.md` → Đo lường quảng cáo.
+- Never build the `ref` param with `URLSearchParams`; it encodes `:` as `%3A`
+  and Meta's allowed character set for `ref` is narrow.
 
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know

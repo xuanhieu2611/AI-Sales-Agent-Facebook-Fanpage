@@ -7,15 +7,38 @@
  * ╚══════════════════════════════════════════════════════════════════╝
  */
 
+import { refCoBan, type ViTri } from "./tracking";
+
 // ── LIÊN HỆ ──────────────────────────────────────────────────────────
-// TODO(chủ shop): thay bằng username thật của Page.
-// Vào Trang Facebook → Giới thiệu → tên người dùng (vd. facebook.com/englishwithbubby)
-// rồi ghép thành https://m.me/englishwithbubby
+// Đã kiểm: link này về đúng Page thật (ID 100581372820445). Đổi username
+// của Page trên Facebook là phải sửa lại đây.
+//
+// ĐỪNG gắn thẳng hằng số này vào `href` của nút — dùng `messengerCta()`
+// ngay bên dưới, để mỗi nút mang theo dấu vết của quảng cáo.
 export const MESSENGER_URL = "https://m.me/englishwithbubby";
 
-/** Mở Messenger với sẵn một câu — dùng khi khách chọn bài học thử. */
-export function messengerVoiTinNhan(tinNhan: string) {
-  return `${MESSENGER_URL}?text=${encodeURIComponent(tinNhan)}`;
+/**
+ * Link Messenger cho MỘT nút cụ thể trên trang.
+ *
+ * Luôn dùng hàm này thay vì gắn thẳng `MESSENGER_URL` vào `href`. Hai lý do:
+ *
+ *   - `ref` cho biết khách bấm từ chỗ nào trên trang, và là đường duy nhất
+ *     để nối cuộc trò chuyện trong Messenger ngược về quảng cáo đã trả tiền.
+ *     Xem `lib/tracking.ts`.
+ *   - `data-cta` (đặt trên chính thẻ `<a>`, không phải ở đây) là thứ khối
+ *     đo lường bám vào để bắn sự kiện `Contact`.
+ *
+ * `text` điền sẵn ô soạn tin. Chỉ dùng cho mục học thử — ở các nút khác,
+ * câu điền sẵn làm khách tưởng mình vừa gửi tin rồi nên bỏ đi luôn.
+ */
+export function messengerCta(viTri: ViTri, tinNhan?: string) {
+  // Ghép chuỗi truy vấn bằng tay chứ KHÔNG dùng URLSearchParams. Nó mã hoá
+  // dấu hai chấm thành `%3A`, mà Meta chỉ nhận một tập ký tự hẹp cho `ref`
+  // — gửi bản đã mã hoá là đánh cược vào việc m.me chịu giải mã lại. Dấu
+  // hai chấm để nguyên trong query là hợp lệ theo RFC 3986.
+  const phan = [`ref=${refCoBan(viTri)}`];
+  if (tinNhan) phan.push(`text=${encodeURIComponent(tinNhan)}`);
+  return `${MESSENGER_URL}?${phan.join("&")}`;
 }
 
 // Link Fanpage. Khách nào chưa sẵn sàng nhắn tin thì qua đây xem thêm bài
@@ -24,12 +47,15 @@ export const FANPAGE_URL = "https://facebook.com/englishwithbubby";
 
 // Kênh video (nơi có sẵn 150+ nội dung miễn phí). Đây là bằng chứng khách
 // tự đi kiểm chứng được, mạnh hơn mọi lời quảng cáo trên trang này.
-// TODO(chủ shop): dán link kênh thật vào. Để trống thì trang vẫn chạy,
-// chỉ là mấy chỗ nhắc tới kênh sẽ không bấm được.
-// `: string` là cố ý — không có nó thì TypeScript suy ra kiểu là hằng chuỗi
-// rỗng, và mọi chỗ kiểm tra `KENH_URL && ...` bị coi là luôn sai ngay lúc
-// biên dịch. Điền link thật vào là hết, nhưng cứ để đó cho chắc.
-export const KENH_URL: string = "";
+//
+// ĐÂY LÀ NƠI DUY NHẤT GIỮ LINK KÊNH. `BUBBY.tiktokUrl` trỏ về hằng số này
+// chứ không chép lại - hai bản sao của cùng một link thì sớm muộn cũng lệch
+// nhau, và lúc đó chân trang với dải TikTok sẽ dẫn đi hai nơi khác nhau.
+//
+// `: string` là cố ý - không có nó thì TypeScript suy ra kiểu là hằng chuỗi
+// cụ thể, và mọi chỗ kiểm tra `KENH_URL && ...` bị coi là luôn đúng/sai ngay
+// lúc biên dịch. Để trống thì các chỗ nhắc tới kênh tự ẩn, trang không lỗi.
+export const KENH_URL: string = "https://www.tiktok.com/@englishwithbubby";
 
 // Zalo của bên mình. Đây là số để khách NHẮN cho mình qua Zalo, không phải
 // số thu thập từ khách. Nhập theo dạng 09xxxxxxxx hoặc +849xxxxxxxx.
@@ -221,7 +247,7 @@ export const BUBBY = {
   chungChi: "C1 VSTEP",
   nhanChungChi: "TB 8.5 cả 4 kỹ năng",
   taiKhoan: "@englishwithbubby",
-  tiktokUrl: "https://www.tiktok.com/@englishwithbubby",
+  tiktokUrl: KENH_URL,
 };
 
 // ── BẰNG CHỨNG TIKTOK ──────────────────────────────────────────────

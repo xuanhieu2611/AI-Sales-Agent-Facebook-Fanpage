@@ -1,7 +1,8 @@
 import { ChatCircleDots } from "@phosphor-icons/react/dist/ssr";
 import { Button, MessengerIcon, SectionHead } from "./ui";
 import { Reveal } from "./Reveal";
-import { MESSENGER_URL, ZALO_SO_DIEN_THOAI, ZALO_URL } from "@/lib/site";
+import { messengerCta, ZALO_SO_DIEN_THOAI, ZALO_URL } from "@/lib/site";
+import { VI_TRI } from "@/lib/tracking";
 
 /**
  * Khối chốt. Đây là chỗ DUY NHẤT trên trang đảo sang nền màu đậm — cả
@@ -26,13 +27,23 @@ export function FinalCta() {
 
         <Reveal className="reveal-d1">
           <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
-            <Button href={MESSENGER_URL} external variant="onBrand">
+            <Button
+              href={messengerCta(VI_TRI.chotCuoiTrang)}
+              external
+              cta={VI_TRI.chotCuoiTrang}
+              variant="onBrand"
+            >
               <MessengerIcon className="h-4 w-4" />
               Messenger
             </Button>
 
             {ZALO_URL && (
-              <Button href={ZALO_URL} external variant="outlineOnBrand">
+              <Button
+                href={ZALO_URL}
+                external
+                cta={VI_TRI.chotCuoiTrang}
+                variant="outlineOnBrand"
+              >
                 <ChatCircleDots weight="fill" aria-hidden className="h-4 w-4" />
                 Zalo · {ZALO_SO_DIEN_THOAI}
               </Button>

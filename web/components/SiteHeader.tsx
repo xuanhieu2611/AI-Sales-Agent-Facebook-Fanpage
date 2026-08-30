@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button, CTA, MessengerIcon } from "./ui";
-import { CONTACT, MESSENGER_URL } from "@/lib/site";
+import { CONTACT, messengerCta } from "@/lib/site";
+import { VI_TRI } from "@/lib/tracking";
 
 /**
  * Hai mục thôi. Trang này là một mạch đọc từ trên xuống, thanh điều hướng
@@ -73,8 +74,9 @@ export function SiteHeader() {
             </nav>
 
             <Button
-              href={MESSENGER_URL}
+              href={messengerCta(VI_TRI.thanhDauTrang)}
               external
+              cta={VI_TRI.thanhDauTrang}
               className="h-11 px-4 py-2.5 text-sm sm:px-5"
             >
               <MessengerIcon className="h-4 w-4" />

@@ -5,6 +5,7 @@ import {
   Be_Vietnam_Pro,
 } from "next/font/google";
 import "./globals.css";
+import { MetaPixel } from "@/components/MetaPixel";
 
 // Display — Genos on headings. Has Vietnamese (dấu ế ỗ ữ).
 const genos = Genos({
@@ -32,7 +33,25 @@ const beVietnam = Be_Vietnam_Pro({
   display: "swap",
 });
 
+/** Domain của trang, dùng để dựng URL tuyệt đối cho thẻ Open Graph.
+ *  Facebook và Zalo đòi URL tuyệt đối — đường dẫn tương đối thì ảnh
+ *  xem trước không hiện. */
+const DOMAIN = "https://englishwithbubby.com";
+
+/** Mã xác minh domain của Meta Business Manager. Lấy ở: Business Settings
+ *  → Brand safety → Domains → thêm englishwithbubby.com → chọn cách
+ *  "Meta-tag verification", copy phần `content`.
+ *
+ *  KHÔNG XÁC MINH THÌ KHÔNG CẤU HÌNH ĐƯỢC sự kiện chuyển đổi cho khách
+ *  dùng iPhone, và phần lớn traffic quảng cáo ở Việt Nam là điện thoại.
+ *  Đặt biến `META_DOMAIN_VERIFICATION` trên Vercel rồi deploy lại. */
+const MA_XAC_MINH = process.env.META_DOMAIN_VERIFICATION ?? "";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(DOMAIN),
+  ...(MA_XAC_MINH
+    ? { other: { "facebook-domain-verification": MA_XAC_MINH } }
+    : {}),
   title: "English with Bubby: Xây gốc tiếng Anh, coaching 1-1",
   description:
     "Người Việt nói tiếng Anh bị khựng vì dịch từng chữ một. Lộ trình 32 buổi coaching 1-1 của Bubby xử lý đúng ba chỗ tiếng Việt và tiếng Anh lệch nhau: Từ, Câu, Thì.",
@@ -42,6 +61,8 @@ export const metadata: Metadata = {
       "Bạn không dở tiếng Anh. Bạn đang dịch từng chữ một. Lộ trình 32 buổi coaching 1-1 với Bubby.",
     type: "website",
     locale: "vi_VN",
+    url: DOMAIN,
+    siteName: "English with Bubby",
   },
 };
 
@@ -60,7 +81,10 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${genos.variable} ${oswald.variable} ${beVietnam.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <MetaPixel />
+      </body>
     </html>
   );
 }
