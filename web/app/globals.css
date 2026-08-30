@@ -314,32 +314,26 @@
 }
 
 /* ── Feedback flood — một hàng điện thoại trôi trên trời ──
-   Track chứa 2 set giống hệt; translateX(-50%) = đúng một set.
-   Linear vì đây là chuyển động liên tục (marquee). Pause khi hover.
-   Chỉ chạy khi `.is-in-view`. Reduced-motion: ẩn, hiện dải tĩnh vuốt ngang.
+   Track chứa 2 set giống hệt để JS cuộn scrollLeft thành vòng lặp liền mạch.
+   Dùng scroll thật thay vì transform để touch có thể vuốt và chuột có thể kéo.
+   Reduced-motion: ẩn, hiện dải tĩnh vuốt ngang.
 
    Mỗi tấm bị cắt thành cùng một khung màn hình (object-position: top)
    rồi bọc viền máy - screenshot gốc dài ngắn khác nhau, để nguyên tấm
    thì hàng nhìn như đổ file. */
-@keyframes feedback-marquee-x {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
 
 .feedback-flood {
   --fb-card: 13.25rem;
   --fb-gap: 1.35rem;
   --fb-overlap: 1.7rem;
-  display: flex;
+  display: block;
   width: 100%;
-  /* Keep the viewport fixed while the duplicated track moves beneath it.
-     A scrollable viewport and a translated track can combine their offsets,
-     pushing both copies outside the visible area and leaving a blank gap. */
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
   /* Chừa chỗ cho máy nghiêng, bóng đổ (~36px), tấm dịch xuống, hover nhô lên. */
   padding-block: 4rem;
   -webkit-mask-image: linear-gradient(
@@ -371,30 +365,22 @@
   }
 }
 
+.feedback-flood::-webkit-scrollbar {
+  display: none;
+}
+
+.feedback-flood.is-interacting {
+  cursor: grabbing;
+}
+
 .feedback-flood-lane {
+  width: max-content;
   overflow: visible;
 }
 
 .feedback-marquee-track {
   display: flex;
   width: max-content;
-  animation: feedback-marquee-x linear infinite;
-  animation-play-state: paused;
-}
-
-.feedback-flood.is-in-view .feedback-marquee-track {
-  animation-play-state: running;
-  will-change: transform;
-}
-
-.feedback-flood.is-interacting .feedback-marquee-track {
-  animation-play-state: paused;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .feedback-flood.is-in-view:hover .feedback-marquee-track {
-    animation-play-state: paused;
-  }
 }
 
 .feedback-marquee-set {
@@ -427,10 +413,6 @@
   outline: 3px solid var(--color-brand);
   outline-offset: 5px;
   border-radius: 1.25rem;
-}
-
-.feedback-gallery[data-open="true"] .feedback-marquee-track {
-  animation-play-state: paused;
 }
 
 /* Xếp chồng: mỗi tấm đè lên tấm bên trái một chút. Âm margin (gap không
@@ -845,7 +827,7 @@
    the full heading width. */
 @utility title-band {
   color: white;
-  background-color: var(--color-brand);
+  background-color: #5a87e3;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding-inline: 0.16em;

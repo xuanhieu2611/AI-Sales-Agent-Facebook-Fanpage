@@ -225,9 +225,8 @@ export const BUBBY = {
 };
 
 // ── BẰNG CHỨNG TIKTOK ──────────────────────────────────────────────
-// Ảnh nhỏ nằm giữa dải "Bubby là ai" và cặp video trên tấm giấy —
-// không tiêu đề, chỉ ảnh. Trên trang bị cắt lấy phần đầu (object-top);
-// `rong` / `cao` vẫn ghi kích thước file gốc để Next biết tỉ lệ.
+// Ảnh kênh phải đứng đầu. Các ảnh sau là bình luận thật, hiện trong dải
+// chọn bên phải để khách có thể bấm xem từng ảnh mà không kéo dài trang.
 export type AnhTikTok = {
   nhan: string;
   tieuDe: string;
@@ -239,13 +238,21 @@ export type AnhTikTok = {
 
 export const BANG_CHUNG_TIKTOK: AnhTikTok[] = [
   {
-    nhan: "01 · Kênh TikTok",
+    nhan: "Kênh TikTok",
     tieuDe: "@englishwithbubby",
     src: "/img/kenh/tiktok.jpg",
     alt: "Trang TikTok Xây Gốc TA Cùng Bubby với hơn 70k người theo dõi",
     rong: 1170,
     cao: 2397,
   },
+  ...Array.from({ length: 9 }, (_, index) => ({
+    nhan: `Bình luận TikTok ${index + 1}`,
+    tieuDe: `Bình luận TikTok ${index + 1}/9`,
+    src: `/img/kenh/tiktok-cmt/tiktok_cmt_${index + 1}.jpeg`,
+    alt: `Ảnh chụp bình luận của người xem trên TikTok English with Bubby, ảnh ${index + 1} trên 9`,
+    rong: 944,
+    cao: 2046,
+  })),
 ];
 
 // ── ẢNH ─────────────────────────────────────────────────────────────

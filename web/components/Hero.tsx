@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { YouTubeLite } from "./YouTubeLite";
 import { AssetPlaceholder } from "./AssetPlaceholder";
+import { TikTokGallery } from "./TikTokGallery";
 import {
   ANH,
   BANG_CHUNG_TIKTOK,
@@ -172,49 +173,24 @@ function VideoCot({
   );
 }
 
-/** Góc nghiêng rất nhỏ — đủ để đọc ra "ảnh chụp màn hình dán lên",
- * chưa tới mức thành hiệu ứng. Quá 2.5° là bắt đầu điệu. */
 /**
- * Ảnh TikTok + link kênh — nằm giữa dải Bubby và cặp video.
- * Cắt lấy phần đầu (object-top) để khách thấy ngay follower và tên kênh;
- * giữ nguyên tấm dọc thì dải này cao hơn cả video và tranh mất chỗ. Link
- * TikTok đứng dưới ảnh, sau khi khách đã thấy bằng chứng.
- *
- * Không đóng khung từng tấm nữa: trên mặt kính, một cái thẻ viền trong một
- * cái thẻ viền đọc ra là thẻ lồng thẻ. Để trần + bóng đổ + nghiêng nhẹ thì
- * nó đọc ra đúng thứ nó là: ảnh chụp màn hình.
+ * Ảnh kênh TikTok luôn mở đầu. Các ảnh bình luận nằm thành dải chọn bên
+ * phải để khách tò mò có thể xem thêm mà không kéo dài luồng chính.
  */
 function TikTokProof() {
   return (
     <div
-      aria-label="Ảnh chụp kênh TikTok của Bubby"
+      aria-label="Ảnh chụp kênh và bình luận TikTok của Bubby"
       className="mx-auto mt-6 flex w-full max-w-2xl flex-col items-center sm:mt-7"
     >
-      <ul className="flex w-full justify-center">
-        {BANG_CHUNG_TIKTOK.map((anh) => (
-          <li
-            key={anh.src}
-            className="relative aspect-3/4 w-full max-w-[15rem] -rotate-[1.6deg] overflow-hidden rounded-xl shadow-[0_10px_28px_-16px_rgba(22,35,63,0.55)] sm:max-w-[17rem]"
-          >
-            <div className="relative h-full w-full">
-              <Image
-                src={anh.src}
-                alt={anh.alt}
-                fill
-                sizes="(max-width: 639px) 15rem, 17rem"
-                className="object-cover object-top"
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
+      <TikTokGallery images={BANG_CHUNG_TIKTOK} />
       <Link
         href={BUBBY.tiktokUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="mt-4 text-sm font-semibold text-brand underline underline-offset-4 decoration-brand/35 transition-colors duration-[160ms] ease [@media(hover:hover)_and_(pointer:fine)]:hover:decoration-brand"
       >
-        Xem TikTok {BUBBY.taiKhoan}
+        Mở kênh TikTok
       </Link>
     </div>
   );
