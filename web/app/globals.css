@@ -822,12 +822,13 @@
   }
 }
 
-/* Nền xanh đậm ôm sát chữ tiêu đề. `box-decoration-break: clone` keeps
-   the background behind every wrapped line instead of stretching it across
-   the full heading width. */
+/* Nền xanh thương hiệu ôm sát chữ tiêu đề. Dùng cùng token với nền khối
+   "Thông Tin Liên Hệ" để mọi dải chữ và chấm số có đúng một màu xanh.
+   `box-decoration-break: clone` giữ nền phía sau từng dòng khi chữ xuống
+   hàng, thay vì kéo thành một khối rộng bằng toàn bộ tiêu đề. */
 @utility title-band {
   color: white;
-  background-color: #5a87e3;
+  background-color: var(--color-brand);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   padding-inline: 0.16em;

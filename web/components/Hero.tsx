@@ -38,7 +38,7 @@ export function Hero() {
               Anh" phải đứng riêng một dòng để hai cụm sao ôm đúng hai đầu.
               `whitespace-nowrap` giữ cụm từ không xuống dòng ở màn hẹp; dòng
               trên vẫn được tự xuống dòng để cỡ chữ điện thoại không bị bóp. */}
-          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-brand drop-shadow-[0_1px_1px_rgb(255_255_255_/_0.45)] sm:text-[4rem] lg:text-[4.75rem]">
+          <h1 className="max-w-[24ch] text-[2.5rem] leading-[1.22] text-brand [-webkit-text-stroke:6px_white] [paint-order:stroke_fill] drop-shadow-[0_3px_2px_rgb(30_64_175_/_0.18)] sm:text-[4rem] sm:[-webkit-text-stroke:8px_white] lg:text-[4.75rem]">
             <span className="block">Nơi Dành Riêng Cho Các Bạn</span>
             <span className="relative inline-block whitespace-nowrap">
               <CumSaoVang className="right-[calc(100%+0.04em)]" />
@@ -289,18 +289,19 @@ function AiLaBubby() {
  */
 function BuocXem({ so, children }: { so: number; children: ReactNode }) {
   return (
-    <div className="mt-8 flex flex-col items-center sm:mt-10">
-      {/* Vạch dài, bắt đầu từ trong suốt: nó phải đọc ra "nối từ trên xuống",
-          không phải "một cái gạch nhỏ lửng lơ". Ngắn quá là thành gạch. */}
+    <div className="mt-4 flex flex-col items-center sm:mt-10">
+      {/* Trên điện thoại, giữ vạch đủ rõ nhưng ngắn hơn để bước 1 không bị
+          tách khỏi lời hứa chính bởi một khoảng trời quá lớn. Màn rộng vẫn
+          dùng vạch dài để nối hai khối trong bố cục thoáng hơn. */}
       <span
         aria-hidden
-        className="h-20 w-px bg-linear-to-b from-transparent to-brand/45 sm:h-24"
+        className="h-10 w-px bg-linear-to-b from-transparent to-brand/45 sm:h-24"
       />
       {/* Điện thoại xếp dọc, máy tính xếp ngang. Trên màn hẹp câu nhãn xuống
           hai dòng, mà xếp ngang thì cái chấm số bị canh vào giữa hai dòng đó,
           trôi lửng lơ không dính vào dòng nào. Xếp dọc là hết, và nó nối
           thẳng mạch với cái vạch dọc ngay bên trên. */}
-      <span className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:gap-3.5">
+      <span className="mt-3 flex flex-col items-center gap-3 sm:mt-4 sm:flex-row sm:gap-3.5">
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand font-subtitle text-[0.8rem] font-bold text-white">
           {so}
         </span>
