@@ -1,19 +1,24 @@
 import { AssetPlaceholder } from "./AssetPlaceholder";
-import { FeedbackWall } from "./FeedbackWall";
+import { FeedbackCta, FeedbackWall } from "./FeedbackWall";
+import { FeedbackVideoWall } from "./FeedbackVideoWall";
 import { Reveal } from "./Reveal";
 import { SectionHead } from "./ui";
-import { YouTubeLite } from "./YouTubeLite";
 import { FEEDBACK, FEEDBACK_VIDEO } from "@/lib/site";
 
 /**
- * Bằng chứng xã hội, đứng sau bảng giá. Ảnh là tin nhắn học viên thật
- * (Messenger / Zalo), các tấm đè lên nhau một chút rồi trôi chậm trên
- * nền trời. Video học viên (nếu có) đứng trước ảnh vì đó là
- * thứ khó dựng giả nhất.
+ * Bằng chứng xã hội, đứng sau bảng giá.
+ *
+ * Ảnh tin nhắn đi TRƯỚC video, dù video khó dựng giả hơn. Tường ảnh đọc được
+ * ngay lúc lướt, không phải bấm gì; sức thuyết phục của nó nằm ở chỗ NHIỀU.
+ * Hàng video thì phải bấm mới có nội dung, mà khách vào từ quảng cáo đa số
+ * đang dùng 4G. Đặt một hàng thumbnail chưa bấm lên đầu mục là đem chỗ đẹp
+ * nhất đổi lấy một khoảng khách lướt qua. Để tường ảnh kéo khách vào, rồi
+ * video làm lớp bằng chứng sâu hơn cho người đã chịu dừng lại.
  */
 export function Feedback() {
   const anhThat = FEEDBACK.filter((f) => !f.src.endsWith(".svg"));
-  const coFeedbackThat = FEEDBACK_VIDEO.length > 0 || anhThat.length > 0;
+  const coVideo = FEEDBACK_VIDEO.length > 0;
+  const coFeedbackThat = coVideo || anhThat.length > 0;
 
   return (
     <section id="feedback" className="py-16 sm:py-24">
@@ -21,37 +26,40 @@ export function Feedback() {
         <Reveal>
           <SectionHead
             title="Cảm Nhận Của Học Viên"
-            lead="Tin nhắn thật trên Messenger và Zalo, sau khi học xong."
+            lead={
+              coVideo
+                ? "Tin nhắn thật trên Messenger và Zalo, và học viên tự kể sau khi học xong."
+                : "Tin nhắn thật trên Messenger và Zalo, sau khi học xong."
+            }
           />
         </Reveal>
       </div>
 
       {coFeedbackThat ? (
         <>
-          {FEEDBACK_VIDEO.length > 0 && (
-            <div className="shell">
-              <div
-                className={`mt-14 grid gap-5 ${
-                  FEEDBACK_VIDEO.length === 1
-                    ? "max-w-3xl"
-                    : "sm:grid-cols-2 lg:grid-cols-3"
-                }`}
-              >
-                {FEEDBACK_VIDEO.map((v) => (
-                  <Reveal key={v.videoId} className="flex flex-col gap-3">
-                    <YouTubeLite id={v.videoId} title={v.ketQua} />
-                    <p className="text-sm leading-snug text-muted">{v.ketQua}</p>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          )}
-
           {anhThat.length > 0 && (
-            <div className={FEEDBACK_VIDEO.length > 0 ? "mt-12" : "mt-14 sm:mt-16"}>
+            <div className="mt-14 sm:mt-16">
               <FeedbackWall anh={anhThat} />
             </div>
           )}
+
+          {coVideo && (
+            // Hai dải dính liền nhau, không có tiêu đề phụ chen giữa: mỗi
+            // dải đã tự chừa 3-4rem trên dưới cho phần nghiêng và bóng đổ,
+            // cộng thêm khoảng cách nữa là hở ra một mảng trời trống giữa
+            // mục. Kéo lên một chút cho hai dải đọc như một khối.
+            <div
+              className={
+                anhThat.length > 0 ? "-mt-6 sm:-mt-8" : "mt-10 sm:mt-12"
+              }
+            >
+              <FeedbackVideoWall video={FEEDBACK_VIDEO} />
+            </div>
+          )}
+
+          <div className="shell mt-10 sm:mt-12">
+            <FeedbackCta />
+          </div>
         </>
       ) : (
         <div className="shell">

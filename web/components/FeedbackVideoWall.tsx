@@ -2,12 +2,26 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Play } from "@phosphor-icons/react/dist/ssr";
 import { FeedbackFlood } from "./FeedbackFlood";
-import type { AnhFeedback } from "@/lib/site";
+import type { FeedbackVideo } from "@/lib/site";
 
 const CLOSE_DURATION_MS = 200;
+/** Thẻ video rộng gần gấp đôi thẻ điện thoại, cho vòng chạy dài hơn để tốc độ trôi ngang bằng nhau. */
+const LOOP_MS = 128_000;
 
-export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
+/**
+ * Dải video học viên, trôi ngang y như dải ảnh tin nhắn.
+ *
+ * Bấm vào một thẻ thì mở hẳn ra xem trong lightbox chứ không phát ngay tại
+ * chỗ: thẻ đang trôi mà chạy video trong đó thì khách vừa đọc phụ đề vừa bị
+ * kéo đi. Mở lightbox cũng là thứ dừng dải trôi lại - `data-flood-open` báo
+ * cho `FeedbackFlood` ngưng cuộn, nên lúc xem thì cả khối đứng yên.
+ *
+ * Iframe chỉ tồn tại khi lightbox mở. Đóng lightbox là nó unmount, tiếng tắt
+ * theo - không cần gọi postMessage sang YouTube để dừng.
+ */
+export function FeedbackVideoWall({ video }: { video: FeedbackVideo[] }) {
   const [dangXem, setDangXem] = useState<number | null>(null);
   const [dangDong, setDangDong] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -31,10 +45,10 @@ export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
     (buoc: number) => {
       setDangXem((hienTai) => {
         if (hienTai === null) return null;
-        return (hienTai + buoc + anh.length) % anh.length;
+        return (hienTai + buoc + video.length) % video.length;
       });
     },
-    [anh.length],
+    [video.length],
   );
 
   const dangMo = dangXem !== null;
@@ -62,25 +76,31 @@ export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
     [],
   );
 
-  const viTriDangXem = dangXem ?? 0;
-  const feedbackDangXem = dangXem === null ? null : anh[viTriDangXem];
+  if (video.length === 0) return null;
+
+  const viTri = dangXem ?? 0;
+  const videoDangXem = dangXem === null ? null : video[viTri];
 
   return (
-    <div
-      className="feedback-gallery"
-      data-flood-open={dangXem !== null || undefined}
-    >
-      <FeedbackFlood nhan="Tin nhắn học viên. Vuốt hoặc kéo ngang để xem nhanh, chạm vào ảnh để xem đầy đủ">
-        <Lane anh={anh} onOpen={mo} />
+    <div className="feedback-clips" data-flood-open={dangMo || undefined}>
+      <FeedbackFlood
+        nhan="Video cảm nhận của học viên. Vuốt hoặc kéo ngang để xem nhanh, chạm vào một video để phát"
+        thoiLuongMs={LOOP_MS}
+      >
+        <div className="feedback-flood-lane">
+          <div className="feedback-marquee-track">
+            <LaneSet video={video} onOpen={mo} />
+            <LaneSet video={video} onOpen={mo} anDanh />
+          </div>
+        </div>
       </FeedbackFlood>
 
       <div className="shell hidden motion-reduce:block">
-        <div className="flex gap-5 overflow-x-auto px-1 py-6 sm:gap-6">
-          {anh.map((feedback, index) => (
-            <TheAnh
-              key={`tinh-${feedback.src}`}
-              anh={feedback}
-              sizes="256px"
+        <div className="grid gap-5 py-6 sm:grid-cols-2 lg:grid-cols-3">
+          {video.map((v, index) => (
+            <TheVideo
+              key={`tinh-${v.videoId}`}
+              video={v}
               onOpen={() => mo(index)}
             />
           ))}
@@ -91,7 +111,7 @@ export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
         ref={dialogRef}
         className="feedback-lightbox"
         data-closing={dangDong || undefined}
-        aria-label="Ảnh phản hồi đầy đủ của học viên"
+        aria-label="Video cảm nhận của học viên"
         onCancel={(event) => {
           event.preventDefault();
           dong();
@@ -111,38 +131,48 @@ export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
           if (event.key === "ArrowRight") chuyen(1);
         }}
       >
-        {feedbackDangXem ? (
+        {videoDangXem ? (
           <div className="feedback-lightbox-panel">
-            <Image
-              src={feedbackDangXem.src}
-              alt={feedbackDangXem.alt}
-              width={feedbackDangXem.rong}
-              height={feedbackDangXem.cao}
-              sizes="(max-width: 640px) 94vw, 720px"
-              className="feedback-lightbox-image"
-              priority
-            />
+            <div className="feedback-lightbox-video">
+              <iframe
+                // `key` ép React dựng iframe mới khi bấm mũi tên sang video
+                // khác. Chỉ đổi `src` thì trình duyệt ghi thêm một mục vào
+                // history, bấm Back mấy lần mới thoát được khỏi trang.
+                key={videoDangXem.videoId}
+                src={`https://www.youtube-nocookie.com/embed/${videoDangXem.videoId}?autoplay=1&rel=0`}
+                title={
+                  videoDangXem.ketQua ??
+                  "Cảm nhận của học viên English With Bubby"
+                }
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+
+            {videoDangXem.ketQua && (
+              <p className="feedback-lightbox-caption">{videoDangXem.ketQua}</p>
+            )}
 
             <div className="feedback-lightbox-count" aria-live="polite">
-              {viTriDangXem + 1} / {anh.length}
+              {viTri + 1} / {video.length}
             </div>
 
             <button
               type="button"
               className="feedback-lightbox-close"
               onClick={dong}
-              aria-label="Đóng ảnh"
+              aria-label="Đóng video"
             >
               <CloseIcon />
             </button>
 
-            {anh.length > 1 ? (
+            {video.length > 1 ? (
               <>
                 <button
                   type="button"
                   className="feedback-lightbox-nav feedback-lightbox-prev"
                   onClick={() => chuyen(-1)}
-                  aria-label="Xem phản hồi trước"
+                  aria-label="Xem video trước"
                 >
                   <ChevronIcon />
                 </button>
@@ -150,7 +180,7 @@ export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
                   type="button"
                   className="feedback-lightbox-nav feedback-lightbox-next"
                   onClick={() => chuyen(1)}
-                  aria-label="Xem phản hồi tiếp theo"
+                  aria-label="Xem video tiếp theo"
                 >
                   <ChevronIcon />
                 </button>
@@ -163,42 +193,21 @@ export function FeedbackGallery({ anh }: { anh: AnhFeedback[] }) {
   );
 }
 
-function Lane({
-  anh,
-  onOpen,
-}: {
-  anh: AnhFeedback[];
-  onOpen: (index: number) => void;
-}) {
-  return (
-    <div className="feedback-flood-lane">
-      <div
-        className="feedback-marquee-track"
-        style={{ animationDuration: "96s" }}
-      >
-        <LaneSet anh={anh} onOpen={onOpen} />
-        <LaneSet anh={anh} onOpen={onOpen} anDanh />
-      </div>
-    </div>
-  );
-}
-
 function LaneSet({
-  anh,
+  video,
   onOpen,
   anDanh = false,
 }: {
-  anh: AnhFeedback[];
+  video: FeedbackVideo[];
   onOpen: (index: number) => void;
   anDanh?: boolean;
 }) {
   return (
     <div className="feedback-marquee-set" aria-hidden={anDanh || undefined}>
-      {anh.map((feedback, index) => (
-        <TheAnh
-          key={`${anDanh ? "dup-" : ""}${feedback.src}-${index}`}
-          anh={feedback}
-          sizes="(max-width: 640px) 212px, (max-width: 1024px) 256px, 280px"
+      {video.map((v, index) => (
+        <TheVideo
+          key={`${anDanh ? "dup-" : ""}${v.videoId}`}
+          video={v}
           onOpen={() => onOpen(index)}
           anDanh={anDanh}
         />
@@ -207,36 +216,43 @@ function LaneSet({
   );
 }
 
-function TheAnh({
-  anh,
-  sizes,
+function TheVideo({
+  video,
   onOpen,
   anDanh = false,
 }: {
-  anh: AnhFeedback;
-  sizes: string;
+  video: FeedbackVideo;
   onOpen: () => void;
   anDanh?: boolean;
 }) {
+  const nhan = video.ketQua ?? "Cảm nhận của học viên English With Bubby";
+
   return (
     <button
       type="button"
-      className="feedback-phone"
+      className="feedback-phone feedback-clip"
       onClick={onOpen}
       tabIndex={anDanh ? -1 : undefined}
-      aria-label={`Xem đầy đủ: ${anh.alt}`}
+      aria-label={`Phát video: ${nhan}`}
     >
       <span className="feedback-phone-tilt">
         <span className="feedback-phone-screen">
           <Image
-            src={anh.src}
-            alt={anh.alt}
+            src={`https://i.ytimg.com/vi/${video.videoId}/sddefault.jpg`}
+            alt=""
             fill
-            sizes={sizes}
+            sizes="(max-width: 640px) 260px, (max-width: 1024px) 320px, 360px"
             loading="lazy"
             draggable={false}
-            className="object-cover object-top"
+            className="object-cover"
           />
+          <span className="feedback-clip-scrim" />
+          <span className="feedback-clip-play">
+            <Play weight="fill" aria-hidden />
+          </span>
+          {video.ketQua && (
+            <span className="feedback-clip-caption">{video.ketQua}</span>
+          )}
         </span>
       </span>
     </button>

@@ -19,18 +19,15 @@ import type { AnhFeedback } from "@/lib/site";
 export function FeedbackWall({ anh }: { anh: AnhFeedback[] }) {
   if (anh.length === 0) return null;
 
-  return (
-    <div className="flex flex-col gap-14 sm:gap-16">
-      <FeedbackGallery anh={anh} />
-
-      <div className="shell">
-        <TheChot />
-      </div>
-    </div>
-  );
+  return <FeedbackGallery anh={anh} />;
 }
 
-function TheChot() {
+/**
+ * Thẻ chốt, đứng cuối mục feedback - sau CẢ ảnh lẫn video. Tách rời khỏi
+ * `FeedbackWall` để hàng video chèn được vào giữa: một lời mời nhắn tin đặt
+ * ở giữa mục thì phần bằng chứng còn lại phía dưới coi như mất.
+ */
+export function FeedbackCta() {
   return (
     <Link
       href={messengerCta(VI_TRI.duoiFeedback)}

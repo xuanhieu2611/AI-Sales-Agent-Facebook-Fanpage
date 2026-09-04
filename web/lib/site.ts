@@ -166,10 +166,7 @@ export const KHOA_HOC: Khoa[] = [
     coaching: "9 tháng coaching 1-1",
     // Không lặp 12 mục của 2 khóa kia — khách đã thấy trên 2 thẻ bên cạnh.
     // Full = cả 2 khóa + phần thêm, chia 2 nhóm đúng như Bubby viết.
-    gomCo: [
-      "Cả khóa Phát Âm",
-      "Cả khóa Kĩ Năng Dịch + Xây Vốn Từ",
-    ],
+    gomCo: ["Cả khóa Phát Âm", "Cả khóa Kĩ Năng Dịch + Xây Vốn Từ"],
     gomCoDan: "và thêm:",
     gomCoNhom: [
       {
@@ -324,18 +321,45 @@ export type FeedbackNoiBat = {
 //     ten: "Ngọc Ánh", ketQua: "học xong khóa Full" },
 export const FEEDBACK_NOI_BAT: FeedbackNoiBat[] = [];
 
-/** Video học viên tự quay. 2 tới 3 cái là đủ, đừng nhiều hơn. */
+/** Video học viên tự quay, chạy thành một dải trôi ngang. */
 export type FeedbackVideo = {
   /** ID video YouTube (phần sau v= trong link). */
   videoId: string;
-  /** Một dòng nói kết quả, hiện dưới video. */
-  ketQua: string;
+  /**
+   * Một dòng nói kết quả, hiện dưới video - vd. "Minh Thư, đi phỏng vấn bằng
+   * tiếng Anh sau 5 tháng".
+   *
+   * Để trống được, nhưng đừng để trống: ảnh thumbnail chỉ cho khách thấy MỘT
+   * khuôn mặt, còn dòng này mới nói cho khách biết vì sao đáng bấm vào. Không
+   * có nó thì các thẻ video trông y hệt nhau.
+   */
+  ketQua?: string;
 };
 
-// TODO(chủ shop): up video feedback lên YouTube (để chế độ "không công khai"
-// cũng được, vẫn nhúng được), rồi dán ID vào đây. Mẫu:
-//   { videoId: "abc123xyz", ketQua: "Minh Thư, đi phỏng vấn bằng tiếng Anh sau 5 tháng" },
-export const FEEDBACK_VIDEO: FeedbackVideo[] = [];
+// Cả 8 video trong playlist, chạy thành một dải trôi ngang.
+//
+// TODO(chủ shop) - hai việc, việc thứ hai gấp hơn:
+//
+//  1. Điền `ketQua` cho từng video: tên học viên + kết quả cụ thể. Không có
+//     dòng này thì 8 thẻ chỉ là 8 tấm ảnh, khách không biết bấm cái nào.
+//
+//  2. Đặt ảnh bìa riêng trên YouTube cho 4 video CUỐI danh sách (Feedback
+//     6-9). Bốn cái đó quay màn hình buổi học: từ đầu tới cuối chỉ có tài
+//     liệu Word chia sẻ qua Zoom, không khung hình nào thấy mặt người. Để
+//     nguyên thì thẻ của chúng là một mảng chữ li ti nằm ngay cạnh bốn thẻ
+//     có mặt học viên - khách nhìn ra ngay cái nào đáng bấm. Kênh là của
+//     mình nên up ảnh bìa được: lấy một khung có mặt học viên, hoặc làm tấm
+//     bìa chữ to.
+export const FEEDBACK_VIDEO: FeedbackVideo[] = [
+  { videoId: "Wc4U-Q3avqo" }, // Feedback 1 - học viên nói trước camera
+  { videoId: "lxXeONB99Is" }, // Feedback 2 - học viên nói trước camera
+  { videoId: "1x0iDe5C8dw" }, // Feedback 3 - học viên nói trước camera
+  { videoId: "Q_ddEiVHmZk" }, // Feedback 4 - học viên nói trước camera
+  { videoId: "XoIbHAoUhN8" }, // Feedback 6 - quay màn hình, cần ảnh bìa
+  { videoId: "enZftxZEUIE" }, // Feedback 7 - quay màn hình, cần ảnh bìa
+  { videoId: "SIHsAJ-TFsk" }, // Feedback 8 - quay màn hình, cần ảnh bìa
+  { videoId: "8FZeHvX2a8M" }, // Feedback 9 - quay màn hình, cần ảnh bìa
+];
 
 /**
  * Ảnh chụp tin nhắn học viên (Messenger / Zalo). Đặt trong

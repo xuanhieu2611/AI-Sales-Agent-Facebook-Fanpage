@@ -307,8 +307,16 @@
    hoàn toàn — không phải là hiệu ứng giả ảnh dùng ở bản production. */
 .asset-placeholder-grid {
   background-image:
-    linear-gradient(to right, color-mix(in srgb, var(--color-brand) 12%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in srgb, var(--color-brand) 12%, transparent) 1px, transparent 1px);
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-brand) 12%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-brand) 12%, transparent) 1px,
+      transparent 1px
+    );
   background-size: 28px 28px;
   mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
@@ -488,6 +496,154 @@
       0 28px 48px -22px rgb(22 35 63 / 0.55),
       0 7px 16px -8px rgb(22 35 63 / 0.26);
   }
+}
+
+/* ── Dải video học viên ──────────────────────────────────────────────
+   Dùng chung khung với dải ảnh (`.feedback-phone*`), chỉ đổi khổ thẻ và
+   tỉ lệ khung hình. Thẻ 16:9 nằm ngang nên phải rộng hơn thẻ điện thoại
+   thì mặt người mới đủ to để nhận ra, và nghiêng ít lại - cùng một góc
+   nghiêng, tấm càng rộng thì hai mép trên dưới càng lệch nhau. */
+.feedback-clips .feedback-flood {
+  --fb-card: 16.5rem;
+  --fb-gap: 1.5rem;
+  /* Thẻ ngang không đè lên nhau: che mất mặt người ở mép trái tấm sau. */
+  --fb-overlap: 0rem;
+  padding-block: 3.25rem;
+
+  @media (width >= 640px) {
+    --fb-card: 20rem;
+    --fb-gap: 1.75rem;
+  }
+
+  @media (width >= 1024px) {
+    --fb-card: 22.5rem;
+    --fb-gap: 2rem;
+  }
+}
+
+.feedback-clip {
+  cursor: pointer;
+}
+
+.feedback-clip .feedback-phone-screen {
+  aspect-ratio: 16 / 9;
+}
+
+.feedback-clips
+  .feedback-marquee-set
+  > :nth-child(5n + 1)
+  .feedback-phone-tilt {
+  transform: rotate(-1.6deg) translateY(0.4rem);
+}
+.feedback-clips
+  .feedback-marquee-set
+  > :nth-child(5n + 2)
+  .feedback-phone-tilt {
+  transform: rotate(1.2deg) translateY(-0.6rem);
+}
+.feedback-clips
+  .feedback-marquee-set
+  > :nth-child(5n + 3)
+  .feedback-phone-tilt {
+  transform: rotate(-0.7deg) translateY(0.1rem);
+}
+.feedback-clips
+  .feedback-marquee-set
+  > :nth-child(5n + 4)
+  .feedback-phone-tilt {
+  transform: rotate(1.8deg) translateY(-0.25rem);
+}
+.feedback-clips
+  .feedback-marquee-set
+  > :nth-child(5n + 5)
+  .feedback-phone-tilt {
+  transform: rotate(-1.1deg) translateY(0.6rem);
+}
+
+/* Thumbnail YouTube sáng tối tuỳ video - nút phát trắng và dòng chữ dưới
+   chân chỉ đọc được khi có lớp tối này. */
+.feedback-clip-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgb(8 15 30 / 0.82) 0%,
+    rgb(8 15 30 / 0.28) 42%,
+    rgb(8 15 30 / 0.06) 100%
+  );
+}
+
+.feedback-clip-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.95);
+  box-shadow: 0 10px 26px -10px rgb(0 0 0 / 0.6);
+}
+
+.feedback-clip-play svg {
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-left: 0.12rem;
+  fill: var(--color-brand);
+}
+
+.feedback-clip-caption {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 0.9rem 1rem;
+  color: white;
+  font-size: 0.82rem;
+  /* Dấu tiếng Việt chồng lên nhau, line-height 1 là cụt đầu chữ. */
+  line-height: 1.3;
+  font-weight: 600;
+  text-align: left;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.5);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .feedback-clip-play {
+    transition: transform 220ms var(--ease-out);
+  }
+
+  .feedback-clip:hover .feedback-clip-play {
+    transform: translate(-50%, -50%) scale(1.09);
+  }
+}
+
+/* Khung video trong lightbox. */
+.feedback-lightbox-video {
+  width: min(58rem, calc(100vw - 1.5rem));
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: calc(100dvh - 9rem);
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: black;
+  box-shadow: 0 30px 80px -24px rgb(0 0 0 / 0.8);
+}
+
+.feedback-lightbox-video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.feedback-lightbox-caption {
+  max-width: min(58rem, calc(100vw - 1.5rem));
+  padding-top: 0.9rem;
+  color: rgb(255 255 255 / 0.92);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  text-align: center;
 }
 
 /* Ảnh feedback đầy đủ. Native dialog lo focus trap, Escape và top layer;
@@ -746,7 +902,9 @@
   }
 }
 
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
   .header-capsule[data-scrolled="true"] {
     background: rgb(255 255 255 / 0.92);
   }
@@ -783,8 +941,9 @@
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     /* Không animate transform/box-shadow — màu & opacity vẫn chuyển được. */
-    transition-property: color, background-color, border-color, opacity,
-      text-decoration-color, fill, stroke !important;
+    transition-property:
+      color, background-color, border-color, opacity, text-decoration-color,
+      fill, stroke !important;
   }
 }
 
@@ -816,7 +975,9 @@
   }
 }
 
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
   .glass-panel {
     background: rgb(255 255 255 / 0.95);
   }

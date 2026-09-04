@@ -34,6 +34,16 @@ export function YouTubeLite({
   sizes?: string;
 }) {
   const [choi, setChoi] = useState(false);
+  // ĐỪNG đổi sang `maxresdefault`. Nó nét hơn thật (1280x720, đúng khổ 16:9)
+  // nhưng YouTube chỉ sinh ra nếu bản gốc up lên đủ 720p — `9yM4oimQqcM` và
+  // `OGqAs5ifPFc` trong `VIDEO` không có, và YouTube trả 404. Với `priority`
+  // thì Next còn preload sẵn cái URL hỏng đó: khách 4G trả tiền cho một vòng
+  // request vứt đi rồi mới tải lại ảnh thật.
+  //
+  // `sddefault` có ở mọi video (đã dò cả 10 ID đang dùng). Ảnh 640x480 khổ
+  // 4:3 nên `object-cover` cắt hai vạch đen còn 640x360 — vẫn hơn `hqdefault`
+  // (480x360, cắt còn 480x270) mà không đánh cược gì.
+  const [duPhong, setDuPhong] = useState(false);
 
   return (
     <div
@@ -55,11 +65,12 @@ export function YouTubeLite({
           aria-label={`Phát video: ${title}`}
         >
           <Image
-            src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+            src={`https://i.ytimg.com/vi/${id}/${duPhong ? "hqdefault" : "sddefault"}.jpg`}
             alt=""
             fill
             priority={priority}
             sizes={sizes}
+            onError={() => setDuPhong(true)}
             className="object-cover"
           />
           {/* thumbnail có thể sáng màu (vd. ảnh chụp tài liệu) — cần lớp

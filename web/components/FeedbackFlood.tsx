@@ -18,7 +18,17 @@ const DRAG_THRESHOLD_PX = 5;
  * hoặc giữ chuột và kéo. Hai set ảnh giống nhau tạo thành một vòng lặp liền
  * mạch; autoplay chỉ chạy khi khối đang hiện và người dùng không tương tác.
  */
-export function FeedbackFlood({ children }: { children: ReactNode }) {
+export function FeedbackFlood({
+  children,
+  nhan,
+  thoiLuongMs = LOOP_DURATION_MS,
+}: {
+  children: ReactNode;
+  /** Nhãn cho trình đọc màn hình - dải ảnh và dải video nói khác nhau. */
+  nhan: string;
+  /** Thời gian chạy hết một vòng. Thẻ càng to thì cho càng lâu, không thì trôi nhanh như băng chuyền. */
+  thoiLuongMs?: number;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const intersectingRef = useRef(false);
   const inViewRef = useRef(false);
@@ -29,6 +39,8 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
   const dragStartXRef = useRef(0);
   const dragStartScrollRef = useRef(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Phần lẻ dưới 1px của bước trôi, cộng dồn qua các frame. Xem `tick`.
+  const leRef = useRef(0);
 
   const setInteracting = useCallback((interacting: boolean) => {
     interactingRef.current = interacting;
@@ -70,11 +82,28 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
 
       const track = el.querySelector<HTMLElement>(".feedback-marquee-track");
       const loopWidth = track ? track.scrollWidth / 2 : 0;
-      const galleryOpen = el.closest<HTMLElement>(".feedback-gallery")?.dataset.open === "true";
+      // Dừng hẳn khi khách đang mở một tấm/một video ra xem. Cờ nằm trên thẻ
+      // cha (`data-flood-open`) chứ không phải một class cụ thể, để dải ảnh và
+      // dải video dùng chung được cơ chế này.
+      const dangXem = el.closest<HTMLElement>("[data-flood-open]") !== null;
 
-      if (inViewRef.current && !interactingRef.current && !galleryOpen && loopWidth > 0) {
+      if (
+        inViewRef.current &&
+        !interactingRef.current &&
+        !dangXem &&
+        loopWidth > 0
+      ) {
         if (el.scrollLeft >= loopWidth) el.scrollLeft -= loopWidth;
-        el.scrollLeft += (elapsed * loopWidth) / LOOP_DURATION_MS;
+
+        // Chrome làm tròn `scrollLeft` về số nguyên khi đọc lại. Cộng thẳng
+        // một bước nhỏ hơn 1px thì frame sau đọc ra vẫn là con số cũ, cộng
+        // tiếp lại mất - dải đứng im hoàn toàn chứ không phải trôi chậm.
+        // Dải càng ngắn hoặc `thoiLuongMs` càng lớn thì bước càng nhỏ, nên
+        // phải giữ phần lẻ lại, đủ một pixel nguyên mới cuộn.
+        const buoc = (elapsed * loopWidth) / thoiLuongMs + leRef.current;
+        const nguyen = Math.floor(buoc);
+        leRef.current = buoc - nguyen;
+        if (nguyen > 0) el.scrollLeft += nguyen;
       }
 
       frame = requestAnimationFrame(tick);
@@ -87,38 +116,65 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
       cancelAnimationFrame(frame);
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     };
-  }, []);
+  }, [thoiLuongMs]);
+
+  // Kéo bằng chuột nghe theo `window`, KHÔNG dùng `setPointerCapture`.
+  //
+  // Bắt con trỏ thì mọi pointer event sau đó bị chuyển hướng về đúng phần tử
+  // đã bắt - và Chrome cũng bắn luôn `click` vào phần tử đó thay vì vào thẻ
+  // nằm dưới chuột. Hệ quả: `onClick` trên từng tấm KHÔNG BAO GIỜ chạy, bấm
+  // vào ảnh trên desktop không mở được lightbox (trên điện thoại vẫn mở, vì
+  // nhánh touch không bắt con trỏ - nên lỗi này rất dễ lọt).
+  //
+  // Nghe trên `window` giữ được phần hay của capture (chuột đi ra ngoài khối
+  // vẫn kéo tiếp) mà không đụng tới đích của `click`.
+  const dungKeoRef = useRef<(() => void) | null>(null);
+
+  const batDauKeo = (event: ReactPointerEvent<HTMLDivElement>) => {
+    const el = ref.current;
+    if (!el) return;
+
+    draggingRef.current = true;
+    dragStartXRef.current = event.clientX;
+    dragStartScrollRef.current = el.scrollLeft;
+
+    const onMove = (e: PointerEvent) => {
+      const distance = e.clientX - dragStartXRef.current;
+      if (Math.abs(distance) >= DRAG_THRESHOLD_PX) movedRef.current = true;
+      el.scrollLeft = dragStartScrollRef.current - distance;
+      e.preventDefault();
+    };
+
+    const ketThuc = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", ketThuc);
+      window.removeEventListener("pointercancel", ketThuc);
+      dungKeoRef.current = null;
+      draggingRef.current = false;
+      if (!hoveringRef.current) setInteracting(false);
+    };
+
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", ketThuc);
+    window.addEventListener("pointercancel", ketThuc);
+    dungKeoRef.current = ketThuc;
+  };
+
+  useEffect(() => () => dungKeoRef.current?.(), []);
 
   const onPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "mouse" && event.button !== 0) return;
 
     if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
     movedRef.current = false;
-    draggingRef.current = event.pointerType === "mouse";
-    dragStartXRef.current = event.clientX;
-    dragStartScrollRef.current = event.currentTarget.scrollLeft;
     setInteracting(true);
 
-    if (draggingRef.current) event.currentTarget.setPointerCapture(event.pointerId);
+    // Touch cứ để trình duyệt tự cuộn - mượt hơn và có cả quán tính.
+    if (event.pointerType === "mouse") batDauKeo(event);
   };
 
-  const onPointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!draggingRef.current) return;
-
-    const distance = event.clientX - dragStartXRef.current;
-    if (Math.abs(distance) >= DRAG_THRESHOLD_PX) movedRef.current = true;
-    event.currentTarget.scrollLeft = dragStartScrollRef.current - distance;
-    event.preventDefault();
-  };
-
-  const finishPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (draggingRef.current && event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    draggingRef.current = false;
-
+  const onPointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch") scheduleTouchResume();
-    else if (!hoveringRef.current) setInteracting(false);
   };
 
   return (
@@ -126,7 +182,7 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
       ref={ref}
       className="feedback-flood"
       role="region"
-      aria-label="Tin nhắn học viên. Vuốt hoặc kéo ngang để xem nhanh, chạm vào ảnh để xem đầy đủ"
+      aria-label={nhan}
       onPointerEnter={(event) => {
         if (event.pointerType === "mouse") {
           hoveringRef.current = true;
@@ -140,11 +196,14 @@ export function FeedbackFlood({ children }: { children: ReactNode }) {
         }
       }}
       onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={finishPointer}
-      onPointerCancel={finishPointer}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
       onScroll={() => {
-        if (interactingRef.current && !draggingRef.current && !hoveringRef.current) {
+        if (
+          interactingRef.current &&
+          !draggingRef.current &&
+          !hoveringRef.current
+        ) {
           scheduleTouchResume();
         }
       }}
