@@ -242,7 +242,6 @@ export const BUBBY = {
   namDay: "10 năm",
   nhanNamDay: "chuyên xây gốc tiếng Anh",
   chungChi: "C1 VSTEP",
-  nhanChungChi: "TB 8.5 cả 4 kỹ năng",
   taiKhoan: "@englishwithbubby",
   tiktokUrl: KENH_URL,
 };

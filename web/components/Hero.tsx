@@ -203,10 +203,10 @@ function TikTokProof() {
  */
 function AiLaBubby() {
   const daCoAnhThat = !ANH.bubby.endsWith(".svg");
-  const chiSo = [
+  const chiSo: { so: string; nhan?: string }[] = [
     { so: BUBBY.soFollower, nhan: BUBBY.nhanFollower },
     { so: BUBBY.namDay, nhan: BUBBY.nhanNamDay },
-    { so: BUBBY.chungChi, nhan: BUBBY.nhanChungChi },
+    { so: BUBBY.chungChi },
   ];
 
   return (
@@ -257,7 +257,7 @@ function AiLaBubby() {
         <ul className="flex w-full max-w-md flex-wrap items-stretch justify-center gap-y-3 border-y border-ink/10 py-4">
           {chiSo.map((muc, i) => (
             <li
-              key={muc.nhan}
+              key={muc.so}
               className={`flex min-w-[6.5rem] flex-1 flex-col items-center px-3 ${
                 i > 0 ? "border-l border-ink/10" : ""
               }`}
@@ -265,9 +265,11 @@ function AiLaBubby() {
               <span className="font-display text-[1.5rem] leading-[1.2] font-heading tracking-tight text-ink sm:text-[1.75rem]">
                 {muc.so}
               </span>
-              <span className="mt-1.5 text-center text-[0.72rem] leading-snug text-muted">
-                {muc.nhan}
-              </span>
+              {muc.nhan && (
+                <span className="mt-1.5 text-center text-[0.72rem] leading-snug text-muted">
+                  {muc.nhan}
+                </span>
+              )}
             </li>
           ))}
         </ul>
