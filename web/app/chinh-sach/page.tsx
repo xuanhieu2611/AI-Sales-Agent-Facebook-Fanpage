@@ -48,10 +48,12 @@ export default function ChinhSach() {
             số điện thoại của bạn ở đây, và không có form để bạn điền.
           </p>
           <p>
-            Thứ duy nhất được ghi nhận là dữ liệu đo lường ẩn danh do Meta
-            Pixel tạo ra: bạn mở trang lúc nào, xem tới phần nào, có bấm nút
-            nhắn tin hay không. Dữ liệu này gắn với trình duyệt, không gắn với
-            tên của bạn.
+            Bên mình ghi nhận hai loại dữ liệu đo lường, cả hai đều không gắn
+            với tên của bạn. Meta Pixel ghi bạn mở trang lúc nào, xem tới phần
+            nào, có bấm nút nhắn tin hay không — dữ liệu này gắn với trình
+            duyệt. Vercel Web Analytics ghi số lượt xem, bạn đến từ đâu, quốc
+            gia, loại thiết bị và trình duyệt — không đặt cookie và không nhận
+            diện từng người.
           </p>
         </Muc>
 
@@ -72,6 +74,20 @@ export default function ChinhSach() {
               cài đặt quảng cáo của tài khoản Facebook
             </A>
             , hoặc bằng cách chặn cookie trong trình duyệt.
+          </p>
+        </Muc>
+
+        <Muc tieuDe="Vercel Web Analytics">
+          <p>
+            Trang dùng Vercel Web Analytics để biết trang được xem thế nào: bao
+            nhiêu lượt, từ nguồn nào, trên điện thoại hay máy tính. Công cụ này
+            không đặt cookie, không thu thập tên hay thông tin liên hệ, và
+            không dùng để hiện quảng cáo lại cho bạn. Dữ liệu do Vercel xử lý
+            theo{" "}
+            <A href="https://vercel.com/docs/analytics/privacy-policy">
+              chính sách riêng tư của Vercel Web Analytics
+            </A>
+            .
           </p>
         </Muc>
 

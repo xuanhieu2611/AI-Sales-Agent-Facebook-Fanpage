@@ -4,6 +4,7 @@ import {
   Oswald,
   Be_Vietnam_Pro,
 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { MetaPixel } from "@/components/MetaPixel";
 
@@ -84,6 +85,7 @@ export default function RootLayout({
       <body>
         {children}
         <MetaPixel />
+        <Analytics />
       </body>
     </html>
   );
